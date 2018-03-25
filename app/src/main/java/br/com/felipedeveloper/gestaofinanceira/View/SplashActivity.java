@@ -1,4 +1,4 @@
-package br.com.felipedeveloper.gestaofinanceira;
+package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.animation.Animator;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.airbnb.lottie.LottieAnimationView;
+
+import br.com.felipedeveloper.gestaofinanceira.R;
 
 public class SplashActivity extends AppCompatActivity {
 
