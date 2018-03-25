@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "47355088904",
+    "firebase_url": "https://tccgestaofinanceira-1c86c.firebaseio.com",
+    "project_id": "tccgestaofinanceira-1c86c",
+    "storage_bucket": "tccgestaofinanceira-1c86c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47355088904:android:30ad951ba22f9ff6",
+        "android_client_info": {
+          "package_name": "br.com.felipedeveloper.gestaofinanceira"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "47355088904-2j1rkpj8kdq95080nllpm1p8l8k31bbq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.felipedeveloper.gestaofinanceira",
+            "certificate_hash": "5ccbd5e2388d8f415afaccb4a5d1e2f8161ad5d8"
+          }
+        },
+        {
+          "client_id": "47355088904-hdficdh4ssv1ch43tv0feemesdlfncgf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByVgEZFcA05PCLW414fop_A6epVL1ceBE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47355088904-hdficdh4ssv1ch43tv0feemesdlfncgf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
