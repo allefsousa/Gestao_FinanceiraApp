@@ -35,7 +35,7 @@
             android:paddingLeft="22dp"
             android:text="CONTAS BANCARIAS"
             android:textColor="@color/primary_text"
-            android:textSize="20dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -66,7 +66,7 @@
         <View
             android:layout_width="20dp"
             android:layout_height="match_parent"
-            android:background="@color/cpb_blue">
+            android:background="@color/vermelho">
 
         </View>
 
@@ -78,7 +78,7 @@
             android:paddingLeft="22dp"
             android:text="CARTÃO"
             android:textColor="@color/primary_text"
-            android:textSize="20dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -111,7 +111,7 @@
         <View
             android:layout_width="20dp"
             android:layout_height="match_parent"
-            android:background="@color/cpb_blue">
+            android:background="@color/roxo">
 
         </View>
 
@@ -123,7 +123,7 @@
             android:paddingLeft="22dp"
             android:text="CARTEIRA"
             android:textColor="@color/primary_text"
-            android:textSize="20dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -155,7 +155,7 @@
         <View
             android:layout_width="20dp"
             android:layout_height="match_parent"
-            android:background="@color/cpb_blue">
+            android:background="@color/rosa">
 
         </View>
 
@@ -167,7 +167,7 @@
             android:paddingLeft="22dp"
             android:text="GRUPO"
             android:textColor="@color/primary_text"
-            android:textSize="20dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
