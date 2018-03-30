@@ -10,6 +10,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
+import com.facebook.FacebookAuthorizationException;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -20,11 +25,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Arrays;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -70,7 +78,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btnfacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,OpcoesFinanceiraActivity.class));
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+                //startActivity(new Intent(LoginActivity.this,OpcoesFinanceiraActivity.class));
 
             }
         });
@@ -88,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
         firebaseAuth = FirebaseAuth.getInstance(); // pegando a instancia do OAuth  do firebase paar trabalhar com ela.
+        firebaseAuth.signOut(); // deslogando
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -99,7 +109,43 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         };
         callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        handlerFacebookToken(loginResult); // metodo para fazer o login no firebase
 
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Snackbar.make(findViewById(android.R.id.content), "Erro na Autenticação",
+                                Snackbar.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        if(error instanceof FacebookAuthorizationException){
+
+
+                        }
+
+
+                        // TODO: 29/08/2017 tratar exception de erros api facebook
+
+                        Snackbar.make(findViewById(android.R.id.content), "Falha na Autenticação" + error.getMessage(),
+                                Snackbar.LENGTH_LONG).show();
+                    }
+
+                }
+
+
+        );
+
+    }
+
+    private void handlerFacebookToken(LoginResult loginResult) {
+        authCredential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+        SingInFirebase(authCredential);
     }
 
 
@@ -126,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-      //  callbackManager.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 
         // verificando  o codigo recebido do GoogleSing
         if (requestCode == SING_IN_CODE) {

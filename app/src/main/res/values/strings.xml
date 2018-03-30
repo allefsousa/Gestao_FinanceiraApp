@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Team Money</string>
     <string name="web_id_client_firebase">47355088904-hdficdh4ssv1ch43tv0feemesdlfncgf.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">2079628952063475</string>
+    <string name="fb_login_protocol_scheme">fb2079628952063475</string>
+
 </resources>
