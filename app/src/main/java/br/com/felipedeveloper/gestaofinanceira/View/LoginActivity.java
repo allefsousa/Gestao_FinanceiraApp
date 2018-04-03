@@ -65,15 +65,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         ButterKnife.bind(this);
         inicializaFirebase(); // chamada de metodo que inicia firebase
 
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.web_id_client_firebase))
-                .requestEmail()
-                .build();
-
-        mGoogleapi = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
-                .build();
+        services_googleLogin();
 
         btnfacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,10 +120,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
                         }
-
-
-                        // TODO: 29/08/2017 tratar exception de erros api facebook
-
                         Snackbar.make(findViewById(android.R.id.content), "Falha na Autenticação" + error.getMessage(),
                                 Snackbar.LENGTH_LONG).show();
                     }
@@ -141,6 +129,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         );
 
+    }
+
+    private void services_googleLogin() {
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_id_client_firebase))
+                .requestEmail()
+                .build();
+
+        mGoogleapi = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
+                .build();
     }
 
     private void handlerFacebookToken(LoginResult loginResult) {
@@ -239,6 +239,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onStop() {
         super.onStop();
+        firebaseAuth.removeAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         firebaseAuth.removeAuthStateListener(authStateListener);
     }
 
