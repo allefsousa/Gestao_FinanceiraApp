@@ -5,50 +5,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.com.felipedeveloper.gestaofinanceira.View.LoginActivity"
-    tools:layout_editor_absoluteY="81dp">
-    <com.daimajia.slider.library.SliderLayout
+    tools:layout_editor_absoluteY="25dp">
+
+    <ss.com.bannerslider.views.BannerSlider
         android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        />
+        android:layout_height="313dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/principal"
+        app:defaultIndicators="circle"
+        app:interval="6000"
+        app:layout_constraintBottom_toTopOf="@+id/btnfacebook"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:loopSlides="true" />
+
     <Button
         android:id="@+id/btnfacebook"
         style="@style/AppTheme.FacebookBlockButton"
-        android:layout_width="0dp"
+        android:layout_width="246dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="17dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="264dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="ENTRAR COM FACEBOOK"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btngoogle"
-        app:layout_constraintEnd_toEndOf="@+id/btngoogle"
-        app:layout_constraintStart_toStartOf="@+id/btngoogle"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btngoogle"
         style="@style/AppTheme.GoogleBlockButton"
-        android:layout_width="0dp"
+        android:layout_width="248dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="68dp"
-        android:layout_marginStart="68dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="ENTRAR COM GOOGLE"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnemail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnfacebook" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnemail"
-        android:layout_width="0dp"
+        android:layout_width="250dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="71dp"
-        android:layout_marginEnd="67dp"
-        android:layout_marginStart="67dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="@color/principal"
         android:drawableLeft="@drawable/ic_email_black_24dp"
         android:paddingLeft="10dp"
@@ -58,6 +66,5 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btngoogle" />
+        app:layout_constraintStart_toStartOf="parent" />
 </android.support.constraint.ConstraintLayout>

@@ -32,17 +32,23 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ss.com.bannerslider.banners.Banner;
+import ss.com.bannerslider.banners.DrawableBanner;
+import ss.com.bannerslider.views.BannerSlider;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     // variaveis globais
     FirebaseAuth auth;
     FirebaseDatabase database;
     DatabaseReference myref;
+    BannerSlider sliderLayout;
     @BindView(R.id.btnfacebook)
     Button btnfacebookLogin;
     @BindView(R.id.btngoogle)
@@ -66,6 +72,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         inicializaFirebase(); // chamada de metodo que inicia firebase
 
         services_googleLogin();
+        List<Banner> banners=new ArrayList<>();
+        banners.add(new DrawableBanner(R.drawable.app));
+        banners.add(new DrawableBanner(R.drawable.rosinha));
+        banners.add(new DrawableBanner(R.drawable.dinheiro));
+
+
+        sliderLayout = findViewById(R.id.slider);
+        sliderLayout.setBanners(banners);
 
         btnfacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
