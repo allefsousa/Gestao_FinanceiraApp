@@ -98,8 +98,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btngooglelogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleapi);
-                startActivityForResult(intent, SING_IN_CODE);
+//                Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleapi);
+//                startActivityForResult(intent, SING_IN_CODE);
+                loginRealizadocomSucesso();
+
+
             }
         });
         firebaseAuth = FirebaseAuth.getInstance(); // pegando a instancia do OAuth  do firebase paar trabalhar com ela.

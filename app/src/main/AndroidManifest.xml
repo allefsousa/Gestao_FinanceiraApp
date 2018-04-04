@@ -42,7 +42,9 @@
             android:theme="@style/MyTheme">
 
         </activity>
-        <activity android:name=".View.OpcoesFinanceiraActivity" />
+        <activity android:name=".View.OpcoesFinanceiraActivity"
+            android:theme="@style/AppTheme">
+        </activity>
 
         <activity
             android:name=".View.LoginEmailActivity"

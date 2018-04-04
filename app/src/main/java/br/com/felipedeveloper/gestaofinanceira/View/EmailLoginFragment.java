@@ -37,10 +37,14 @@ public class EmailLoginFragment extends Fragment {
         btnlogar = rootView.findViewById(R.id.btnentrar);
         eemail = rootView.findViewById(R.id.editemaillogin);
         esenha = rootView.findViewById(R.id.editsenhalogin);
+        tRecuperarsenha = rootView.findViewById(R.id.textView);
         auth = FirebaseAuth.getInstance();
         btnlogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                usuaario = new usuario();
+                usuaario.setUsuarioEmail(eemail.getText().toString());
+                usuaario.setUsuarioSenha(esenha.getText().toString());
                 if (!usuaario.getUsuarioEmail().isEmpty() && !usuaario.getUsuarioSenha().isEmpty()){
                     loginEmailFirebase(usuaario.getUsuarioEmail(), usuaario.getUsuarioSenha());
                 }else {
@@ -49,6 +53,12 @@ public class EmailLoginFragment extends Fragment {
 
             }
 
+        });
+        tRecuperarsenha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
         });
 
 
