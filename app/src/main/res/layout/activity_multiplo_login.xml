@@ -10,38 +10,40 @@
     <ss.com.bannerslider.views.BannerSlider
         android:id="@+id/slider"
         android:layout_width="match_parent"
-        android:layout_height="313dp"
+        android:layout_height="325dp"
         android:layout_marginBottom="8dp"
         android:background="@color/principal"
         app:defaultIndicators="circle"
         app:interval="6000"
-        app:layout_constraintBottom_toTopOf="@+id/btnfacebook"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:loopSlides="true" />
 
     <Button
         android:id="@+id/btnfacebook"
         style="@style/AppTheme.FacebookBlockButton"
-        android:layout_width="246dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="ENTRAR COM FACEBOOK"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btngoogle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btngoogle"
         style="@style/AppTheme.GoogleBlockButton"
-        android:layout_width="248dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:text="ENTRAR COM GOOGLE"
@@ -52,9 +54,9 @@
 
     <Button
         android:id="@+id/btnemail"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="40dp"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@color/principal"
@@ -67,4 +69,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="334dp" />
 </android.support.constraint.ConstraintLayout>

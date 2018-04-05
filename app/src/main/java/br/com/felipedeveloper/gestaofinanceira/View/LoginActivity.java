@@ -67,15 +67,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_multiplo_login);
         ButterKnife.bind(this);
         inicializaFirebase(); // chamada de metodo que inicia firebase
 
         services_googleLogin();
         List<Banner> banners=new ArrayList<>();
-        banners.add(new DrawableBanner(R.drawable.app));
-        banners.add(new DrawableBanner(R.drawable.rosinha));
-        banners.add(new DrawableBanner(R.drawable.dinheiro));
+        banners.add(new DrawableBanner(R.drawable.um));
+        banners.add(new DrawableBanner(R.drawable.dois));
+        banners.add(new DrawableBanner(R.drawable.tres));
 
 
         sliderLayout = findViewById(R.id.slider);
