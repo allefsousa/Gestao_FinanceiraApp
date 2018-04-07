@@ -12,8 +12,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyTheme">
-        <activity android:name=".View.SplashActivity">
+        android:theme="@style/SplashTheme">
+        <activity
+            android:name=".View.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,7 +59,7 @@
         <activity
             android:name=".View.UsuarioConfiguracaoActivity"
             android:label="Configuração"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".View.CartaoActivity"
             android:label="@string/title_activity_cartao"

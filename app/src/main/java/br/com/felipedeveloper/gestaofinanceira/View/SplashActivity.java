@@ -23,16 +23,15 @@ public class SplashActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     Animation scaledown;
     Animation scaleup;
-    @BindView(R.id.imageviewlogin)
-            ImageView imagelogin;
     ImageView imageView;
     private FirebaseAuth.AuthStateListener authStateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
         firebaseAuth = FirebaseAuth.getInstance();
-        ButterKnife.bind(this);
+
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
         authStateListener = new FirebaseAuth.AuthStateListener() {
@@ -68,11 +67,11 @@ public class SplashActivity extends AppCompatActivity {
                      * caso o usuario esteja logado é enviado para a tela de menu , caso nao esteja precisara fazer o login e é direcionado para tela.
                      */
                     if (firebaseUser != null) {
-                        imagelogin.setAnimation(scaledown);
+
                         Intent i = new Intent(SplashActivity.this, OpcoesFinanceiraActivity.class);
                         startActivity(i);
                     } else {
-                        imagelogin.setAnimation(scaledown);
+
                         Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                         startActivity(i);
                     }
