@@ -8,6 +8,7 @@ public class Carteira {
     private String titulo;
     private Double valor;
     private String data;
+    private int StatusOp;
 
 
     public Carteira() {
@@ -37,6 +38,13 @@ public class Carteira {
         this.data = data;
     }
 
+    public int getStatusOp() {
+        return StatusOp;
+    }
+
+    public void setStatusOp(int statusOp) {
+        StatusOp = statusOp;
+    }
 
     public Double adicionaDinheiro(Double dinheiro){
         Double saldo = valor;

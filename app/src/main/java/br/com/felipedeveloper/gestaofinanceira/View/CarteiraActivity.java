@@ -15,13 +15,17 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
+import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,9 +46,10 @@ public class CarteiraActivity extends AppCompatActivity {
     EditText texttitulo;
     @BindView(R.id.btnconfirmar)
     Button btconfirmar;
-    FirebaseDatabase database;
-    DatabaseReference myreference;
-    Calendar myCalendar;
+    private DatabaseReference myreference;
+    private Calendar myCalendar;
+    private FirebaseUser firebaseUser;
+    Carteira carteira;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +59,11 @@ public class CarteiraActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");
+        carteira = new Carteira();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         ButterKnife.bind(this);
         configFirebase();
         myCalendar = Calendar.getInstance();
-        textvalor.setCompoundDrawables(null, null, getResources().getDrawable(R.drawable.ic_add), null);
          final android.support.v7.widget.SwitchCompat aSwitch = (android.support.v7.widget.SwitchCompat) findViewById(R.id.switchaaddvalor);
 
 
@@ -93,6 +99,22 @@ public class CarteiraActivity extends AppCompatActivity {
                             myCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
 
+
+            }
+        });
+        btconfirmar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                carteira.setData(textdata.getText().toString());
+                carteira.setTitulo(texttitulo.getText().toString());
+                carteira.setValor(Double.parseDouble(textvalor.getText().toString()));
+                if (aSwitch.isChecked()){
+                    carteira.setStatusOp(1);
+                    myreference.child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(carteira);
+                }else {
+                    carteira.setStatusOp(0);
+                    myreference.child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(carteira);
+                }
 
             }
         });
