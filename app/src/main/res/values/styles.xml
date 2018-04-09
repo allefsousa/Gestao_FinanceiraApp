@@ -55,4 +55,30 @@
 
     <style name="MyTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="SplashTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="SplashTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="SwitchCompatTheme" >
+        <item name="trackTint">@color/colorSwitchdebito</item>
+        <item name="thumbTint">@color/colorSwitchdebito</item>
+
+    </style>
+    <style name="SwitchCompatThem" >
+        <item name="trackTint">@color/colorSwitchcredito</item>
+        <item name="thumbTint">@color/colorSwitchcredito</item>
+
+    </style>
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/colorSwitchcredito</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/colorSwitchdebito
+        </item>
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/colorSwitchdebito
+        </item>
+    </style>
+
 </resources>

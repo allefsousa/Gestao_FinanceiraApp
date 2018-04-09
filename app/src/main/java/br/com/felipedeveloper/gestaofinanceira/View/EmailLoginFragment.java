@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import br.com.felipedeveloper.gestaofinanceira.Model.usuario;
+import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
 public class EmailLoginFragment extends Fragment {
@@ -28,7 +28,7 @@ public class EmailLoginFragment extends Fragment {
     TextView tRecuperarsenha;
     View rootView;
     FirebaseAuth auth;
-    usuario usuaario;
+    Usuario usuaario;
 
     @Nullable
     @Override
@@ -42,7 +42,7 @@ public class EmailLoginFragment extends Fragment {
         btnlogar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                usuaario = new usuario();
+                usuaario = new Usuario();
                 usuaario.setUsuarioEmail(eemail.getText().toString());
                 usuaario.setUsuarioSenha(esenha.getText().toString());
                 if (!usuaario.getUsuarioEmail().isEmpty() && !usuaario.getUsuarioSenha().isEmpty()){

@@ -9,7 +9,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="roxo">#311E76</color>
     <color name="rosa">#f9ff00c3</color>
-    <color name="vermelho">#fa0400</color>
+    <color name="vermelho">#ff0b07</color>
     <color name="principal">#5DBDFC</color>
 
     <color name="colorPrimary">#5dbdfc</color>
@@ -25,7 +25,8 @@
 
 
     <color name="Branco">#FFFFFF</color>
-    <color name="Introcolor">#05141c</color>
+    <color name="colorSwitchcredito">#33ff00</color>
+    <color name="colorSwitchdebito">#ff0b07</color>
 
     <color name="facebook_blue">#464F99</color>
     <color name="cpb_blue">#464F99</color>

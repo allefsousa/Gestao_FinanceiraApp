@@ -37,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                // Pegando a instancia do usuario caso ele esteja logado
+                // Pegando a instancia do Usuario caso ele esteja logado
                 firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             }
         };
@@ -64,7 +64,7 @@ public class SplashActivity extends AppCompatActivity {
 
                     }
                     /**
-                     * caso o usuario esteja logado é enviado para a tela de menu , caso nao esteja precisara fazer o login e é direcionado para tela.
+                     * caso o Usuario esteja logado é enviado para a tela de menu , caso nao esteja precisara fazer o login e é direcionado para tela.
                      */
                     if (firebaseUser != null) {
 

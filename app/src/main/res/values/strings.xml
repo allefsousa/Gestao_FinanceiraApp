@@ -4,5 +4,6 @@
     <string name="facebook_app_id">2079628952063475</string>
     <string name="fb_login_protocol_scheme">fb2079628952063475</string>
     <string name="title_activity_cartao">Cartões</string>
+    <string name="title_activity_carteira">"Carteira "</string>
 
 </resources>

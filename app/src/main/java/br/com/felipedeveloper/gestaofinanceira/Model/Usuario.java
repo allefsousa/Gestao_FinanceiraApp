@@ -4,13 +4,16 @@ package br.com.felipedeveloper.gestaofinanceira.Model;
  * Created by allef on 03/04/2018.
  */
 
-public class usuario {
+public class Usuario {
+
+    private String idUsuario;
     private String usuarioNome;
     private String usuarioEmail;
+    private String fotoUrl;
     private String usuarioSenha;
     private String usuarioconfirmaSenha;
 
-    public usuario() {
+    public Usuario() {
     }
 
 

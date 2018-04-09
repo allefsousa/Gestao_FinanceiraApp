@@ -13,8 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
-        <activity
-            android:name=".View.SplashActivity">
+        <activity android:name=".View.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -64,6 +63,15 @@
             android:name=".View.CartaoActivity"
             android:label="@string/title_activity_cartao"
             android:parentActivityName=".View.OpcoesFinanceiraActivity"
+            android:theme="@style/Theme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
+        </activity>
+        <activity
+            android:name=".View.CarteiraActivity"
+            android:parentActivityName=".View.OpcoesFinanceiraActivity"
+            android:label=""
             android:theme="@style/Theme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
