@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,8 +48,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     // variaveis globais
     FirebaseAuth auth;
     FirebaseDatabase database;
-    DatabaseReference myref;
+    private DatabaseReference reference;
     BannerSlider sliderLayout;
+    Usuario user;
     @BindView(R.id.btnfacebook)
     Button btnfacebookLogin;
     @BindView(R.id.btngoogle)
@@ -64,13 +66,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private FirebaseAuth.AuthStateListener authStateListener;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplo_login);
         ButterKnife.bind(this);
         inicializaFirebase(); // chamada de metodo que inicia firebase
-
+        user = new Usuario();
         services_googleLogin();
         List<Banner> banners=new ArrayList<>();
         banners.add(new DrawableBanner(R.drawable.um));
@@ -113,6 +116,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(firebaseUser != null){
+                    salvarUsuarioBD(firebaseUser); // TODO: 08/04/2018  testar com google e facebook
                     loginRealizadocomSucesso();
                 }
             }
@@ -148,6 +152,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
+    private void inicializaFirebase() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        reference = firebaseDatabase.getReference("usuario");
+    }
+
+    private void salvarUsuarioBD(FirebaseUser firebaseUser) {
+        user.setUsuarioEmail(firebaseUser.getEmail());
+        user.setUsuarioNome(firebaseUser.getDisplayName());
+        user.setFotoUrl(firebaseUser.getPhotoUrl().toString());
+        user.setIdUsuario(firebaseUser.getUid());
+        reference.child(user.getIdUsuario()).setValue(user);
+
+    }
+
     private void services_googleLogin() {
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_id_client_firebase))
@@ -168,7 +186,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void loginRealizadocomSucesso() {
         Intent i = new Intent(LoginActivity.this, OpcoesFinanceiraActivity.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         finish();
     }
@@ -177,10 +194,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
      * metodo responsavel por inicializar firebase
      * neste caso o banco de dados realtime database
      */
-    public void inicializaFirebase(){
-        database = FirebaseDatabase.getInstance();
-        myref = database.getReference();
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

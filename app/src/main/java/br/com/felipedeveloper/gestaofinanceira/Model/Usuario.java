@@ -49,8 +49,24 @@ public class Usuario {
         this.usuarioconfirmaSenha = usuarioconfirmaSenha;
     }
 
-    public boolean Verificasenha(String senha1,String senha2){
-        if (senha1.equals(senha2)){
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getFotoUrl() {
+        return fotoUrl;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
+    }
+
+    public boolean Verificasenha(){
+        if (usuarioSenha.equals(usuarioconfirmaSenha)){
             return true;
         }else {
             return false;

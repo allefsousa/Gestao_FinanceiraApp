@@ -13,6 +13,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +25,7 @@ public class SplashActivity extends AppCompatActivity {
     Animation scaledown;
     Animation scaleup;
     ImageView imageView;
+
     private FirebaseAuth.AuthStateListener authStateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
         firebaseAuth = FirebaseAuth.getInstance();
+
 
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
