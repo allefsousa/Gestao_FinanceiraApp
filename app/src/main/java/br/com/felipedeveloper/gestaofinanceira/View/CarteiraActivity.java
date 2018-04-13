@@ -2,8 +2,6 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,16 +10,19 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -50,6 +51,9 @@ public class CarteiraActivity extends AppCompatActivity {
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
     Carteira carteira;
+    String tagCarteira[];
+    List<Carteira> arrayValorPositivo;
+    List<Carteira> arrayValorNegativo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +64,35 @@ public class CarteiraActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");
         carteira = new Carteira();
+        tagCarteira = getResources().getStringArray(R.array.tagcarteira);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         ButterKnife.bind(this);
         configFirebase();
         myCalendar = Calendar.getInstance();
          final android.support.v7.widget.SwitchCompat aSwitch = (android.support.v7.widget.SwitchCompat) findViewById(R.id.switchaaddvalor);
+        arrayValorNegativo = new ArrayList<>();
+        arrayValorPositivo = new ArrayList<>();
+        myreference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Carteira carte;
+                for (DataSnapshot d: dataSnapshot.getChildren()){
+                  carte= d.getValue(Carteira.class);
+                  if(carte.getStatusOp()== 1){
+                      arrayValorPositivo.add(carte);
+                  }else {
+                      arrayValorNegativo.add(carte);
 
+                  }
+                }
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -133,6 +159,11 @@ public class CarteiraActivity extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         myreference = firebaseDatabase.getReference().child("financeiro").child("carteira");
 
+    }
+    private void limpar(){
+        textdata.setText("");
+        textvalor.setText("");
+        texttitulo.setText("");
     }
 
 }

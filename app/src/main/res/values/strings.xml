@@ -6,4 +6,11 @@
     <string name="title_activity_cartao">Cartões</string>
     <string name="title_activity_carteira">"Carteira "</string>
 
+    <array name="tagcarteira">
+        <item>Vestuario</item>
+        <item>Comida</item>
+        <item>Veiculo</item>
+
+    </array>
+
 </resources>

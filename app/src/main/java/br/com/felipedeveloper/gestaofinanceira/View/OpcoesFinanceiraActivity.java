@@ -77,7 +77,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         cardContaBancaria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity(new Intent(OpcoesFinanceiraActivity.this,ContasBancariasActivity.class));
             }
         });
         cardGrupo.setOnClickListener(new View.OnClickListener() {

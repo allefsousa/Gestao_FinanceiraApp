@@ -70,13 +70,15 @@
         </activity>
         <activity
             android:name=".View.CarteiraActivity"
-            android:parentActivityName=".View.OpcoesFinanceiraActivity"
             android:label=""
+            android:parentActivityName=".View.OpcoesFinanceiraActivity"
             android:theme="@style/Theme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
         </activity>
+        <activity android:name=".View.ContasBancariasActivity"
+            android:theme="@style/Theme"></activity>
     </application>
 
 </manifest>
