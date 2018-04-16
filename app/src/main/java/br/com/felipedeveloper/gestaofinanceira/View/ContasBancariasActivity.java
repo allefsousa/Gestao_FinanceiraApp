@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,9 +39,9 @@ public class ContasBancariasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contas_bancarias);
         ButterKnife.bind(this);
-        auth = FirebaseAuth.getInstance();
-        idUser = auth.getCurrentUser().getUid();
-        IniciaFirebase();
+//        auth = FirebaseAuth.getInstance();
+//        idUser = auth.getCurrentUser().getUid();
+      //  IniciaFirebase();
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -48,8 +49,9 @@ public class ContasBancariasActivity extends AppCompatActivity {
         btnaddbanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(ContasBancariasActivity.this,AddBancoActivity.class));
 
-                AdicionarBancoDialog();
+                //AdicionarBancoDialog();
 
             }
         });

@@ -83,6 +83,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity"/>
         </activity>
+        <activity android:name=".View.AddBancoActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.ContasBancariasActivity"/>
+        </activity>
     </application>
 
 </manifest>
