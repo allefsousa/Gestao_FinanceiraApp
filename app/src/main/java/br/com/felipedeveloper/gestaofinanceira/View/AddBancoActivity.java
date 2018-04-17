@@ -46,7 +46,7 @@ public class AddBancoActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
         IniciaFirebase();
-          contasBancarias = new ContasBancarias();
+        contasBancarias = new ContasBancarias();
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -55,21 +55,21 @@ public class AddBancoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 contasBancarias.setIdContabancaria(UUID.randomUUID().toString());
                 contasBancarias.setTituloContabancaria(titulobanco.getText().toString());
-                if (!saldobanco.getText().toString().isEmpty()){
-                    contasBancarias.setSaldoContabancaria(saldobanco.getText().toString());
+                if (!saldobanco.getText().toString().isEmpty()) {
+                    contasBancarias.setSaldoContabancaria((saldobanco.getText().toString()));
                 }
 
 
-                    if (!contasBancarias.getSaldoContabancaria().isEmpty()) {
-                        if (!contasBancarias.getTituloContabancaria().isEmpty()) {
-                            myreference.child(contasBancarias.getIdContabancaria()).setValue(contasBancarias);
-                            Toast.makeText(AddBancoActivity.this, "Conta Adicionada com sucesso !", Toast.LENGTH_LONG).show();
-                        } else {
-
-                        }
+                if (!contasBancarias.getSaldoContabancaria().isEmpty()) {
+                    if (!contasBancarias.getTituloContabancaria().isEmpty()) {
+                        myreference.child(contasBancarias.getIdContabancaria()).setValue(contasBancarias);
+                        Toast.makeText(AddBancoActivity.this, "Conta Adicionada com sucesso !", Toast.LENGTH_LONG).show();
                     } else {
 
                     }
+                } else {
+
+                }
 
 
 

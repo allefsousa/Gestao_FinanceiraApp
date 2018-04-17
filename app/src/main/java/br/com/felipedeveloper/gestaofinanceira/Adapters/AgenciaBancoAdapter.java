@@ -60,7 +60,7 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
         public ViewHolderAgencia(View itemView) {
             super(itemView);
             tituloConta = itemView.findViewById(R.id.titulocontabancarias);
-            saldoConta = itemView.findViewById(R.id.saldocontabancaria);
+            saldoConta = itemView.findViewById(R.id.cardsaldocontabancaria);
         }
     }
 }

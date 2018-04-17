@@ -47,12 +47,12 @@
             />
 
         <TextView
-            android:id="@+id/saldocontabancaria"
+            android:id="@+id/cardsaldocontabancaria"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_marginBottom="05dp"
-            android:paddingRight="120dp"
+            android:paddingRight="30dp"
             android:text="R$:"
             android:textColor="@color/cpb_blue"
             android:textSize="16dp" />
