@@ -7,8 +7,8 @@ package br.com.felipedeveloper.gestaofinanceira.Model;
 public class ContasBancarias {
     private String idContabancaria;
     private String tituloContabancaria;
-    private Double SaldoContabancaria;
-    private String agencia;
+    private String SaldoContabancaria;
+
 
 
     public ContasBancarias() {
@@ -30,19 +30,12 @@ public class ContasBancarias {
         this.tituloContabancaria = tituloContabancaria;
     }
 
-    public Double getSaldoContabancaria() {
+    public String getSaldoContabancaria() {
         return SaldoContabancaria;
     }
 
-    public void setSaldoContabancaria(Double saldoContabancaria) {
+    public void setSaldoContabancaria(String saldoContabancaria) {
         SaldoContabancaria = saldoContabancaria;
     }
 
-    public String getAgencia() {
-        return agencia;
-    }
-
-    public void setAgencia(String agencia) {
-        this.agencia = agencia;
-    }
 }

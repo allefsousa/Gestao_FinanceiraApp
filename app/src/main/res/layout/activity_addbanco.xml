@@ -2,6 +2,7 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,41 +20,25 @@
         app:layout_constraintVertical_bias="0.187" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayout7"
+        android:id="@+id/textInputLayout8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/agencia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Agencia"
-            android:textSize="13dp" />
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayout8"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
-
-        <android.support.design.widget.TextInputEditText
             android:id="@+id/titulobanco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Titulo do Banco"
+            android:inputType="textCapWords"
+            android:maxLength="30"
+            android:maxLines="1"
             android:textSize="13dp" />
     </android.support.design.widget.TextInputLayout>
 
@@ -72,6 +57,9 @@
             android:id="@+id/saldo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:maxLength="15"
             android:hint="SALDO"
             android:textSize="13dp" />
     </android.support.design.widget.TextInputLayout>
