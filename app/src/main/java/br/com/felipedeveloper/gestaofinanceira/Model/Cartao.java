@@ -6,10 +6,7 @@ package br.com.felipedeveloper.gestaofinanceira.Model;
 
 public class Cartao {
     private int saldoCartao;
-    private String detalhesCartao;
-    private String bandeiraCartao;
-    // TODO: 04/04/2018 numeor de cartão ninguem vai colocar.
-
+    private String tituloCartao;
 
     public Cartao() {
     }
@@ -23,18 +20,11 @@ public class Cartao {
     }
 
     public String getDetalhesCartao() {
-        return detalhesCartao;
+        return tituloCartao;
     }
 
     public void setDetalhesCartao(String detalhesCartao) {
-        this.detalhesCartao = detalhesCartao;
+        this.tituloCartao = detalhesCartao;
     }
 
-    public String getBandeiraCartao() {
-        return bandeiraCartao;
-    }
-
-    public void setBandeiraCartao(String bandeiraCartao) {
-        this.bandeiraCartao = bandeiraCartao;
-    }
 }
