@@ -60,6 +60,7 @@ public class AddCartaoActivity extends AppCompatActivity {
                     if (!cartao.getTituloCartao().isEmpty()) {
                         myreference.child(cartao.getIdcartao()).setValue(cartao);
                         Toast.makeText(AddCartaoActivity.this, "Cartão Adicionado!", Toast.LENGTH_LONG).show();
+                        clear();
                     } else {
 
                     }
@@ -78,5 +79,10 @@ public class AddCartaoActivity extends AppCompatActivity {
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         myreference = firebaseDatabase.getReference().child("financeiro").child("cartao").child(idUser);
+    }
+    private void clear(){
+        edtsaldoCartao.clearFocus();
+        edtnomeCartao.setText("");
+        edtsaldoCartao.setText("");
     }
 }

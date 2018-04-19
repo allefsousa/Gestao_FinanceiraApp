@@ -30,11 +30,11 @@ public class AddBancoActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private String idUser;
     @BindView(R.id.titulobanco)
-    EditText titulobanco;
+    EditText edtTituloBanco;
     @BindView(R.id.saldo)
-    EditText saldobanco;
+    EditText edtSaldoBanco;
     @BindView(R.id.btnsalvarbanco)
-    Button adicionarBanco;
+    Button btnAdicionarBanco;
     private DatabaseReference myreference;
     private ContasBancarias contasBancarias;
 
@@ -50,13 +50,13 @@ public class AddBancoActivity extends AppCompatActivity {
         IniciaFirebase();
         contasBancarias = new ContasBancarias();
 
-        adicionarBanco.setOnClickListener(new View.OnClickListener() {
+        btnAdicionarBanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 contasBancarias.setIdContabancaria(UUID.randomUUID().toString());
-                contasBancarias.setTituloContabancaria(titulobanco.getText().toString());
-                if (!saldobanco.getText().toString().isEmpty()) {
-                    contasBancarias.setSaldoContabancaria((saldobanco.getText().toString()));
+                contasBancarias.setTituloContabancaria(edtTituloBanco.getText().toString());
+                if (!edtSaldoBanco.getText().toString().isEmpty()) {
+                    contasBancarias.setSaldoContabancaria((edtSaldoBanco.getText().toString()));
                 }
 
 
@@ -64,6 +64,7 @@ public class AddBancoActivity extends AppCompatActivity {
                     if (!contasBancarias.getTituloContabancaria().isEmpty()) {
                         myreference.child(contasBancarias.getIdContabancaria()).setValue(contasBancarias);
                         Toast.makeText(AddBancoActivity.this, "Conta Adicionada com sucesso !", Toast.LENGTH_LONG).show();
+                        clear();
                     } else {
 
                     }
@@ -86,5 +87,10 @@ public class AddBancoActivity extends AppCompatActivity {
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         myreference = firebaseDatabase.getReference().child("financeiro").child("banco").child(idUser);
+    }
+    private void clear(){
+        edtSaldoBanco.clearFocus();
+        edtTituloBanco.setText("");
+        edtSaldoBanco.setText("");
     }
 }

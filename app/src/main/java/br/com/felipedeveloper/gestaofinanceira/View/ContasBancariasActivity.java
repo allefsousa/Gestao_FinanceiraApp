@@ -97,9 +97,9 @@ public class ContasBancariasActivity extends AppCompatActivity {
         View alview = getLayoutInflater().inflate(R.layout.activity_addbanco, null);
         final ContasBancarias contasBancarias = new ContasBancarias();
 
-//        titulobanco = alview.findViewById(R.id.titulobanco);
+//        edtTituloBanco = alview.findViewById(R.id.edtTituloBanco);
 //        agenciaBanco = alview.findViewById(R.id.agencia);
-//        saldobanco = alview.findViewById(R.id.saldo);
+//        edtSaldoBanco = alview.findViewById(R.id.saldo);
         Button salvar = alview.findViewById(R.id.btnsalvarbanco);
         builder.setView(alview);
         alertDialog = builder.create();
