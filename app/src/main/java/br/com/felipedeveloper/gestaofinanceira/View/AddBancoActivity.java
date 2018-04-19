@@ -26,29 +26,29 @@ import butterknife.ButterKnife;
 
 public class AddBancoActivity extends AppCompatActivity {
 
-    FirebaseAuth auth;
-    FirebaseUser firebaseUser;
-    String idUser;
+    private FirebaseAuth auth;
+    private FirebaseUser firebaseUser;
+    private String idUser;
     @BindView(R.id.titulobanco)
     EditText titulobanco;
     @BindView(R.id.saldo)
     EditText saldobanco;
     @BindView(R.id.btnsalvarbanco)
     Button adicionarBanco;
-    DatabaseReference myreference;
-    ContasBancarias contasBancarias;
+    private DatabaseReference myreference;
+    private ContasBancarias contasBancarias;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addbanco);
+        getSupportActionBar();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
         IniciaFirebase();
         contasBancarias = new ContasBancarias();
-        getSupportActionBar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         adicionarBanco.setOnClickListener(new View.OnClickListener() {
             @Override

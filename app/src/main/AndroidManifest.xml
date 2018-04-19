@@ -63,7 +63,7 @@
             android:name=".View.CartaoActivity"
             android:label="@string/title_activity_cartao"
             android:parentActivityName=".View.OpcoesFinanceiraActivity"
-            android:theme="@style/Theme">
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
@@ -77,17 +77,25 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
         </activity>
-        <activity android:name=".View.ContasBancariasActivity"
+        <activity
+            android:name=".View.ContasBancariasActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity"/>
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
         </activity>
-        <activity android:name=".View.AddBancoActivity"
+        <activity
+            android:name=".View.AddBancoActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.ContasBancariasActivity"/>
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.ContasBancariasActivity" />
+        </activity>
+        <activity android:name=".View.AddCartaoActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.CartaoActivity" />
         </activity>
     </application>
 

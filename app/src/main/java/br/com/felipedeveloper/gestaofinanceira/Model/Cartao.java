@@ -5,26 +5,36 @@ package br.com.felipedeveloper.gestaofinanceira.Model;
  */
 
 public class Cartao {
-    private int saldoCartao;
+    private String idcartao;
+    private String saldoCartao;
     private String tituloCartao;
 
     public Cartao() {
     }
 
-    public int getSaldoCartao() {
-        return saldoCartao;
+    public String getIdcartao() {
+        return idcartao;
     }
 
-    public void setSaldoCartao(int saldoCartao) {
-        this.saldoCartao = saldoCartao;
+    public void setIdcartao(String idcartao) {
+        this.idcartao = idcartao;
     }
 
-    public String getDetalhesCartao() {
+    public String getTituloCartao() {
         return tituloCartao;
     }
 
-    public void setDetalhesCartao(String detalhesCartao) {
-        this.tituloCartao = detalhesCartao;
+    public void setTituloCartao(String tituloCartao) {
+        this.tituloCartao = tituloCartao;
     }
+
+    public String getSaldoCartao() {
+        return saldoCartao;
+    }
+
+    public void setSaldoCartao(String saldoCartao) {
+        this.saldoCartao = saldoCartao;
+    }
+
 
 }
