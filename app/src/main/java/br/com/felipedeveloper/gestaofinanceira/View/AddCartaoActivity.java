@@ -12,6 +12,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
@@ -32,6 +35,7 @@ public class AddCartaoActivity extends AppCompatActivity {
     private String idUser;
     private DatabaseReference myreference;
     private Cartao cartao;
+    NumberFormat df;
 
 
     @Override
@@ -45,6 +49,7 @@ public class AddCartaoActivity extends AppCompatActivity {
         idUser = auth.getCurrentUser().getUid();
         IniciaFirebase();
         cartao = new Cartao();
+        df = new DecimalFormat("#.##");
 
         btnsalvarCartao.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,14 +57,14 @@ public class AddCartaoActivity extends AppCompatActivity {
                 cartao.setIdcartao(UUID.randomUUID().toString());
                 cartao.setTituloCartao(edtnomeCartao.getText().toString());
                 if (!edtsaldoCartao.getText().toString().isEmpty()) {
-                    cartao.setSaldoCartao((edtsaldoCartao.getText().toString()));
+                    cartao.setSaldoCartao(Double.parseDouble(edtsaldoCartao.getText().toString()));
                 }
 
 
-                if (!cartao.getSaldoCartao().isEmpty()) {
+                if (cartao.getSaldoCartao() != null) {
                     if (!cartao.getTituloCartao().isEmpty()) {
                         myreference.child(cartao.getIdcartao()).setValue(cartao);
-                        Toast.makeText(AddCartaoActivity.this, "Cartão Adicionado!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddCartaoActivity.this, "Cartão Adicionado!" + df.format(cartao.getSaldoCartao()), Toast.LENGTH_LONG).show();
                         clear();
                     } else {
 

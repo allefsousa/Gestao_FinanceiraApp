@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
@@ -21,6 +24,8 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
 
     private List<ContasBancarias> contasBancariasArray;
     private Context context;
+    int clickFlag = 0;
+    NumberFormat df;
 
     public AgenciaBancoAdapter(List<ContasBancarias> contasBancarias, Context context) {
         this.contasBancariasArray = contasBancarias;
@@ -42,8 +47,10 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
         if (!contasBancariasArray.isEmpty() && contasBancariasArray.size()>0){
 
             holder.tituloConta.setText(contasBancariasArray.get(position).getTituloContabancaria());
-            holder.saldoConta.setText(String.valueOf(contasBancariasArray.get(position).getSaldoContabancaria()+" Reais"));
+            holder.saldoConta.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria())+" Reais"));
         }
+
+
 
 
     }
@@ -61,6 +68,34 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
             super(itemView);
             tituloConta = itemView.findViewById(R.id.titulocontabancarias);
             saldoConta = itemView.findViewById(R.id.cardsaldocontabancaria);
+            df = new DecimalFormat("#0.00");
+            click(itemView);
+            remove(itemView);
         }
+
+        private void remove(View itemView) {
+
+        }
+
+
+        // FIXME: 19/04/2018  Excluir item ;
+        private void click(View itemView) {
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Toast.makeText(context, "clikc loco", Toast.LENGTH_SHORT).show();
+                    view.setBackgroundColor(context.getResources().getColor(R.color.cardview_shadow_start_color));
+                    clickFlag = clickFlag +1;
+
+
+                    return false;
+                }
+            });
+        }
+
+
+
+
     }
 }

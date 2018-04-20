@@ -25,7 +25,7 @@
         android:id="@+id/recyclerContasbancarias"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="3dp"
         app:layout_constraintBottom_toTopOf="@+id/btnnovobanco"
         tools:listitem="@layout/item_conta_bancaria"
         app:layout_constraintEnd_toEndOf="parent"

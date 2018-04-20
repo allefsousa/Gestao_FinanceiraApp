@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,7 +67,6 @@ public class ContasBancariasActivity extends AppCompatActivity {
                     contasBancariasList.add(contasBancarias);
                 }
                 AgenciaBancoAdapter agenciaBancoAdapter = new AgenciaBancoAdapter(contasBancariasList,ContasBancariasActivity.this);
-                recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(agenciaBancoAdapter);
             }
 
@@ -86,6 +87,7 @@ public class ContasBancariasActivity extends AppCompatActivity {
                 startActivity(new Intent(ContasBancariasActivity.this, AddBancoActivity.class));
             }
         });
+
 
     }
 

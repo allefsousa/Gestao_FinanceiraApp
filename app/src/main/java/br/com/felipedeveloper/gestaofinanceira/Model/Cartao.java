@@ -1,12 +1,14 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
+import java.math.BigDecimal;
+
 /**
  * Created by allef on 04/04/2018.
  */
 
 public class Cartao {
     private String idcartao;
-    private String saldoCartao;
+    private Double saldoCartao;
     private String tituloCartao;
 
     public Cartao() {
@@ -28,11 +30,11 @@ public class Cartao {
         this.tituloCartao = tituloCartao;
     }
 
-    public String getSaldoCartao() {
+    public Double getSaldoCartao() {
         return saldoCartao;
     }
 
-    public void setSaldoCartao(String saldoCartao) {
+    public void setSaldoCartao(Double saldoCartao) {
         this.saldoCartao = saldoCartao;
     }
 

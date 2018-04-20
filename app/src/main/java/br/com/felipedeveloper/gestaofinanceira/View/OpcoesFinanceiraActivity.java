@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,10 +23,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -47,14 +51,19 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     CardView cardGrupo;
     @BindView(R.id.cardsaldocontabancaria)
     TextView saldoContabbancaria;
+    @BindView(R.id.cardviewsaldocartao)
+    TextView saldoCartao;
+
     DatabaseReference reference;
     FirebaseUser firebaseUser;
     FirebaseAuth auth;
     String idUser;
     ContasBancarias conta;
-    List<ContasBancarias> contasBancariasArray;
-    List<Double> contasBancariasArraysaldo;
-    DecimalFormat df;
+    List<ContasBancarias> contasBancariasList;
+    NumberFormat df;
+    Cartao cartaoModel;
+    List<Cartao> cartaoList;
+    FloatingActionButton actionButtonitemcartao;
 
 
     @Override
@@ -64,32 +73,35 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         fabmenu = (FloatingActionMenu) findViewById(R.id.menu);
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+        actionButtonitemcartao = findViewById(R.id.menu_itemcartao);
         constraintLayout = (ConstraintLayout) findViewById(R.id.constraint);
         ButterKnife.bind(this);
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
         IniciaFirebase();
-        contasBancariasArray = new ArrayList<>();
-         df = new DecimalFormat("#.##");
+        contasBancariasList = new ArrayList<>();
+        cartaoList = new ArrayList<>();
+        cartaoModel = new Cartao();
+         df = new DecimalFormat("#0.00");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Double result = null;
+                Double result1 =null;
 
 
                 if (dataSnapshot.child("banco").hasChild(idUser)) {
                     for (DataSnapshot dd : dataSnapshot.child("banco").child(idUser).getChildren()) {
                         conta = dd.getValue(ContasBancarias.class);
-                        contasBancariasArray.add(conta);
+                        contasBancariasList.add(conta);
                     }
                     Boolean flag = false;
-                    for (ContasBancarias cc : contasBancariasArray){
+                    for (ContasBancarias cc : contasBancariasList){
 
                         if (!flag){
-
                              result = Double.parseDouble(cc.getSaldoContabancaria());
-                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+cc.getSaldoContabancaria(), Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+cc.getSaldoContabancaria(), Toast.LENGTH_SHORT).show();
                             flag = true;
                         }else {
                             result = result+Double.parseDouble(cc.getSaldoContabancaria());
@@ -100,7 +112,29 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
 
                     }
-                    saldoContabbancaria.setText(String.valueOf(("Saldo: "+result)));
+                    saldoContabbancaria.setText(String.valueOf(("Saldo: "+df.format(result))));
+
+
+                }
+                if (dataSnapshot.child("cartao").hasChild(idUser)){
+
+                    for (DataSnapshot dd : dataSnapshot.child("cartao").child(idUser).getChildren()) {
+                        cartaoModel = dd.getValue(Cartao.class);
+                        cartaoList.add(cartaoModel);
+                    }
+                    Boolean flag = false;
+                    for (Cartao cc : cartaoList){
+                        if (!flag){
+                            result1 = (cc.getSaldoCartao());
+                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+cc.getSaldoCartao(), Toast.LENGTH_SHORT).show();
+                            flag = true;
+                        }else {
+                            result1 =result1 + cc.getSaldoCartao();
+                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+result1, Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                    saldoCartao.setText(String.valueOf("Saldo: "+df.format(result1)));
 
 
                 }
@@ -122,6 +156,12 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 //
                     constraintLayout.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+        actionButtonitemcartao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OpcoesFinanceiraActivity.this, CartaoActivity.class));
             }
         });
 
