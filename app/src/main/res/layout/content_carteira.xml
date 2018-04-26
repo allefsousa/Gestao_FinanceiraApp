@@ -22,10 +22,10 @@
         <android.support.design.widget.TextInputEditText
             android:id="@+id/texteditvalor"
             android:layout_width="match_parent"
-            android:inputType="numberDecimal"
-            android:maxLines="1"
             android:layout_height="wrap_content"
-            android:hint="Valor" />
+            android:hint="Valor"
+            android:inputType="numberDecimal"
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -42,10 +42,10 @@
         <android.support.design.widget.TextInputEditText
             android:id="@+id/texteditdata"
             android:layout_width="match_parent"
-            android:inputType="date"
-            android:maxLines="1"
             android:layout_height="wrap_content"
-            android:hint="Data" />
+            android:hint="Data"
+            android:inputType="date"
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -62,54 +62,35 @@
         <android.support.design.widget.TextInputEditText
             android:id="@+id/textedittitulo"
             android:layout_width="match_parent"
-            android:inputType="text"
-            android:maxLines="1"
             android:layout_height="wrap_content"
-            android:hint="Titulo" />
+            android:hint="Titulo"
+            android:inputType="text"
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayout10"
+    <Spinner
+        android:id="@+id/spinneropbancaria"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="39dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputtitulo">
 
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="hint" />
-    </android.support.design.widget.TextInputLayout>
+    </Spinner>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayout11"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="19dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout10">
-
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="hint" />
-    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btnconfirmar"
         android:layout_width="356dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Confirmar"
-        tools:layout_editor_absoluteX="11dp"
-        tools:layout_editor_absoluteY="462dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinneropbancaria"
+        app:layout_constraintVertical_bias="0.894" />
 </android.support.constraint.ConstraintLayout>

@@ -6,10 +6,12 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,7 +28,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
+import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +51,8 @@ public class CarteiraActivity extends AppCompatActivity {
     EditText texttitulo;
     @BindView(R.id.btnconfirmar)
     Button btconfirmar;
+    @BindView(R.id.spinneropbancaria)
+    Spinner spinneropcao;
     private DatabaseReference myreference;
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
@@ -54,6 +60,9 @@ public class CarteiraActivity extends AppCompatActivity {
     String tagCarteira[];
     List<Carteira> arrayValorPositivo;
     List<Carteira> arrayValorNegativo;
+    List<ContasBancarias> contasBancariasList;
+    List<Cartao> cartaoList;
+    List<String> financeiroSpinnerlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +81,45 @@ public class CarteiraActivity extends AppCompatActivity {
          final android.support.v7.widget.SwitchCompat aSwitch = (android.support.v7.widget.SwitchCompat) findViewById(R.id.switchaaddvalor);
         arrayValorNegativo = new ArrayList<>();
         arrayValorPositivo = new ArrayList<>();
-        myreference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+        contasBancariasList = new ArrayList<>();
+        financeiroSpinnerlist = new ArrayList<>();
+        financeiroSpinnerlist.add("Forma de Pagamento");
+        cartaoList = new ArrayList<>();
+
+
+
+        myreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Carteira carte;
-                for (DataSnapshot d: dataSnapshot.getChildren()){
-                  carte= d.getValue(Carteira.class);
-                  if(carte.getStatusOp()== 1){
-                      arrayValorPositivo.add(carte);
-                  }else {
-                      arrayValorNegativo.add(carte);
-
-                  }
+                Cartao card;
+                String titulosCardConta;
+                ContasBancarias bancarias;
+                for (DataSnapshot d: dataSnapshot.child("banco").child(firebaseUser.getUid()).getChildren()){
+                    bancarias = d.getValue(ContasBancarias.class);
+                    if (bancarias!= null){
+                        titulosCardConta = bancarias.getTituloContabancaria();
+                        financeiroSpinnerlist.add(titulosCardConta);
+                    }
+                    contasBancariasList.add(bancarias);
                 }
+                for (DataSnapshot d: dataSnapshot.child("carteira").child(firebaseUser.getUid()).getChildren()){
+
+                }
+                for (DataSnapshot d: dataSnapshot.child("cartao").child(firebaseUser.getUid()).getChildren()){
+                    card = d.getValue(Cartao.class);
+                    if (card!= null){
+                        titulosCardConta = card.getTituloCartao();
+                        financeiroSpinnerlist.add(titulosCardConta);
+                    }
+                    cartaoList.add(card);
+
+                }
+
+                ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(CarteiraActivity.this, android.R.layout.simple_list_item_1, financeiroSpinnerlist);
+                mesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinneropcao.setAdapter(mesadapter);
+
 
             }
 
@@ -93,6 +128,8 @@ public class CarteiraActivity extends AppCompatActivity {
 
             }
         });
+
+
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -157,7 +194,7 @@ public class CarteiraActivity extends AppCompatActivity {
 
     private void configFirebase(){
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro").child("carteira");
+        myreference = firebaseDatabase.getReference().child("financeiro");
 
     }
     private void limpar(){

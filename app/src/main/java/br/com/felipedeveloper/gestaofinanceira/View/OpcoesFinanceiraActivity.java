@@ -100,11 +100,11 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
                     for (ContasBancarias cc : contasBancariasList){
 
                         if (!flag){
-                             result = Double.parseDouble(cc.getSaldoContabancaria());
+                             result = Double.parseDouble(cc.getSaldoContabancaria().toString());
 //                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+cc.getSaldoContabancaria(), Toast.LENGTH_SHORT).show();
                             flag = true;
                         }else {
-                            result = result+Double.parseDouble(cc.getSaldoContabancaria());
+                            result = result+Double.parseDouble(cc.getSaldoContabancaria().toString());
                         }
 
 

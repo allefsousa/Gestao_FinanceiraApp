@@ -7,7 +7,7 @@ package br.com.felipedeveloper.gestaofinanceira.Model;
 public class ContasBancarias {
     private String idContabancaria;
     private String tituloContabancaria;
-    private String SaldoContabancaria;
+    private Double SaldoContabancaria;
     // TODO: 20/04/2018  atualizar saldo para double corrigir possiveis falhas 
 
 
@@ -31,11 +31,11 @@ public class ContasBancarias {
         this.tituloContabancaria = tituloContabancaria;
     }
 
-    public String getSaldoContabancaria() {
+    public Double getSaldoContabancaria() {
         return SaldoContabancaria;
     }
 
-    public void setSaldoContabancaria(String saldoContabancaria) {
+    public void setSaldoContabancaria(Double saldoContabancaria) {
         SaldoContabancaria = saldoContabancaria;
     }
 
