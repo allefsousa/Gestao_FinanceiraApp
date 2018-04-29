@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class EmailCadastroFragment extends Fragment {
 
@@ -60,11 +62,14 @@ public class EmailCadastroFragment extends Fragment {
                 user.setUsuarioEmail(edtemail.getText().toString());
                 user.setUsuarioSenha(edtsenha.getText().toString());
                 user.setUsuarioconfirmaSenha(edtConfirmasenha.getText().toString());
-                if (user.Verificasenha()) {
-                    criarContaFirebase(user);
-                } else {
-                    Toast.makeText(rootView.getContext(), "Senhas nao conferem", Toast.LENGTH_SHORT).show();
-                    // TODO: 02/04/2018  exibir erro no edittext
+                if (!user.getUsuarioEmail().isEmpty()) {
+                    if (user.Verificasenha()) {
+                        criarContaFirebase(user);
+                    }else {
+                        ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Senhas nao conferem !");
+                    }
+                }else {
+                    ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE,"Existem Campos em Branco");
                 }
 
 
@@ -89,29 +94,45 @@ public class EmailCadastroFragment extends Fragment {
                     limparcampos();
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     salvarUsuarioBD(firebaseUser);
+                    ExibirMensagem(rootView.getContext(), SweetAlertDialog.SUCCESS_TYPE, "Conta criada com sucesso !");
 
-                    Toast.makeText(rootView.getContext(), "Conta criada com sucesso.", Toast.LENGTH_SHORT).show();
+
                 }
                 if (!task.isSuccessful()) {
 
                     try {
                         throw task.getException();
                     } catch (FirebaseAuthWeakPasswordException e) {
+                        ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Senha Fraca, Utilize Numeros e Letras");
+                        edtsenha.setText("");
+                        edtConfirmasenha.setText("");
+                        edtsenha.requestFocus();
 //                        icadSenha.setError("Senha Fraca, Utilize Numeros e Letras.");
                         edtsenha.requestFocus();
                     } catch (FirebaseAuthInvalidCredentialsException c) {
-//                        icadEmail.setError("Email invalido !!");
+                        ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Email invalido !!");
+                        edtemail.setText("");
                         edtemail.requestFocus();
+//                       icadEmail.setError("Email invalido !!");
                     } catch (FirebaseAuthUserCollisionException d) {
 //                        icadEmail.setError("Usuario ja existe!!");
-                        edtemail.requestFocus();
+                        ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Usuario ja existe !!");
+                        limparcampos();
                     } catch (Exception e) {
-
+                        ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Verifique sua conexao com a Internet");
+                        limparcampos();
                     }
                 }
 
             }
         });
+    }
+
+    private void ExibirMensagem(Context context, int successType, String s) {
+        new SweetAlertDialog(context, successType)
+                .setTitleText(getResources().getString(R.string.app_name))
+                .setContentText(s)
+                .show();
     }
 
     private void salvarUsuarioBD(FirebaseUser firebaseUser) {

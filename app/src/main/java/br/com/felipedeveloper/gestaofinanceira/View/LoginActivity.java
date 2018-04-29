@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +41,7 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import ss.com.bannerslider.banners.Banner;
 import ss.com.bannerslider.banners.DrawableBanner;
 import ss.com.bannerslider.views.BannerSlider;
@@ -109,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
         firebaseAuth = FirebaseAuth.getInstance(); // pegando a instancia do OAuth  do firebase paar trabalhar com ela.
-       // firebaseAuth.signOut(); // deslogando
+       firebaseAuth.signOut(); // deslogando
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
