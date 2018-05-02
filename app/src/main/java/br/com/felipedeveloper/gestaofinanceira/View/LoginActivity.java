@@ -111,13 +111,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
         firebaseAuth = FirebaseAuth.getInstance(); // pegando a instancia do OAuth  do firebase paar trabalhar com ela.
-       firebaseAuth.signOut(); // deslogando
+        firebaseAuth.signOut(); // deslogando
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(firebaseUser != null){
+                    firebaseUser.getUid();
                     salvarUsuarioBD(firebaseUser); // TODO: 08/04/2018  testar com google e facebook
                     loginRealizadocomSucesso();
                 }

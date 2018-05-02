@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -101,7 +101,6 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
                         if (!flag){
                              result = Double.parseDouble(cc.getSaldoContabancaria().toString());
-//                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+cc.getSaldoContabancaria(), Toast.LENGTH_SHORT).show();
                             flag = true;
                         }else {
                             result = result+Double.parseDouble(cc.getSaldoContabancaria().toString());
@@ -126,11 +125,9 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
                     for (Cartao cc : cartaoList){
                         if (!flag){
                             result1 = (cc.getSaldoCartao());
-                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+cc.getSaldoCartao(), Toast.LENGTH_SHORT).show();
                             flag = true;
                         }else {
                             result1 =result1 + cc.getSaldoCartao();
-                            Toast.makeText(OpcoesFinanceiraActivity.this, ""+result1, Toast.LENGTH_SHORT).show();
 
                         }
                     }

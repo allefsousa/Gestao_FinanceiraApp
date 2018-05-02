@@ -15,15 +15,12 @@ import java.util.List;
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
-/**
- * Created by allef on 16/04/2018.
- */
 
 public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolderAgencia> {
 
     private List<Cartao> cartaoArray;
     private Context context;
-    NumberFormat df;
+    private NumberFormat df;
 
     public CartaoAdapter(List<Cartao> cartao, Context context) {
         this.cartaoArray = cartao;
@@ -34,7 +31,7 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
     @Override
     public ViewHolderAgencia onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_cartao,parent,false);
+        View view = layoutInflater.inflate(R.layout.item_cartao, parent, false);
 
 
         return new ViewHolderAgencia(view);
@@ -42,10 +39,10 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderAgencia holder, int position) {
-        if (!cartaoArray.isEmpty() && cartaoArray.size()>0){
+        if (!cartaoArray.isEmpty() && cartaoArray.size() > 0) {
 
             holder.titulocartao.setText(cartaoArray.get(position).getTituloCartao());
-            holder.saldocartao.setText(String.valueOf(df.format(cartaoArray.get(position).getSaldoCartao())+" Reais"));
+            holder.saldocartao.setText(String.valueOf(df.format(cartaoArray.get(position).getSaldoCartao()) + " Reais"));
         }
 
 

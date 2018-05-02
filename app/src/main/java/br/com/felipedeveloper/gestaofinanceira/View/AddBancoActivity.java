@@ -53,16 +53,16 @@ public class AddBancoActivity extends AppCompatActivity {
         btnAdicionarBanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                contasBancarias.setIdContabancaria(UUID.randomUUID().toString());
-                contasBancarias.setTituloContabancaria(edtTituloBanco.getText().toString());
+                contasBancarias.setIdContaBanco(UUID.randomUUID().toString());
+                contasBancarias.setTituloContabanco(edtTituloBanco.getText().toString());
                 if (!edtSaldoBanco.getText().toString().isEmpty()) {
                     contasBancarias.setSaldoContabancaria(Double.parseDouble(edtSaldoBanco.getText().toString()));
                 }
 
 
                 if (contasBancarias.getSaldoContabancaria()!= null) {
-                    if (!contasBancarias.getTituloContabancaria().isEmpty()) {
-                        myreference.child(contasBancarias.getIdContabancaria()).setValue(contasBancarias);
+                    if (!contasBancarias.getTituloContabanco().isEmpty()) {
+                        myreference.child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);
                         Toast.makeText(AddBancoActivity.this, "Conta Adicionada com sucesso !", Toast.LENGTH_LONG).show();
                         clear();
                     } else {

@@ -24,8 +24,8 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
 
     private List<ContasBancarias> contasBancariasArray;
     private Context context;
-    int clickFlag = 0;
-    NumberFormat df;
+    private int clickFlag = 0;
+    private NumberFormat df;
 
     public AgenciaBancoAdapter(List<ContasBancarias> contasBancarias, Context context) {
         this.contasBancariasArray = contasBancarias;
@@ -36,7 +36,7 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
     @Override
     public ViewHolderAgencia onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_conta_bancaria,parent,false);
+        View view = layoutInflater.inflate(R.layout.item_conta_bancaria, parent, false);
 
 
         return new ViewHolderAgencia(view);
@@ -44,13 +44,11 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderAgencia holder, int position) {
-        if (!contasBancariasArray.isEmpty() && contasBancariasArray.size()>0){
+        if (!contasBancariasArray.isEmpty() && contasBancariasArray.size() > 0) {
 
-            holder.tituloConta.setText(contasBancariasArray.get(position).getTituloContabancaria());
-            holder.saldoConta.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria())+" Reais"));
+            holder.tituloConta.setText(contasBancariasArray.get(position).getTituloContabanco());
+            holder.saldoConta.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria()) + " Reais"));
         }
-
-
 
 
     }
@@ -86,15 +84,13 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
                 public boolean onLongClick(View view) {
                     Toast.makeText(context, "clikc loco", Toast.LENGTH_SHORT).show();
                     view.setBackgroundColor(context.getResources().getColor(R.color.cardview_shadow_start_color));
-                    clickFlag = clickFlag +1;
+                    clickFlag = clickFlag + 1;
 
 
                     return false;
                 }
             });
         }
-
-
 
 
     }

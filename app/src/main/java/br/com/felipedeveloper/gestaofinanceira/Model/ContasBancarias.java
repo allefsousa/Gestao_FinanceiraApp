@@ -1,12 +1,13 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
-/**
- * Created by allef on 04/04/2018.
- */
+import java.util.HashMap;
+import java.util.Map;
+
+
 
 public class ContasBancarias {
-    private String idContabancaria;
-    private String tituloContabancaria;
+    private String idContaBanco;
+    private String tituloContabanco;
     private Double SaldoContabancaria;
     // TODO: 20/04/2018  atualizar saldo para double corrigir possiveis falhas 
 
@@ -15,20 +16,20 @@ public class ContasBancarias {
     public ContasBancarias() {
     }
 
-    public String getIdContabancaria() {
-        return idContabancaria;
+    public String getIdContaBanco() {
+        return idContaBanco;
     }
 
-    public void setIdContabancaria(String idContabancaria) {
-        this.idContabancaria = idContabancaria;
+    public void setIdContaBanco(String idContaBanco) {
+        this.idContaBanco = idContaBanco;
     }
 
-    public String getTituloContabancaria() {
-        return tituloContabancaria;
+    public String getTituloContabanco() {
+        return tituloContabanco;
     }
 
-    public void setTituloContabancaria(String tituloContabancaria) {
-        this.tituloContabancaria = tituloContabancaria;
+    public void setTituloContabanco(String tituloContabanco) {
+        this.tituloContabanco = tituloContabanco;
     }
 
     public Double getSaldoContabancaria() {
@@ -39,4 +40,30 @@ public class ContasBancarias {
         SaldoContabancaria = saldoContabancaria;
     }
 
+    public Map<String,Object> MapBancoDebita(ContasBancarias ban, Double valor) {
+        HashMap<String, Object> result = new HashMap<>();
+        /**
+         * validando valor do saldo da conta nao pode ser menor que o valor a ser debitado enviando erro.
+         */
+        if (ban.getSaldoContabancaria() < valor){
+            result = null;
+        }else {
+            Double saldoAtualizado = ban.getSaldoContabancaria()-valor;
+            result.put("idContaBanco", ban.getIdContaBanco());
+            result.put("saldoCartao", saldoAtualizado);
+            result.put("tituloContabanco", ban.getTituloContabanco());
+        }
+
+        return result;
+
+    }
+    public Map<String,Object> MapBancoCredita(ContasBancarias ban, Double valor) {
+        Double saldoAtualizado = ban.getSaldoContabancaria()+valor;
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("idContaBanco", ban.getIdContaBanco());
+        result.put("tituloContabanco", saldoAtualizado);
+        result.put("tituloContabanco", ban.getTituloContabanco());
+        return result;
+
+    }
 }

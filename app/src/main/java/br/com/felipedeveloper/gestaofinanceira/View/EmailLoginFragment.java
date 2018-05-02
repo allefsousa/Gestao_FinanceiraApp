@@ -27,13 +27,13 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class EmailLoginFragment extends Fragment {
-    Button btnlogar;
-    EditText eemail;
-    EditText esenha;
-    TextView tRecuperarsenha;
-    View rootView;
-    FirebaseAuth auth;
-    Usuario usuaario;
+    private Button btnlogar;
+    private EditText eemail;
+    private EditText esenha;
+    private TextView tRecuperarsenha;
+    private View rootView;
+    private FirebaseAuth auth;
+    private Usuario usuaario;
 
     @Nullable
     @Override
@@ -50,10 +50,10 @@ public class EmailLoginFragment extends Fragment {
                 usuaario = new Usuario();
                 usuaario.setUsuarioEmail(eemail.getText().toString());
                 usuaario.setUsuarioSenha(esenha.getText().toString());
-                if (!usuaario.getUsuarioEmail().isEmpty() && !usuaario.getUsuarioSenha().isEmpty()){
+                if (!usuaario.getUsuarioEmail().isEmpty() && !usuaario.getUsuarioSenha().isEmpty()) {
                     loginEmailFirebase(usuaario.getUsuarioEmail(), usuaario.getUsuarioSenha());
-                }else {
-                    ExibirMensagem(rootView.getContext(),SweetAlertDialog.ERROR_TYPE,"Usuario ou senha em branco");
+                } else {
+                    ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Usuario ou senha em branco");
 
                 }
 
@@ -74,30 +74,30 @@ public class EmailLoginFragment extends Fragment {
     }
 
     private void loginEmailFirebase(String usuarioEmail, String usuarioSenha) {
-            auth.signInWithEmailAndPassword(usuarioEmail, usuarioSenha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        ExibirMensagem(rootView.getContext(),SweetAlertDialog.SUCCESS_TYPE,"Login realizado com sucesso. Vamos lá ?");
+        auth.signInWithEmailAndPassword(usuarioEmail, usuarioSenha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    ExibirMensagem(rootView.getContext(), SweetAlertDialog.SUCCESS_TYPE, "Login realizado com sucesso. Vamos lá ?");
 
-                    }else {
-                        try{
-                            throw task.getException();
-                            // TODO: 29/04/2018 verificar exceptions de login
-                        } catch (FirebaseAuthWeakPasswordException e) {
+                } else {
+                    try {
+                        throw task.getException();
+                        // TODO: 29/04/2018 verificar exceptions de login
+                    } catch (FirebaseAuthWeakPasswordException e) {
 
-                        } catch (FirebaseAuthInvalidCredentialsException c) {
+                    } catch (FirebaseAuthInvalidCredentialsException c) {
 
-                        } catch (FirebaseAuthUserCollisionException d) {
- //
-                        } catch (Exception e) {
-
-                        }
+                    } catch (FirebaseAuthUserCollisionException d) {
+                        //
+                    } catch (Exception e) {
 
                     }
 
                 }
-            });
+
+            }
+        });
 
 
     }
@@ -106,6 +106,7 @@ public class EmailLoginFragment extends Fragment {
         Intent intent = new Intent(rootView.getContext(), OpcoesFinanceiraActivity.class);
         startActivity(intent);
     }
+
     private void ExibirMensagem(Context context, int successType, String s) {
         new SweetAlertDialog(context, successType)
                 .setTitleText(getResources().getString(R.string.app_name))

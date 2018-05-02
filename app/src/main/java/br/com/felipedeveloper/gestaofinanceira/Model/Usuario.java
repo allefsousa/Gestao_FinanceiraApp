@@ -1,8 +1,5 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
-/**
- * Created by allef on 03/04/2018.
- */
 
 public class Usuario {
 
