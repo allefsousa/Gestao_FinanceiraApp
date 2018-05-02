@@ -50,7 +50,7 @@ public class ContasBancarias {
         }else {
             Double saldoAtualizado = ban.getSaldoContabancaria()-valor;
             result.put("idContaBanco", ban.getIdContaBanco());
-            result.put("saldoCartao", saldoAtualizado);
+            result.put("SaldoContabancaria", saldoAtualizado);
             result.put("tituloContabanco", ban.getTituloContabanco());
         }
 

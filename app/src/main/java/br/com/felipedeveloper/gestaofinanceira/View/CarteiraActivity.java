@@ -204,7 +204,7 @@ public class CarteiraActivity extends AppCompatActivity {
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(cardatualiza.getIdcartao()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valor adicionado com Sucesso");
+                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados comSucesso");
 
                                         }
                                     });
@@ -229,7 +229,7 @@ public class CarteiraActivity extends AppCompatActivity {
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(contBancos.getIdContaBanco()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valor adicionado com Sucesso");
+                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados comSucesso !");
 
                                         }
                                     });
