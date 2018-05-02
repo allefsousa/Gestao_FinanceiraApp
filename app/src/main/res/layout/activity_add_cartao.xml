@@ -60,7 +60,7 @@
             android:inputType="numberDecimal"
             android:maxLines="1"
             android:maxLength="15"
-            android:hint="SALDO CARTÂO"
+            android:hint="LIMITE CARTÂO"
             android:textSize="13dp" />
     </android.support.design.widget.TextInputLayout>
 

@@ -59,8 +59,6 @@ public class CarteiraActivity extends AppCompatActivity {
     Spinner spinneropcao;
     Carteira carteira;
     String tagCarteira[];
-    List<Carteira> arrayValorPositivo;
-    List<Carteira> arrayValorNegativo;
     List<ContasBancarias> contasBancariasList;
     List<Cartao> cartaoList;
     List<String> financeiroSpinnerlist;
@@ -85,22 +83,28 @@ public class CarteiraActivity extends AppCompatActivity {
         configFirebase();
         myCalendar = Calendar.getInstance();
         final android.support.v7.widget.SwitchCompat aSwitch = (android.support.v7.widget.SwitchCompat) findViewById(R.id.switchaaddvalor);
-        arrayValorNegativo = new ArrayList<>();
-        arrayValorPositivo = new ArrayList<>();
         contasBancariasList = new ArrayList<>();
         financeiroSpinnerlist = new ArrayList<>();
-        financeiroSpinnerlist.add("Forma de Pagamento");
         cartaoList = new ArrayList<>();
 
 
         myreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Carteira carte;
                 Cartao card;
                 String titulosCardConta;
                 ContasBancarias bancarias;
                 globalSnapshot = dataSnapshot;
+
+                /**
+                 * limpando as listas pois os dados veem em tempo real,
+                 * e caso a lista possua dados assim é adicionado mais
+                 * tornando os dados inconsistentes
+                 */
+                contasBancariasList.clear();
+                cartaoList.clear();
+                financeiroSpinnerlist.clear();
+                financeiroSpinnerlist.add("Forma de Pagamento");
                 for (DataSnapshot d : dataSnapshot.child("banco").child(firebaseUser.getUid()).getChildren()) {
                     bancarias = d.getValue(ContasBancarias.class);
                     if (bancarias != null) {
@@ -122,9 +126,12 @@ public class CarteiraActivity extends AppCompatActivity {
 
                 }
 
+
                 ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(CarteiraActivity.this, android.R.layout.simple_list_item_1, financeiroSpinnerlist);
                 mesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinneropcao.setAdapter(mesadapter);
+                spinneropcao.setFocusable(true);
+                spinneropcao.setFocusableInTouchMode(true);
 
 
             }
@@ -177,6 +184,7 @@ public class CarteiraActivity extends AppCompatActivity {
                 carteira.setData(textdata.getText().toString());
                 carteira.setTitulo(texttitulo.getText().toString());
                 carteira.setValor(Double.parseDouble(textvalor.getText().toString()));
+
                 /**
                  * verificando se a opçao de deposito é para conta corrente ou cartao.
                  */
@@ -229,12 +237,12 @@ public class CarteiraActivity extends AppCompatActivity {
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(contBancos.getIdContaBanco()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados comSucesso !");
+                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados com sucesso!");
 
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente !");
+                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
 
                                 }
 
@@ -265,12 +273,12 @@ public class CarteiraActivity extends AppCompatActivity {
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(cardatualiza.getIdcartao()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com sucesso !");
+                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com sucesso!");
 
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente !");
+                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
                                 }
 
                             }
@@ -288,11 +296,11 @@ public class CarteiraActivity extends AppCompatActivity {
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(ban.getIdContaBanco()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com sucesso !");
+                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com Sucesso!");
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente !");
+                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
                                 }
 
 

@@ -74,7 +74,7 @@
         <View
             android:layout_width="20dp"
             android:layout_height="match_parent"
-            android:background="@color/vermelho">
+            android:background="@color/primaryTextColor">
 
         </View>
 
@@ -129,21 +129,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:paddingLeft="22dp"
-            android:text="CARTEIRA"
+            android:text="MOVIMENTAÇÕES"
             android:textColor="@color/primary_text"
             android:textSize="16sp"
             />
 
-        <TextView
-            android:id="@+id/saldocarteira"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="05dp"
-            android:paddingRight="30dp"
-            android:text="R$:"
-            android:textColor="@color/cpb_blue"
-            android:textSize="16dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/saldocarteira"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|right"-->
+            <!--android:layout_marginBottom="05dp"-->
+            <!--android:paddingRight="30dp"-->
+            <!--android:text="R$:"-->
+            <!--android:textColor="@color/cpb_blue"-->
+            <!--android:textSize="16dp" />-->
 
     </android.support.v7.widget.CardView>
 
@@ -188,6 +188,55 @@
             android:text="R$:"
             android:textColor="@color/cpb_blue"
             android:textSize="16dp" />
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewtransa"
+        android:layout_width="350dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:cardCornerRadius="7dp"
+        app:cardElevation="5dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewgrupo">
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:background="@color/colorSwitchdebito">
+
+        </View>
+        <View
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:background="@color/colorSwitchcredito">
+
+        </View>
+
+        <TextView
+            android:id="@+id/titulotransa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="22dp"
+            android:text="TRANSAÇÕES"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp"
+            />
+
+        <!--<TextView-->
+            <!--android:id="@+id/saldogrupo"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="bottom|right"-->
+            <!--android:layout_marginBottom="05dp"-->
+            <!--android:paddingRight="30dp"-->
+            <!--android:text="R$:"-->
+            <!--android:textColor="@color/cpb_blue"-->
+            <!--android:textSize="16dp" />-->
     </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>

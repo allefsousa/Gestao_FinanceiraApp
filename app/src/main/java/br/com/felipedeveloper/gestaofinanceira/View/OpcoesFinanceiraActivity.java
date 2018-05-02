@@ -12,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -54,16 +52,16 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     @BindView(R.id.cardviewsaldocartao)
     TextView saldoCartao;
 
-    DatabaseReference reference;
-    FirebaseUser firebaseUser;
-    FirebaseAuth auth;
-    String idUser;
-    ContasBancarias conta;
-    List<ContasBancarias> contasBancariasList;
-    NumberFormat df;
-    Cartao cartaoModel;
-    List<Cartao> cartaoList;
-    FloatingActionButton actionButtonitemcartao;
+    private DatabaseReference reference;
+    private FirebaseUser firebaseUser;
+    private FirebaseAuth auth;
+    private String idUser;
+    private ContasBancarias conta;
+    private List<ContasBancarias> contasBancariasList;
+    private NumberFormat df;
+    private Cartao cartaoModel;
+    private List<Cartao> cartaoList;
+    private FloatingActionButton actionButtonitemcartao;
 
 
     @Override
@@ -82,56 +80,58 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         contasBancariasList = new ArrayList<>();
         cartaoList = new ArrayList<>();
         cartaoModel = new Cartao();
-         df = new DecimalFormat("#0.00");
+        df = new DecimalFormat("#0.00");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Double result = null;
-                Double result1 =null;
+                Double result1 = null;
 
-
+                /**
+                 * limpando os dados da lista pois quando algo é modificado na arvore
+                 * todo o processo do banco de dados é refeito  em tempo real
+                 */
+                contasBancariasList.clear();
                 if (dataSnapshot.child("banco").hasChild(idUser)) {
                     for (DataSnapshot dd : dataSnapshot.child("banco").child(idUser).getChildren()) {
                         conta = dd.getValue(ContasBancarias.class);
                         contasBancariasList.add(conta);
                     }
                     Boolean flag = false;
-                    for (ContasBancarias cc : contasBancariasList){
+                    for (ContasBancarias cc : contasBancariasList) {
 
-                        if (!flag){
-                             result = Double.parseDouble(cc.getSaldoContabancaria().toString());
+                        if (!flag) {
+                            result = Double.parseDouble(cc.getSaldoContabancaria().toString());
                             flag = true;
-                        }else {
-                            result = result+Double.parseDouble(cc.getSaldoContabancaria().toString());
+                        } else {
+                            result = result + Double.parseDouble(cc.getSaldoContabancaria().toString());
                         }
 
 
-
-
-
                     }
-                    saldoContabbancaria.setText(String.valueOf(("Saldo: "+df.format(result))));
+                    saldoContabbancaria.setText(String.valueOf(("Saldo: " + df.format(result))));
 
 
                 }
-                if (dataSnapshot.child("cartao").hasChild(idUser)){
+                if (dataSnapshot.child("cartao").hasChild(idUser)) {
 
+                    cartaoList.clear();
                     for (DataSnapshot dd : dataSnapshot.child("cartao").child(idUser).getChildren()) {
                         cartaoModel = dd.getValue(Cartao.class);
                         cartaoList.add(cartaoModel);
                     }
                     Boolean flag = false;
-                    for (Cartao cc : cartaoList){
-                        if (!flag){
+                    for (Cartao cc : cartaoList) {
+                        if (!flag) {
                             result1 = (cc.getSaldoCartao());
                             flag = true;
-                        }else {
-                            result1 =result1 + cc.getSaldoCartao();
+                        } else {
+                            result1 = result1 + cc.getSaldoCartao();
 
                         }
                     }
-                    saldoCartao.setText(String.valueOf("Saldo: "+df.format(result1)));
+                    saldoCartao.setText(String.valueOf("Saldo: " + df.format(result1)));
 
 
                 }
