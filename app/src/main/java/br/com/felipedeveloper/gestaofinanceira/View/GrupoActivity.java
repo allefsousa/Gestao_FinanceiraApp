@@ -16,6 +16,7 @@ public class GrupoActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     EditText editText;
+    MenuItem itemm;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -29,10 +30,10 @@ public class GrupoActivity extends AppCompatActivity {
                 case R.id.navigation_adduser:
                     mTextMessage.setText(R.string.title_dashboard);
                     mensagem();
-                    mTextMessage.setText(editText.getText());
                     return true;
             }
             return false;
+
         }
     };
 

@@ -3,6 +3,7 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,9 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -184,6 +188,8 @@ public class CarteiraActivity extends AppCompatActivity {
                 carteira.setData(textdata.getText().toString());
                 carteira.setTitulo(texttitulo.getText().toString());
                 carteira.setValor(Double.parseDouble(textvalor.getText().toString()));
+                final Long a = horarioMovimentacao();
+                carteira.setCreatedAt(a);
 
                 /**
                  * verificando se a opçao de deposito é para conta corrente ou cartao.
@@ -191,6 +197,8 @@ public class CarteiraActivity extends AppCompatActivity {
                 final String nomeopFinanceira = spinneropcao.getSelectedItem().toString();
                 if (aSwitch.isChecked()) {
                     carteira.setStatusOp(1);
+
+                    carteira.setCreatedAt(a);
                     myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(carteira).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -315,6 +323,14 @@ public class CarteiraActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @NonNull
+    private Long horarioMovimentacao() {
+        Calendar cal = Calendar.getInstance();
+        Date data_atual = cal.getTime();
+        final Timestamp ts = new Timestamp(data_atual.getTime());
+        return ts.getTime();
     }
 
     private String verificaOpcaoFinanceira(String nomeopFinanceira) {

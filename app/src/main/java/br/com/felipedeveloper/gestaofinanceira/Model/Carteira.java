@@ -6,6 +6,7 @@ public class Carteira {
     private Double valor;
     private String data;
     private int StatusOp;
+    private Long createdAt;
 
 
     public Carteira() {
@@ -41,6 +42,14 @@ public class Carteira {
 
     public void setStatusOp(int statusOp) {
         StatusOp = statusOp;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Double adicionaDinheiro(Double dinheiro){

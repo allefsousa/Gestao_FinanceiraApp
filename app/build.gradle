@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.android.support:design:27.1.0'
     compile 'com.ss.bannerslider:bannerslider:1.8.0'
     compile 'com.github.clans:fab:1.6.4'
-    compile 'pl.hypeapp:materialtimelineview:1.1'
+    compile 'com.github.vipulasri:timelineview:1.0.6'
     compile 'com.github.f0ris.sweetalert:library:1.5.1'
 }
 apply plugin: 'com.google.gms.google-services'

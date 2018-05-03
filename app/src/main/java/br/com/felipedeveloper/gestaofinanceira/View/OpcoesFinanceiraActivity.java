@@ -49,6 +49,8 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     CardView cardGrupo;
     @BindView(R.id.cardsaldocontabancaria)
     TextView saldoContabbancaria;
+    @BindView(R.id.cardViewtransa)
+    CardView cardTransacao;
     @BindView(R.id.cardviewsaldocartao)
     TextView saldoCartao;
 
@@ -62,7 +64,11 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     private Cartao cartaoModel;
     private List<Cartao> cartaoList;
     private FloatingActionButton actionButtonitemcartao;
-
+    private FloatingActionButton actionButtonitemgrupos;
+    private FloatingActionButton actionButtonitemcontas;
+    private FloatingActionButton actionButtonitemovimentacoes;
+    private FloatingActionButton actionButtonitemtransacoes;
+    private FloatingActionButton actionButtonitemrelatorios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +78,8 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
         actionButtonitemcartao = findViewById(R.id.menu_itemcartao);
+        actionButtonitemgrupos = findViewById(R.id.menu_itemgrupos);
+
         constraintLayout = (ConstraintLayout) findViewById(R.id.constraint);
         ButterKnife.bind(this);
         auth = FirebaseAuth.getInstance();
@@ -155,6 +163,13 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
                 }
             }
         });
+        actionButtonitemgrupos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OpcoesFinanceiraActivity.this, GrupoActivity.class));
+
+            }
+        });
         actionButtonitemcartao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,6 +203,12 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(new Intent(OpcoesFinanceiraActivity.this, GrupoActivity.class));
 
+            }
+        });
+        cardTransacao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OpcoesFinanceiraActivity.this, TransacoesActivity.class));
             }
         });
 

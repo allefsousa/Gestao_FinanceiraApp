@@ -61,7 +61,7 @@ public class ContasBancarias {
         Double saldoAtualizado = ban.getSaldoContabancaria()+valor;
         HashMap<String, Object> result = new HashMap<>();
         result.put("idContaBanco", ban.getIdContaBanco());
-        result.put("tituloContabanco", saldoAtualizado);
+        result.put("SaldoContabancaria", saldoAtualizado);
         result.put("tituloContabanco", ban.getTituloContabanco());
         return result;
 

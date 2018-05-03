@@ -103,12 +103,14 @@
         <activity
             android:name=".View.GrupoActivity"
             android:label="@string/title_activity_grupo"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".View.OpcoesFinanceiraActivity">
+            android:parentActivityName=".View.OpcoesFinanceiraActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
         </activity>
+        <activity android:name=".View.TransacoesActivity"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
