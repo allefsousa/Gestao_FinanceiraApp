@@ -1,10 +1,10 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.app.Application;
-import android.view.View;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
 
@@ -17,8 +17,9 @@ public class myApplication extends Application {
     public void onCreate() {
         setTheme(R.style.SplashTheme);
         super.onCreate();
-            FacebookSdk.sdkInitialize(getApplicationContext());
-            AppEventsLogger.activateApp(this);
-        }
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+    }
 
 }
