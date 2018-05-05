@@ -28,12 +28,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewcarteira">
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:background="@color/cpb_blue">
+        <!--<View-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/cpb_blue">-->
 
-        </View>
+        <!--</View>-->
 
         <TextView
             android:id="@+id/titulocontabancarias"
@@ -71,12 +71,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewcontasbancaria">
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:background="@color/primaryTextColor">
+        <!--<View-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/primaryTextColor">-->
 
-        </View>
+        <!--</View>-->
 
         <TextView
             android:id="@+id/titulocartao"
@@ -116,12 +116,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:background="@color/roxo">
+        <!--<View-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/roxo">-->
 
-        </View>
+        <!--</View>-->
 
         <TextView
             android:id="@+id/titulocarteira"
@@ -160,12 +160,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewcartao">
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:background="@color/rosa">
+        <!--<View-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/rosa">-->
 
-        </View>
+        <!--</View>-->
 
         <TextView
             android:id="@+id/titulogrupo"
@@ -178,16 +178,6 @@
             android:textSize="16sp"
              />
 
-        <TextView
-            android:id="@+id/saldogrupo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="05dp"
-            android:paddingRight="30dp"
-            android:text="R$:"
-            android:textColor="@color/cpb_blue"
-            android:textSize="16dp" />
     </android.support.v7.widget.CardView>
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewtransa"
@@ -202,19 +192,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewgrupo">
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="30dp"
-            android:background="@color/colorSwitchdebito">
+        <!--<View-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:background="@color/colorSwitchdebito">-->
 
-        </View>
-        <View
-            android:layout_width="20dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom"
-            android:background="@color/colorSwitchcredito">
+        <!--</View>-->
+        <!--<View-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:background="@color/colorSwitchcredito">-->
 
-        </View>
+        <!--</View>-->
 
         <TextView
             android:id="@+id/titulotransa"
@@ -240,85 +230,4 @@
     </android.support.v7.widget.CardView>
 
 </android.support.constraint.ConstraintLayout>
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/menu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu_animationDelayPerItem="50"
-        fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_buttonSpacing="0dp"
-        fab:menu_colorNormal="#DA4336"
-        fab:menu_colorPressed="#E75043"
-        fab:menu_colorRipple="#99FFFFFF"
-        fab:menu_fab_size="normal"
-        fab:menu_icon="@drawable/fab_add"
-        fab:menu_labels_colorNormal="#333333"
-        fab:menu_labels_colorPressed="#444444"
-        fab:menu_labels_colorRipple="#66FFFFFF"
-        fab:menu_labels_cornerRadius="3dp"
-        fab:menu_labels_ellipsize="none"
-        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-        fab:menu_labels_margin="0dp"
-        fab:menu_labels_maxLines="-1"
-        fab:menu_labels_padding="8dp"
-        fab:menu_labels_paddingBottom="4dp"
-        fab:menu_labels_paddingLeft="8dp"
-        fab:menu_labels_paddingRight="8dp"
-        fab:menu_labels_paddingTop="4dp"
-        fab:menu_labels_position="left"
-        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-        fab:menu_labels_showShadow="true"
-        fab:menu_labels_singleLine="false"
-        fab:menu_labels_textColor="#FFFFFF"
-        fab:menu_labels_textSize="14sp"
-        fab:menu_openDirection="up"
-        fab:menu_shadowColor="#66000000"
-        fab:menu_shadowRadius="4dp"
-        fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="3dp"
-        fab:menu_showShadow="true">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_itemrelatorio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add"
-            fab:fab_label="Relatorio"
-            fab:fab_size="mini" />
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_itemlancamentos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add"
-            fab:fab_label="Lançamentos"
-            fab:fab_size="mini" />
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_itemcontas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add"
-            fab:fab_label="Contas"
-            fab:fab_size="mini" />
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_itemcartao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add"
-            fab:fab_label="Cartao"
-            fab:fab_size="mini" />
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_itemgrupos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add"
-            fab:fab_label="Grupos"
-            fab:fab_size="mini" />
-
-    </com.github.clans.fab.FloatingActionMenu>
 </RelativeLayout>

@@ -1,18 +1,12 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,15 +24,14 @@ import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.CartaoAdapter;
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
-import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CartaoActivity extends AppCompatActivity {
 
-    @BindView(R.id.btnnovocartao)
-    Button btnAdicionarcartao;
+    @BindView(R.id.floatnovo)
+    FloatingActionButton flo;
     @BindView(R.id.recyclerViewcartoes)
     RecyclerView recyclerViewCartoes;
     FirebaseAuth auth;
@@ -90,7 +83,7 @@ public class CartaoActivity extends AppCompatActivity {
 
 
 
-        btnAdicionarcartao.setOnClickListener(new View.OnClickListener() {
+        flo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(CartaoActivity.this,AddCartaoActivity.class));

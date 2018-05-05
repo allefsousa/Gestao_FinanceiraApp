@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempo;
-import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
+import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +29,8 @@ public class TransacoesActivity extends AppCompatActivity {
     AdapterLinhadoTempo adapterLinhadoTempo;
     DatabaseReference myreference;
     private FirebaseUser firebaseUser;
-    Carteira carteira;
-    List<Carteira> carteiraList ;
+    Lancamento lancamento;
+    List<Lancamento> lancamentoList;
 
 
     @Override
@@ -39,9 +39,10 @@ public class TransacoesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transacoes);
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Transações");
         ButterKnife.bind(this);
         configFirebase();
-        carteiraList = new ArrayList<>();
+        lancamentoList = new ArrayList<>();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         adapterLinhadoTempo = new AdapterLinhadoTempo(TransacoesActivity.this);
 

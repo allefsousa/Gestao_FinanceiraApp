@@ -7,13 +7,17 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,14 +40,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
-import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
+import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class CarteiraActivity extends AppCompatActivity {
+public class LancamentoActivity extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener date;
     @BindView(R.id.textInpvalor)
     TextInputLayout layoutvalor;
@@ -61,8 +65,9 @@ public class CarteiraActivity extends AppCompatActivity {
     Button btconfirmar;
     @BindView(R.id.spinneropbancaria)
     Spinner spinneropcao;
-    Carteira carteira;
+    Lancamento lancamento;
     String tagCarteira[];
+
     List<ContasBancarias> contasBancariasList;
     List<Cartao> cartaoList;
     List<String> financeiroSpinnerlist;
@@ -75,12 +80,12 @@ public class CarteiraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_carteiira);
+        setContentView(R.layout.activity_lancamento);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");
-        carteira = new Carteira();
+        lancamento = new Lancamento();
         tagCarteira = getResources().getStringArray(R.array.tagcarteira);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         ButterKnife.bind(this);
@@ -91,7 +96,9 @@ public class CarteiraActivity extends AppCompatActivity {
         financeiroSpinnerlist = new ArrayList<>();
         cartaoList = new ArrayList<>();
 
-
+        /**
+         * metodo responsavel por buscar dadoso no firebase
+         */
         myreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,15 +116,18 @@ public class CarteiraActivity extends AppCompatActivity {
                 cartaoList.clear();
                 financeiroSpinnerlist.clear();
                 financeiroSpinnerlist.add("Forma de Pagamento");
+
                 for (DataSnapshot d : dataSnapshot.child("banco").child(firebaseUser.getUid()).getChildren()) {
                     bancarias = d.getValue(ContasBancarias.class);
+
+
                     if (bancarias != null) {
                         titulosCardConta = bancarias.getTituloContabanco();
                         financeiroSpinnerlist.add(titulosCardConta);
                     }
                     contasBancariasList.add(bancarias);
                 }
-                for (DataSnapshot d : dataSnapshot.child("carteira").child(firebaseUser.getUid()).getChildren()) {
+                for (DataSnapshot d : dataSnapshot.child("lancamento").child(firebaseUser.getUid()).getChildren()) {
 
                 }
                 for (DataSnapshot d : dataSnapshot.child("cartao").child(firebaseUser.getUid()).getChildren()) {
@@ -131,7 +141,7 @@ public class CarteiraActivity extends AppCompatActivity {
                 }
 
 
-                ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(CarteiraActivity.this, android.R.layout.simple_list_item_1, financeiroSpinnerlist);
+                ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(LancamentoActivity.this, android.R.layout.simple_list_item_1, financeiroSpinnerlist);
                 mesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinneropcao.setAdapter(mesadapter);
                 spinneropcao.setFocusable(true);
@@ -159,6 +169,10 @@ public class CarteiraActivity extends AppCompatActivity {
                 }
             }
         });
+        /**
+         * Metodo responsavel por exibir a data no formato
+         * dd/mm/aa  apos o dialog de data ser fechado
+         */
         date = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
@@ -174,7 +188,7 @@ public class CarteiraActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (b) {
-                    new DatePickerDialog(CarteiraActivity.this, date, myCalendar
+                    new DatePickerDialog(LancamentoActivity.this, date, myCalendar
                             .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                             myCalendar.get(Calendar.DAY_OF_MONTH)).show();
                 }
@@ -182,24 +196,39 @@ public class CarteiraActivity extends AppCompatActivity {
 
             }
         });
+
+        texttitulo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    ((InputMethodManager) LancamentoActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                            texttitulo.getWindowToken(), 0);
+                    texttitulo.clearFocus();
+                }
+                return false;
+            }
+        });
+
         btconfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                carteira.setData(textdata.getText().toString());
-                carteira.setTitulo(texttitulo.getText().toString());
-                carteira.setValor(Double.parseDouble(textvalor.getText().toString()));
+                lancamento.setData(textdata.getText().toString());
+                lancamento.setTitulo(texttitulo.getText().toString());
+                lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));
                 final Long a = horarioMovimentacao();
-                carteira.setCreatedAt(a);
+                lancamento.setCreatedAt(a);
+
+
 
                 /**
                  * verificando se a opçao de deposito é para conta corrente ou cartao.
                  */
                 final String nomeopFinanceira = spinneropcao.getSelectedItem().toString();
                 if (aSwitch.isChecked()) {
-                    carteira.setStatusOp(1);
+                    lancamento.setStatusOp(1);
 
-                    carteira.setCreatedAt(a);
-                    myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(carteira).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    lancamento.setCreatedAt(a);
+                    myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(lancamento).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             limpar();
@@ -214,18 +243,18 @@ public class CarteiraActivity extends AppCompatActivity {
                                 Cartao aux;
                                 aux = b;
                                 Cartao cardatualiza = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
-                                Map<String, Object> rec = cardatualiza.MapCartaoCredito(cardatualiza, carteira.getValor());
+                                Map<String, Object> rec = cardatualiza.MapCartaoCredito(cardatualiza, lancamento.getValor());
                                 if (rec != null){
                                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(cardatualiza.getIdcartao()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados comSucesso");
+                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados comSucesso");
 
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente !");
+                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente !");
 
                                 }
 
@@ -239,18 +268,18 @@ public class CarteiraActivity extends AppCompatActivity {
                                 ContasBancarias bancarias;
                                 bancarias = contas;
                                 ContasBancarias contBancos = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
-                                Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, carteira.getValor());
+                                Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, lancamento.getValor());
                                 if (rec != null){
                                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(contBancos.getIdContaBanco()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados com sucesso!");
+                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados com sucesso!");
 
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
+                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
 
                                 }
 
@@ -260,8 +289,8 @@ public class CarteiraActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    carteira.setStatusOp(0);
-                    myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(carteira).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    lancamento.setStatusOp(0);
+                    myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(lancamento).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             limpar();
@@ -275,18 +304,18 @@ public class CarteiraActivity extends AppCompatActivity {
                                 Cartao aux;
                                 aux = b;
                                 Cartao cardatualiza = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
-                                Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, carteira.getValor());
+                                Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamento.getValor());
                                 if (rec != null){
                                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(cardatualiza.getIdcartao()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com sucesso!");
+                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com sucesso!");
 
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
+                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
                                 }
 
                             }
@@ -298,17 +327,17 @@ public class CarteiraActivity extends AppCompatActivity {
                                 ContasBancarias bancarias;
                                 bancarias = contas;
                                 ContasBancarias ban = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
-                                Map<String, Object> rec = ban.MapBancoDebita(ban, carteira.getValor());
+                                Map<String, Object> rec = ban.MapBancoDebita(ban, lancamento.getValor());
                                 if (rec != null){
                                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                                     reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(ban.getIdContaBanco()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com Sucesso!");
+                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com Sucesso!");
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(CarteiraActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
+                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
                                 }
 
 

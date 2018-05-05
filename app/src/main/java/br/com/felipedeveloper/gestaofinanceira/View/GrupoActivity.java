@@ -17,25 +17,26 @@ public class GrupoActivity extends AppCompatActivity {
     private TextView mTextMessage;
     EditText editText;
     MenuItem itemm;
+    BottomNavigationView navigation;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_grupo:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_adduser:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    mensagem();
-                    return true;
-            }
-            return false;
-
-        }
-    };
+//    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+//            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+//
+//        @Override
+//        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//            switch (item.getItemId()) {
+//                case R.id.navigation_grupo:
+//                    mTextMessage.setText(R.string.title_home);
+//                    return true;
+//                case R.id.navigation_adduser:
+//                    mTextMessage.setText(R.string.title_dashboard);
+//                    mensagem();
+//                    return true;
+//            }
+//            return false;
+//
+//        }
+//    };
 
 
 
@@ -45,12 +46,29 @@ public class GrupoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_grupo);
 
         mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+         navigation = (BottomNavigationView) findViewById(R.id.navigation);
+//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         editText = new EditText(this);
+
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                case R.id.navigation_grupo:
+                    mTextMessage.setText(R.string.title_home);
+                    return true;
+                case R.id.navigation_adduser:
+                    mTextMessage.setText(R.string.title_dashboard);
+                    mensagem();
+                    return true;
+            }
+                return false;
+            }
+        });
     }
 
     private void mensagem() {
+
 
         new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText("Custom view")
@@ -74,4 +92,9 @@ public class GrupoActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }

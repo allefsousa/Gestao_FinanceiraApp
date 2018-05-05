@@ -1,22 +1,17 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
-import android.animation.Animator;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SplashActivity extends AppCompatActivity {
     Thread splashTread;
@@ -27,6 +22,7 @@ public class SplashActivity extends AppCompatActivity {
     ImageView imageView;
 
     private FirebaseAuth.AuthStateListener authStateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -47,6 +43,7 @@ public class SplashActivity extends AppCompatActivity {
 
         startAnimation();
     }
+
     // tempo de pausa da Splsh Screem
     public void startAnimation() {
 

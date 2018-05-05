@@ -12,8 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +33,7 @@ import butterknife.ButterKnife;
 
 public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
-    FloatingActionMenu fabmenu;
+
     Animation scaledown;
     Animation scaleup;
     ConstraintLayout constraintLayout;
@@ -63,22 +61,13 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     private NumberFormat df;
     private Cartao cartaoModel;
     private List<Cartao> cartaoList;
-    private FloatingActionButton actionButtonitemcartao;
-    private FloatingActionButton actionButtonitemgrupos;
-    private FloatingActionButton actionButtonitemcontas;
-    private FloatingActionButton actionButtonitemovimentacoes;
-    private FloatingActionButton actionButtonitemtransacoes;
-    private FloatingActionButton actionButtonitemrelatorios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opcoes_financeira);
-        fabmenu = (FloatingActionMenu) findViewById(R.id.menu);
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-        actionButtonitemcartao = findViewById(R.id.menu_itemcartao);
-        actionButtonitemgrupos = findViewById(R.id.menu_itemgrupos);
 
         constraintLayout = (ConstraintLayout) findViewById(R.id.constraint);
         ButterKnife.bind(this);
@@ -151,32 +140,6 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
             }
         });
 
-        fabmenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
-            @Override
-            public void onMenuToggle(boolean opened) {
-                if (opened) {
-                    constraintLayout.setVisibility(View.GONE);
-//
-                } else {
-//
-                    constraintLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        actionButtonitemgrupos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, GrupoActivity.class));
-
-            }
-        });
-        actionButtonitemcartao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, CartaoActivity.class));
-            }
-        });
-
         cardCartao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -188,7 +151,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         cardCarteira.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, CarteiraActivity.class));
+                startActivity(new Intent(OpcoesFinanceiraActivity.this, LancamentoActivity.class));
 
             }
         });

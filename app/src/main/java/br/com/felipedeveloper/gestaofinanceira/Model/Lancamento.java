@@ -1,7 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
 
-public class Carteira {
+public class Lancamento {
 
     private String titulo;
     private Double valor;
@@ -10,7 +10,7 @@ public class Carteira {
     private Long createdAt;
 
 
-    public Carteira() {
+    public Lancamento() {
     }
 
     public String getTitulo() {

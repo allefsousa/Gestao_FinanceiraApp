@@ -71,7 +71,7 @@
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
         </activity>
         <activity
-            android:name=".View.CarteiraActivity"
+            android:name=".View.LancamentoActivity"
             android:label=""
             android:parentActivityName=".View.OpcoesFinanceiraActivity"
             android:theme="@style/Theme">

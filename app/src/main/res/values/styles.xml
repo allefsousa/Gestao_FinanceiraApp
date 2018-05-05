@@ -19,6 +19,11 @@
         <item name="android:drawableLeft">@drawable/googleg_standard_color_18</item>
         <item name="android:textColor">@color/primary_text</item>
     </style>
+    <style name="AppTheme.Email" parent="AppTheme.BlockButton">
+        <item name="android:background">@color/principal</item>
+        <item name="android:drawableLeft">@drawable/ic_email_black_24dp</item>
+        <item name="android:textColor">@color/Branco</item>
+    </style>
 
     <style name="AppTheme.BlockButton">
         <item name="android:textSize">12dp</item>

@@ -59,15 +59,13 @@
         android:layout_marginBottom="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@color/principal"
-        android:drawableLeft="@drawable/ic_email_black_24dp"
         android:paddingLeft="10dp"
         android:text="REGISTRAR OU ENTRAR COM EMAIL"
-        android:textColor="@color/Branco"
         android:textSize="10sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        style="@style/AppTheme.Email"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.Guideline
