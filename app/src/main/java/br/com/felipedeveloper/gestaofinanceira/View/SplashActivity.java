@@ -70,6 +70,7 @@ public class SplashActivity extends AppCompatActivity {
 
                         Intent i = new Intent(SplashActivity.this, OpcoesFinanceiraActivity.class);
                         startActivity(i);
+
                     } else {
 
                         Intent i = new Intent(SplashActivity.this, LoginActivity.class);

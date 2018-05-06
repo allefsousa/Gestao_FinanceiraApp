@@ -28,7 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,8 +39,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
-import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
+import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,13 +65,12 @@ public class LancamentoActivity extends AppCompatActivity {
     @BindView(R.id.spinneropbancaria)
     Spinner spinneropcao;
     Lancamento lancamento;
-    String tagCarteira[];
 
     List<ContasBancarias> contasBancariasList;
     List<Cartao> cartaoList;
     List<String> financeiroSpinnerlist;
-    Cartao card = new Cartao();
     DataSnapshot globalSnapshot;
+    String nomeopFinanceira;
     private DatabaseReference myreference;
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
@@ -85,15 +83,11 @@ public class LancamentoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Lançamentos");
-        lancamento = new Lancamento();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         ButterKnife.bind(this);
         configFirebase();
         myCalendar = Calendar.getInstance();
         final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
-        contasBancariasList = new ArrayList<>();
-        financeiroSpinnerlist = new ArrayList<>();
-        cartaoList = new ArrayList<>();
+        InitObjetos();
 
         /**
          * metodo responsavel por buscar dadoso no firebase na child("financeiro")
@@ -152,7 +146,7 @@ public class LancamentoActivity extends AppCompatActivity {
                  * configurando o adapter de string para adicionar os ttulos das formas de pagamentos.
                  */
                 ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(LancamentoActivity.this, android.R.layout.simple_list_item_1, financeiroSpinnerlist);// passando a lista de titulos para
-                                                                                                                                                                    // serem exibidos no modelo padrao de lista
+                // serem exibidos no modelo padrao de lista
                 mesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinneropcao.setAdapter(mesadapter);
                 spinneropcao.setFocusable(true);
@@ -246,145 +240,191 @@ public class LancamentoActivity extends AppCompatActivity {
                 lancamento.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
 
 
-
                 /**
                  * verificando se a opçao de deposito é para conta corrente ou cartao.
                  */
-                final String nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
+                nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
+                String ret = verificaOpcaoFinanceira(nomeopFinanceira);
                 /**
                  * verificando se o switch esta selecionado ou nao.
                  * neste caso se é CREDITO ou DEBITO a operação a ser feita
                  */
                 if (aSwitch.isChecked()) {
                     lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+
                     /**
-                     * codigo responsavel por enviar o objeto lançemento para o firebase
+                     * codigo responsavel por enviar o objeto lançamento para o firebase
                      */
                     salvarLancamentoFirebase(lancamento);
+                    // Metodos para adicionar credito ao cartao ou banco
+                    adicionandoCreditoCartao(ret);
+                    adicionandoCreditoBanco(ret);
 
 
-                    String ret = verificaOpcaoFinanceira(nomeopFinanceira);
-
-                    if (ret.equals("cartao")) {
-                        for (Cartao b : cartaoList) {
-                            if (b.getTituloCartao().equals(nomeopFinanceira)) {
-                                Cartao aux;
-                                aux = b;
-                                Cartao cardatualiza = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
-                                Map<String, Object> rec = cardatualiza.MapCartaoCredito(cardatualiza, lancamento.getValor());
-                                if (rec != null){
-                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                                    reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(cardatualiza.getIdcartao()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados comSucesso");
-
-                                        }
-                                    });
-                                }else {
-                                    String er = "Conta não possui Saldo sulficiente.";
-                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,er);
-
-                                }
-
-
-                            }
-
-                        }
-                    }else if (ret.equals("banco")){
-                        for (ContasBancarias contas : contasBancariasList) {
-                            if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
-                                ContasBancarias bancarias;
-                                bancarias = contas;
-                                ContasBancarias contBancos = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
-                                Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, lancamento.getValor());
-                                if (rec != null){
-                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                                    reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(contBancos.getIdContaBanco()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Valores Adicionados com sucesso!");
-
-                                        }
-                                    });
-                                }else {
-                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
-
-                                }
-
-
-                            }
-
-                        }
-                    }
                 } else {
                     lancamento.setStatusOp(0);
-                    myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(lancamento).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            limpar();
-                        }
-                    });
-                    String ret = verificaOpcaoFinanceira(nomeopFinanceira);
+                    salvarLancamentoFirebase(lancamento);
+                    // Metodos para adicionar Debito ao cartao ou banco
+                    operacaoDebitoCartao(ret);
+                    adicionandoDebitoConta(ret);
 
-                    if (ret.equals("cartao")) {
-                        for (Cartao b : cartaoList) {
-                            if (b.getTituloCartao().equals(nomeopFinanceira)) {
-                                Cartao aux;
-                                aux = b;
-                                Cartao cardatualiza = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
-                                Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamento.getValor());
-                                if (rec != null){
-                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                                    reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(cardatualiza.getIdcartao()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com sucesso!");
-
-                                        }
-                                    });
-                                }else {
-                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
-                                }
-
-                            }
-
-                        }
-                    }else if (ret.equals("banco")){
-                        for (ContasBancarias contas : contasBancariasList) {
-                            if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
-                                ContasBancarias bancarias;
-                                bancarias = contas;
-                                ContasBancarias ban = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
-                                Map<String, Object> rec = ban.MapBancoDebita(ban, lancamento.getValor());
-                                if (rec != null){
-                                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                                    reference.child("financeiro").child(ret).child(firebaseUser.getUid()).child(ban.getIdContaBanco()).updateChildren(rec).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Debito lançado com Sucesso!");
-                                        }
-                                    });
-                                }else {
-                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente!");
-                                }
-
-
-                            }
-
-                        }
-                    }
 
                 }
 
+            }
+        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
 
 
     }
 
+    private void InitObjetos() {
+        contasBancariasList = new ArrayList<>();
+        financeiroSpinnerlist = new ArrayList<>();
+        cartaoList = new ArrayList<>();
+        lancamento = new Lancamento();
+    }
+
+    private void operacaoDebitoCartao(String ret) {
+        if (ret.equals("cartao")) {
+            for (Cartao b : cartaoList) {
+                if (b.getTituloCartao().equals(nomeopFinanceira)) {
+                    Cartao aux;
+                    aux = b;
+                    Cartao cardatualiza = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
+                    Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamento.getValor());
+                    if (rec != null) {
+                        atualizaSaldoCartaoBancoFirebase(ret, cardatualiza.getIdcartao(),rec,false);
+                    } else {
+                        ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    private void adicionandoDebitoConta(String ret) {
+        if (ret.equals("banco")) {
+            for (ContasBancarias contas : contasBancariasList) {
+                if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
+                    ContasBancarias bancarias;
+                    bancarias = contas;
+                    ContasBancarias ban = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
+                    Map<String, Object> rec = ban.MapBancoDebita(ban, lancamento.getValor());
+                    if (rec != null) {
+                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec,false);
+                    } else {
+                        ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                    }
+
+
+                }
+
+            }
+        }
+    }
+
+
+    private void adicionandoCreditoBanco(String ret) {
+
+        //caso a opcao financeira selecionada seja cartao a lista de cartoes sera percorrida até el ser encontrado
+        if (ret.equals("banco")) {
+            for (ContasBancarias contas : contasBancariasList) {
+                if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
+                    ContasBancarias bancarias;
+                    bancarias = contas;
+                    ContasBancarias contBancos = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
+                    Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, lancamento.getValor());
+                    if (rec != null) {
+
+                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec,true);
+                    }
+
+
+                }
+
+            }
+        }
+
+
+    }
+
+    private void adicionandoCreditoCartao(String opFinanceira) {
+
+        if (opFinanceira.equals("cartao")) {
+            for (Cartao b : cartaoList) { // percorrendo a lisat de cartoes
+                if (b.getTituloCartao().equals(nomeopFinanceira)) { // comparando os nomes
+                    Cartao aux;
+                    aux = b; // caso o nome seja encontrado sera armazenado na variavel aux
+
+                    /**
+                     * fazendo uma busca no snapshot global  evitando uma nova consulta e recuperando o cartao que tera seu valor atualizado;
+                     * para recuperar o cartao é passado o nome do nó que no caso é cartao depois a id do usuario logado, e por final
+                     * a id do cartao que foi selecionado no spinner. com isso o objeto é recuperado e esta pronto para ser atualizado.
+                     *  ex: cartao a ser atualizado= "cartao" -> "idUsuariologado"-> "idcartaoselecionado";
+                     */
+                    Cartao cardatualiza = globalSnapshot.child(opFinanceira).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
+
+                    /**
+                     * Para se atualizar os dados no firebase passar o objeto por enteiro iria o apagar e criar outro com novos dados e Ids
+                     * entao a maneira correta é criando um hashMap e passando odmente oque sera atualizado
+                     * que nesse caso ´o valor.
+                     * o metodo mapcartao de credito  da classe cartao já atualiza os dados. fazendo a soma do valor que tinha e do novo e retornando
+                     * um novo hash map.
+                     * para atualizar os dados é enviado o valor adicionado no editext da view w o objeto que recebera o valor
+                     *
+                     */
+                    Map<String, Object> Mapsaldoatualizado = cardatualiza.MapCartaoCredito(cardatualiza, lancamento.getValor());
+
+                    if (Mapsaldoatualizado != null) {// tratando erro de saldo que é verificado na classe cartao
+                        /**
+                         * passando os caminhos e o map que vai atualizar o que esta no firebase
+                         */
+                        atualizaSaldoCartaoBancoFirebase(opFinanceira, cardatualiza.getIdcartao(), Mapsaldoatualizado,true);
+                    }
+
+
+                }
+
+            }
+
+        }
+    }
+
+    /**
+     * Metodo responsavel por atualizar os valores do BANCO e do CARTÃO de credito.
+     * tando credito quanto debito
+     *
+     * @param opFinanceira       nome do nó .EX ou cartao ou banco
+     * @param idcartao           id do cartao ou do banco
+     * @param mapsaldoatualizado hash map do banco ou cartao com os dados atuaalizados para update
+     */
+    private void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado, final Boolean debitoCredito) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // recuperando uma nova referenciaa do banco de dados
+        reference.child("financeiro").child(opFinanceira).child(firebaseUser.getUid()).child(idcartao).updateChildren(mapsaldoatualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                if (debitoCredito){
+                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Adicionados !"); // mensagme de sucesso.
+
+                }else {
+                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos !"); // mensagme de sucesso.
+
+                }
+            }
+        });
+    }
+
     /**
      * metodo reponsavel por salvar o lançamento no firebase no nó ("lancamento")
+     *
      * @param ll é o lançamento que foi digitado na tela pelo usuario. neste momento o envio ao firebase é feito
      */
     private void salvarLancamentoFirebase(Lancamento ll) {
@@ -401,14 +441,17 @@ public class LancamentoActivity extends AppCompatActivity {
      * até que o mesmo seja enviado ao firebase
      */
     private void RecuperandoDadosdaView() {
+        // TODO: 05/05/2018 validar dados inpedir nulo e vazio
         lancamento.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
         lancamento.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
         lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String
-                                                                                //  e o converte para Double conforme a classe espera
+        //  e o converte para Double conforme a classe espera
+
     }
 
     /**
      * Metodo responsavel por criar o timestamp do lançamento para futuramente ter a precisao de cada lançamento
+     *
      * @return timesTamp
      */
     @NonNull
@@ -419,47 +462,71 @@ public class LancamentoActivity extends AppCompatActivity {
         return ts.getTime();
     }
 
+    /**
+     * metodo responsavel por fazer uma busca na lista de cartoes e de bancos comparando o nome selecionado pelo
+     * usuario na spinner e retornando outra string informando se foi banco ou cartao a forma de pagamento selecionada.
+     *
+     * @param nomeopFinanceira nome selecionado no spinner pela view
+     * @return banco ou cartao.
+     */
     private String verificaOpcaoFinanceira(String nomeopFinanceira) {
-        Boolean resultBusca = false;
-        String retorno = null;
+        Boolean resultBusca = false; // flag para verificar s efoi encontrado
+        String retorno = null; // variavel de retorno
 
+        //percorrendo a lista de cartoes e comparando todos os nomes  com o recbido como paramentro
         for (Cartao a : cartaoList) {
-            resultBusca = a.getTituloCartao().equalsIgnoreCase(nomeopFinanceira);
-            if (resultBusca) {
+            resultBusca = a.getTituloCartao().equalsIgnoreCase(nomeopFinanceira); // retorna true ou false
+            if (resultBusca) {// caso seja true retorna a palavra cartao
                 retorno = "cartao";
             }
         }
+        // se o resultado ainda nao foi encontrado percorre a lista de contas bancarias
         if (!resultBusca) {
+            //percorrendo a lista de cartoes e comparando todos os nomes  com o recbido como paramentro
             for (ContasBancarias d : contasBancariasList) {
-                resultBusca = d.getTituloContabanco().equalsIgnoreCase(nomeopFinanceira);
+                resultBusca = d.getTituloContabanco().equalsIgnoreCase(nomeopFinanceira);// retorna true ou false
             }
-            if (resultBusca) {
+            if (resultBusca) { // caso seja true retorna a palavra banco
                 retorno = "banco";
             }
         }
 
-        return retorno;
+        return retorno; // retorno global do metodo
     }
 
     private void updateLabel() {
         String myFormat = "dd/MM/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
         textdata.setText(sdf.format(myCalendar.getTime()));
     }
 
+    /**
+     * metodo responsavel por inicializar as configurações do firebase na classe.
+     */
     private void configFirebase() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro");
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
+        myreference = firebaseDatabase.getReference().child("financeiro");// definindo qual o pont oque  a referencia do firebase ficara
 
     }
 
+    /**
+     * metodo de limpar campos
+     */
     private void limpar() {
         textdata.setText("");
         textvalor.setText("");
         texttitulo.setText("");
         spinneropcao.setSelection(0);
     }
+
+    /**
+     * metodo pré configurado para exibir as menssagens assim reduzindo o codigo escrito em todas as chamadas
+     *
+     * @param context
+     * @param successType
+     * @param s
+     */
     private void ExibirMensagem(Context context, int successType, String s) {
         new SweetAlertDialog(context, successType)
                 .setTitleText(getResources().getString(R.string.app_name))
@@ -467,4 +534,13 @@ public class LancamentoActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * meotdo responsavel por tratar o botão fisico de voltar do celular
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+
+    }
 }
