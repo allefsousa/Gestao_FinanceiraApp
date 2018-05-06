@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,15 +31,19 @@ public class TransacoesActivity extends AppCompatActivity {
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
 
+    @BindView(R.id.toolbarcontet)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transacoes);
-        getSupportActionBar();
+        setContentView(R.layout.contentcola);
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Transações");
-        ButterKnife.bind(this);
+
 
         configFirebase();
 

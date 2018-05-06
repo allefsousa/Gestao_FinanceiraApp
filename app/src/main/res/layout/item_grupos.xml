@@ -26,12 +26,12 @@
         </View>
 
         <TextView
-            android:id="@+id/titulocontabancarias"
+            android:id="@+id/titulogrupo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:paddingLeft="22dp"
-            android:text="CONTAS BANCARIAS"
+            android:text=""
             android:textColor="@color/primary_text"
             android:textSize="16sp" />
 
