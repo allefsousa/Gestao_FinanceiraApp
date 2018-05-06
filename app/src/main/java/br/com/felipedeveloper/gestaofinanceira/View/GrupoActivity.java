@@ -1,10 +1,17 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,9 +22,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class GrupoActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    EditText editText;
+
     MenuItem itemm;
     BottomNavigationView navigation;
+    Fragment currentFragment = null;
+    FragmentTransaction ft;
 
 //    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
 //            = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,7 +57,10 @@ public class GrupoActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
          navigation = (BottomNavigationView) findViewById(R.id.navigation);
 //        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        editText = new EditText(this);
+
+
+
+
 
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -59,7 +71,7 @@ public class GrupoActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_adduser:
                     mTextMessage.setText(R.string.title_dashboard);
-                    mensagem();
+                    getSupportFragmentManager().beginTransaction().add(R.id.container,new testeFragment()).commit();
                     return true;
             }
                 return false;
@@ -67,34 +79,17 @@ public class GrupoActivity extends AppCompatActivity {
         });
     }
 
-    private void mensagem() {
 
 
-        new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText("Custom view")
-                .setConfirmText("Ok")
-                .setCustomView(editText)
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.setTitleText("Deleted!")
-                                .setContentText("Your imaginary file has been deleted!")
-                                .setConfirmText(editText.getText().toString())
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-
-                    }
-                })
-                .show();
-
-
-
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
     }
+
+
+
+
+
 }

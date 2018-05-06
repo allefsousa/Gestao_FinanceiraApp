@@ -83,7 +83,7 @@ public class AddCartaoActivity extends AppCompatActivity {
             idUser = firebaseUser.getUid();
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro").child("cartao").child(idUser);
+        myreference = firebaseDatabase.getReference().child("financeiro").child(idUser).child("cartao");
     }
     private void clear(){
         edtsaldoCartao.clearFocus();

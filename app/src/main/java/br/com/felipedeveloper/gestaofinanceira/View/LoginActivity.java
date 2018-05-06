@@ -89,8 +89,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btnfacebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
-                //startActivity(new Intent(LoginActivity.this,OpcoesFinanceiraActivity.class));
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
+                startActivity(new Intent(LoginActivity.this,OpcoesFinanceiraActivity.class));
 
             }
         });

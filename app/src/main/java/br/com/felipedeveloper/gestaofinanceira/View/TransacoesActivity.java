@@ -25,12 +25,10 @@ import butterknife.ButterKnife;
 
 public class TransacoesActivity extends AppCompatActivity {
     @BindView(R.id.recyclertransacoes)
-    RecyclerView recyclerViewtran;
-    AdapterLinhadoTempo adapterLinhadoTempo;
-    DatabaseReference myreference;
+     RecyclerView recyclerViewtran;
+    private AdapterLinhadoTempo adapterLinhadoTempo;
+    private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
-    Lancamento lancamento;
-    List<Lancamento> lancamentoList;
 
 
     @Override
@@ -41,15 +39,15 @@ public class TransacoesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Transações");
         ButterKnife.bind(this);
+
         configFirebase();
-        lancamentoList = new ArrayList<>();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         adapterLinhadoTempo = new AdapterLinhadoTempo(TransacoesActivity.this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(TransacoesActivity.this);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);
-        myreference.child(firebaseUser.getUid()).addChildEventListener(new ChildEventListener() {
+        myreference.child("lancamentos").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 adapterLinhadoTempo.addItem(dataSnapshot);
@@ -80,8 +78,9 @@ public class TransacoesActivity extends AppCompatActivity {
 
     }
     private void configFirebase() {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-         myreference = firebaseDatabase.getReference().child("financeiro").child("movimentacao");
+         myreference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());
 
     }
 }

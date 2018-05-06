@@ -127,7 +127,7 @@ public class ContasBancariasActivity extends AppCompatActivity {
             idUser = firebaseUser.getUid();
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro").child("banco").child(idUser);
+        myreference = firebaseDatabase.getReference().child("financeiro").child(idUser).child("banco");
     }
 
 

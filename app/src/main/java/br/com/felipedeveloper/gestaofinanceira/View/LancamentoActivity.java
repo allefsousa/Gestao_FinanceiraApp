@@ -118,7 +118,7 @@ public class LancamentoActivity extends AppCompatActivity {
                  * Iterando o snapshot do firebase no nó ("banco") e passando a UUID do usuario logado para trazer somente os seus bancos.
                  *
                  */
-                for (DataSnapshot d : dataSnapshot.child("banco").child(firebaseUser.getUid()).getChildren()) {
+                for (DataSnapshot d : dataSnapshot.child("banco").getChildren()) {
                     bancarias = d.getValue(ContasBancarias.class);
                     if (bancarias != null) { // se a variavel bancarias nao for vazia adiciono no arrayLIst de bancos para serem exibidos no spinner.
                         titulosCardConta = bancarias.getTituloContabanco();// capturando o nome dos bancos do usuario logado
@@ -131,7 +131,7 @@ public class LancamentoActivity extends AppCompatActivity {
                  * Iterando o snapshot do firebase no nó ("cartao") e passando a UUID do usuario logado para trazer somente os seus cartões.
                  *
                  */
-                for (DataSnapshot d : dataSnapshot.child("cartao").child(firebaseUser.getUid()).getChildren()) {
+                for (DataSnapshot d : dataSnapshot.child("cartao").getChildren()) {
                     card = d.getValue(Cartao.class);// objeto de cartao que recebe o cartao do firebase
                     if (card != null) {
                         titulosCardConta = card.getTituloCartao(); // recuperando somente o nome dos cartoes  do usuario
@@ -296,7 +296,7 @@ public class LancamentoActivity extends AppCompatActivity {
                 if (b.getTituloCartao().equals(nomeopFinanceira)) {
                     Cartao aux;
                     aux = b;
-                    Cartao cardatualiza = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
+                    Cartao cardatualiza = globalSnapshot.child(ret).child(aux.getIdcartao()).getValue(Cartao.class);
                     Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamento.getValor());
                     if (rec != null) {
                         atualizaSaldoCartaoBancoFirebase(ret, cardatualiza.getIdcartao(),rec,false);
@@ -316,7 +316,7 @@ public class LancamentoActivity extends AppCompatActivity {
                 if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
                     ContasBancarias bancarias;
                     bancarias = contas;
-                    ContasBancarias ban = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
+                    ContasBancarias ban = globalSnapshot.child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
                     Map<String, Object> rec = ban.MapBancoDebita(ban, lancamento.getValor());
                     if (rec != null) {
                         atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec,false);
@@ -340,7 +340,7 @@ public class LancamentoActivity extends AppCompatActivity {
                 if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
                     ContasBancarias bancarias;
                     bancarias = contas;
-                    ContasBancarias contBancos = globalSnapshot.child(ret).child(firebaseUser.getUid()).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
+                    ContasBancarias contBancos = globalSnapshot.child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
                     Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, lancamento.getValor());
                     if (rec != null) {
 
@@ -370,7 +370,7 @@ public class LancamentoActivity extends AppCompatActivity {
                      * a id do cartao que foi selecionado no spinner. com isso o objeto é recuperado e esta pronto para ser atualizado.
                      *  ex: cartao a ser atualizado= "cartao" -> "idUsuariologado"-> "idcartaoselecionado";
                      */
-                    Cartao cardatualiza = globalSnapshot.child(opFinanceira).child(firebaseUser.getUid()).child(aux.getIdcartao()).getValue(Cartao.class);
+                    Cartao cardatualiza = globalSnapshot.child(opFinanceira).child(aux.getIdcartao()).getValue(Cartao.class);
 
                     /**
                      * Para se atualizar os dados no firebase passar o objeto por enteiro iria o apagar e criar outro com novos dados e Ids
@@ -408,7 +408,7 @@ public class LancamentoActivity extends AppCompatActivity {
      */
     private void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado, final Boolean debitoCredito) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // recuperando uma nova referenciaa do banco de dados
-        reference.child("financeiro").child(opFinanceira).child(firebaseUser.getUid()).child(idcartao).updateChildren(mapsaldoatualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
+        reference.child("financeiro").child(firebaseUser.getUid()).child(opFinanceira).child(idcartao).updateChildren(mapsaldoatualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 if (debitoCredito){
@@ -428,7 +428,7 @@ public class LancamentoActivity extends AppCompatActivity {
      * @param ll é o lançamento que foi digitado na tela pelo usuario. neste momento o envio ao firebase é feito
      */
     private void salvarLancamentoFirebase(Lancamento ll) {
-        myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(ll).addOnSuccessListener(new OnSuccessListener<Void>() {
+        myreference.child("lancamentos").child(UUID.randomUUID().toString()).setValue(ll).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 limpar();// limpando a view apos inserir os dados
@@ -506,7 +506,7 @@ public class LancamentoActivity extends AppCompatActivity {
     private void configFirebase() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
-        myreference = firebaseDatabase.getReference().child("financeiro");// definindo qual o pont oque  a referencia do firebase ficara
+        myreference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());// definindo qual o pont oque  a referencia do firebase ficara
 
     }
 

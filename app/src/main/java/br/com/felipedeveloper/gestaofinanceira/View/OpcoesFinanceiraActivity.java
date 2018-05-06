@@ -90,8 +90,8 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
                  * todo o processo do banco de dados é refeito  em tempo real
                  */
                 contasBancariasList.clear();
-                if (dataSnapshot.child("banco").hasChild(idUser)) {
-                    for (DataSnapshot dd : dataSnapshot.child("banco").child(idUser).getChildren()) {
+                if (dataSnapshot.hasChild("banco")) {
+                    for (DataSnapshot dd : dataSnapshot.child("banco").getChildren()) {
                         conta = dd.getValue(ContasBancarias.class);
                         contasBancariasList.add(conta);
                     }
@@ -111,10 +111,10 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
 
                 }
-                if (dataSnapshot.child("cartao").hasChild(idUser)) {
+                if (dataSnapshot.hasChild("cartao")) {
 
                     cartaoList.clear();
-                    for (DataSnapshot dd : dataSnapshot.child("cartao").child(idUser).getChildren()) {
+                    for (DataSnapshot dd : dataSnapshot.child("cartao").getChildren()) {
                         cartaoModel = dd.getValue(Cartao.class);
                         cartaoList.add(cartaoModel);
                     }
@@ -185,7 +185,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
             idUser = firebaseUser.getUid();
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        reference = firebaseDatabase.getReference().child("financeiro");
+        reference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());
     }
 
     @Override
