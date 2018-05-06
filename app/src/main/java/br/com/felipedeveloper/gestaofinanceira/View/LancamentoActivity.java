@@ -245,30 +245,37 @@ public class LancamentoActivity extends AppCompatActivity {
                  */
                 nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
                 String ret = verificaOpcaoFinanceira(nomeopFinanceira);
-                /**
-                 * verificando se o switch esta selecionado ou nao.
-                 * neste caso se é CREDITO ou DEBITO a operação a ser feita
-                 */
-                if (aSwitch.isChecked()) {
-                    lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+                if (!ret.isEmpty()) {
+
 
                     /**
-                     * codigo responsavel por enviar o objeto lançamento para o firebase
+                     * verificando se o switch esta selecionado ou nao.
+                     * neste caso se é CREDITO ou DEBITO a operação a ser feita
                      */
-                    salvarLancamentoFirebase(lancamento);
-                    // Metodos para adicionar credito ao cartao ou banco
-                    adicionandoCreditoCartao(ret);
-                    adicionandoCreditoBanco(ret);
+                    if (aSwitch.isChecked()) {
+                        lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+
+                        /**
+                         * codigo responsavel por enviar o objeto lançamento para o firebase
+                         */
+                        salvarLancamentoFirebase(lancamento);
+
+                        // Metodos para adicionar credito ao cartao ou banco
+                        adicionandoCreditoCartao(ret);
+                        adicionandoCreditoBanco(ret);
 
 
-                } else {
-                    lancamento.setStatusOp(0);
-                    salvarLancamentoFirebase(lancamento);
-                    // Metodos para adicionar Debito ao cartao ou banco
-                    operacaoDebitoCartao(ret);
-                    adicionandoDebitoConta(ret);
+                    } else {
+                        lancamento.setStatusOp(0);
+                        salvarLancamentoFirebase(lancamento);
+                        // Metodos para adicionar Debito ao cartao ou banco
+                        operacaoDebitoCartao(ret);
+                        adicionandoDebitoConta(ret);
 
 
+                    }
+                }else {
+                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Erro !! Tente novamente");
                 }
 
             }
@@ -405,6 +412,7 @@ public class LancamentoActivity extends AppCompatActivity {
      * @param opFinanceira       nome do nó .EX ou cartao ou banco
      * @param idcartao           id do cartao ou do banco
      * @param mapsaldoatualizado hash map do banco ou cartao com os dados atuaalizados para update
+     * @param debitoCredito variavel booleana para fazer tratamento da mensagem
      */
     private void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado, final Boolean debitoCredito) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // recuperando uma nova referenciaa do banco de dados
@@ -412,10 +420,10 @@ public class LancamentoActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
                 if (debitoCredito){
-                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Adicionados !"); // mensagme de sucesso.
+                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Credito Adicionado !"); // mensagme de sucesso.
 
                 }else {
-                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos !"); // mensagme de sucesso.
+                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Debito Adicionado !"); // mensagme de sucesso.
 
                 }
             }
@@ -485,10 +493,11 @@ public class LancamentoActivity extends AppCompatActivity {
             //percorrendo a lista de cartoes e comparando todos os nomes  com o recbido como paramentro
             for (ContasBancarias d : contasBancariasList) {
                 resultBusca = d.getTituloContabanco().equalsIgnoreCase(nomeopFinanceira);// retorna true ou false
+                if (resultBusca) { // caso seja true retorna a palavra banco
+                    retorno = "banco";
+                }
             }
-            if (resultBusca) { // caso seja true retorna a palavra banco
-                retorno = "banco";
-            }
+
         }
 
         return retorno; // retorno global do metodo

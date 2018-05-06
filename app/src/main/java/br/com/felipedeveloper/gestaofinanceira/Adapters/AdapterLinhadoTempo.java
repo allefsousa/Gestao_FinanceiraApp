@@ -20,15 +20,10 @@ import java.util.List;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
-/**
- * Created by allef on 03/05/2018.
- */
-
 public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTempo.ViewHolder> {
-    int res = -1;
+
     private Context context;
-    private List<Lancamento> lancamentoList;
-    private Lancamento lancamento;
+
     private SortedList<DataSnapshot> sortedList = new SortedList<>(DataSnapshot.class, new SortedList.Callback<DataSnapshot>() {
         @Override
         public void onInserted(int position, int count) {
@@ -101,14 +96,7 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
         return sortedList.size();
     }
 
-    public int percoreSnapshot(DataSnapshot dataSnapshot) {
 
-        lancamento = dataSnapshot.getValue(Lancamento.class);
-        res = res + 1;
-
-        Log.d("Allef", "percoreSnapshot: " + res);
-        return lancamentoList.size();
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TimelineView mTimelineView;
@@ -120,8 +108,6 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
 
         public ViewHolder(View itemView) {
             super(itemView);
-            lancamentoList = new ArrayList<>();
-            lancamento = new Lancamento();
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
             mTimelineView = itemView.findViewById(R.id.time_marker);
             titulo = itemView.findViewById(R.id.text_timeline_title);
@@ -134,7 +120,7 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
 
         private void render(DataSnapshot dataSnapshot, int pos) {
             cardViewlinha.setUseCompatPadding(true);
-            int tamanho = percoreSnapshot(dataSnapshot);
+
 
 
 
