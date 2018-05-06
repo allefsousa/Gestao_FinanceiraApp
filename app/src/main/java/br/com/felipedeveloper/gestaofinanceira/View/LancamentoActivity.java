@@ -84,20 +84,23 @@ public class LancamentoActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitle("");
+        getSupportActionBar().setTitle("Lançamentos");
         lancamento = new Lancamento();
-        tagCarteira = getResources().getStringArray(R.array.tagcarteira);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         ButterKnife.bind(this);
         configFirebase();
         myCalendar = Calendar.getInstance();
-        final android.support.v7.widget.SwitchCompat aSwitch = (android.support.v7.widget.SwitchCompat) findViewById(R.id.switchaaddvalor);
+        final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
         contasBancariasList = new ArrayList<>();
         financeiroSpinnerlist = new ArrayList<>();
         cartaoList = new ArrayList<>();
 
         /**
-         * metodo responsavel por buscar dadoso no firebase
+         * metodo responsavel por buscar dadoso no firebase na child("financeiro")
+         * neste momento busco todos os dados do firebase.
+         * para na sequencia buscar os dados dentro de cada nó
+         * especifico.
+         *
          */
         myreference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -105,7 +108,7 @@ public class LancamentoActivity extends AppCompatActivity {
                 Cartao card;
                 String titulosCardConta;
                 ContasBancarias bancarias;
-                globalSnapshot = dataSnapshot;
+                globalSnapshot = dataSnapshot; // varivel de nó global do firebase
 
                 /**
                  * limpando as listas pois os dados veem em tempo real,
@@ -115,33 +118,41 @@ public class LancamentoActivity extends AppCompatActivity {
                 contasBancariasList.clear();
                 cartaoList.clear();
                 financeiroSpinnerlist.clear();
-                financeiroSpinnerlist.add("Forma de Pagamento");
+                financeiroSpinnerlist.add("Forma de Pagamento"); // adicionando primeiro elemento do spinner
 
+                /**
+                 * Iterando o snapshot do firebase no nó ("banco") e passando a UUID do usuario logado para trazer somente os seus bancos.
+                 *
+                 */
                 for (DataSnapshot d : dataSnapshot.child("banco").child(firebaseUser.getUid()).getChildren()) {
                     bancarias = d.getValue(ContasBancarias.class);
-
-
-                    if (bancarias != null) {
-                        titulosCardConta = bancarias.getTituloContabanco();
-                        financeiroSpinnerlist.add(titulosCardConta);
+                    if (bancarias != null) { // se a variavel bancarias nao for vazia adiciono no arrayLIst de bancos para serem exibidos no spinner.
+                        titulosCardConta = bancarias.getTituloContabanco();// capturando o nome dos bancos do usuario logado
+                        financeiroSpinnerlist.add(titulosCardConta); //  adicionando somente o titulo dos bancos na lista de strings
                     }
-                    contasBancariasList.add(bancarias);
+                    contasBancariasList.add(bancarias); // agora adiciono o objeto banco a lista de bancos
                 }
-                for (DataSnapshot d : dataSnapshot.child("lancamento").child(firebaseUser.getUid()).getChildren()) {
 
-                }
+                /**
+                 * Iterando o snapshot do firebase no nó ("cartao") e passando a UUID do usuario logado para trazer somente os seus cartões.
+                 *
+                 */
                 for (DataSnapshot d : dataSnapshot.child("cartao").child(firebaseUser.getUid()).getChildren()) {
-                    card = d.getValue(Cartao.class);
+                    card = d.getValue(Cartao.class);// objeto de cartao que recebe o cartao do firebase
                     if (card != null) {
-                        titulosCardConta = card.getTituloCartao();
-                        financeiroSpinnerlist.add(titulosCardConta);
+                        titulosCardConta = card.getTituloCartao(); // recuperando somente o nome dos cartoes  do usuario
+                        financeiroSpinnerlist.add(titulosCardConta); // adicionando o nome do cartao na mesma lista de string para exibilas no spinner
                     }
-                    cartaoList.add(card);
+                    cartaoList.add(card); // adicionando o objeto cartão a lista de cartoes
 
                 }
 
 
-                ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(LancamentoActivity.this, android.R.layout.simple_list_item_1, financeiroSpinnerlist);
+                /**
+                 * configurando o adapter de string para adicionar os ttulos das formas de pagamentos.
+                 */
+                ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(LancamentoActivity.this, android.R.layout.simple_list_item_1, financeiroSpinnerlist);// passando a lista de titulos para
+                                                                                                                                                                    // serem exibidos no modelo padrao de lista
                 mesadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinneropcao.setAdapter(mesadapter);
                 spinneropcao.setFocusable(true);
@@ -156,7 +167,12 @@ public class LancamentoActivity extends AppCompatActivity {
             }
         });
 
-
+        /**
+         * Listner do click do switch de credito ou debito.
+         * caso a variavel b seja verdadeira muda o texto para credito
+         * caso seja falso muda se o testo para debito
+         * e mudando as cores do botão
+         */
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -183,7 +199,11 @@ public class LancamentoActivity extends AppCompatActivity {
             }
         };
 
-
+        /**
+         *
+         * Listner do botao de data.
+         * quando o botão de data receber o foco ao inves de exibir o teclado ele abre o dialogo de calendario
+         */
         textdata.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -197,9 +217,15 @@ public class LancamentoActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * Listner de evento quando o botao de ok do teclado é clicado
+         * neste momento o teclado é fechado para que o usuario possa selecionar a conta no spinner
+         * melhorando o fluxo do app
+         */
         texttitulo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                // se o botão for o ok do teclado. O teclado sera fechado
                 if (i == EditorInfo.IME_ACTION_DONE) {
                     ((InputMethodManager) LancamentoActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
                             texttitulo.getWindowToken(), 0);
@@ -209,31 +235,33 @@ public class LancamentoActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * listner do botão de confirmar a operação de credito ou debito;
+         */
         btconfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lancamento.setData(textdata.getText().toString());
-                lancamento.setTitulo(texttitulo.getText().toString());
-                lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));
-                final Long a = horarioMovimentacao();
-                lancamento.setCreatedAt(a);
+                RecuperandoDadosdaView();// recuperando oque esta digitado nos campos
+                final Long a = criaTimeStamp(); // recuperando o timestamp criado
+                lancamento.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
 
 
 
                 /**
                  * verificando se a opçao de deposito é para conta corrente ou cartao.
                  */
-                final String nomeopFinanceira = spinneropcao.getSelectedItem().toString();
+                final String nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
+                /**
+                 * verificando se o switch esta selecionado ou nao.
+                 * neste caso se é CREDITO ou DEBITO a operação a ser feita
+                 */
                 if (aSwitch.isChecked()) {
-                    lancamento.setStatusOp(1);
+                    lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+                    /**
+                     * codigo responsavel por enviar o objeto lançemento para o firebase
+                     */
+                    salvarLancamentoFirebase(lancamento);
 
-                    lancamento.setCreatedAt(a);
-                    myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(lancamento).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            limpar();
-                        }
-                    });
 
                     String ret = verificaOpcaoFinanceira(nomeopFinanceira);
 
@@ -254,7 +282,8 @@ public class LancamentoActivity extends AppCompatActivity {
                                         }
                                     });
                                 }else {
-                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Conta não possui Saldo Sulficiente !");
+                                    String er = "Conta não possui Saldo sulficiente.";
+                                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,er);
 
                                 }
 
@@ -354,8 +383,36 @@ public class LancamentoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * metodo reponsavel por salvar o lançamento no firebase no nó ("lancamento")
+     * @param ll é o lançamento que foi digitado na tela pelo usuario. neste momento o envio ao firebase é feito
+     */
+    private void salvarLancamentoFirebase(Lancamento ll) {
+        myreference.child("movimentacao").child(firebaseUser.getUid()).child(UUID.randomUUID().toString()).setValue(ll).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                limpar();// limpando a view apos inserir os dados
+            }
+        });
+    }
+
+    /**
+     * atribuindo os dados informados na view  a um objeto lançamento que fara a movimentação dos dados
+     * até que o mesmo seja enviado ao firebase
+     */
+    private void RecuperandoDadosdaView() {
+        lancamento.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
+        lancamento.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
+        lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String
+                                                                                //  e o converte para Double conforme a classe espera
+    }
+
+    /**
+     * Metodo responsavel por criar o timestamp do lançamento para futuramente ter a precisao de cada lançamento
+     * @return timesTamp
+     */
     @NonNull
-    private Long horarioMovimentacao() {
+    private Long criaTimeStamp() {
         Calendar cal = Calendar.getInstance();
         Date data_atual = cal.getTime();
         final Timestamp ts = new Timestamp(data_atual.getTime());
@@ -401,6 +458,7 @@ public class LancamentoActivity extends AppCompatActivity {
         textdata.setText("");
         textvalor.setText("");
         texttitulo.setText("");
+        spinneropcao.setSelection(0);
     }
     private void ExibirMensagem(Context context, int successType, String s) {
         new SweetAlertDialog(context, successType)

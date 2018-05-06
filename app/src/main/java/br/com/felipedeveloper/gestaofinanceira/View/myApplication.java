@@ -8,9 +8,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
 
-/**
- * Created by allef on 22/03/2018.
- */
 
 public class myApplication extends Application {
     @Override

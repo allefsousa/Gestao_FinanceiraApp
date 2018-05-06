@@ -20,9 +20,6 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by allef on 16/04/2018.
- */
 
 public class AddBancoActivity extends AppCompatActivity {
 

@@ -8,16 +8,33 @@
     tools:context="br.com.felipedeveloper.gestaofinanceira.View.LancamentoActivity"
     tools:showIn="@layout/activity_lancamento">
 
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switchaaddvalor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:text="Lançamento Debito"
+        android:textColor="@color/colorSwitchdebito"
+        android:textSize="18sp"
+        android:theme="@style/SCBSwitch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.046"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInpvalor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/switchaaddvalor">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/texteditvalor"
@@ -70,7 +87,7 @@
              />
     </android.support.design.widget.TextInputLayout>
 
-    <Spinner
+    <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/spinneropbancaria"
         android:layout_width="0dp"
         android:layout_height="39dp"
@@ -81,7 +98,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputtitulo">
 
-    </Spinner>
+    </android.support.v7.widget.AppCompatSpinner>
 
 
     <Button
@@ -96,4 +113,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_bias="0.894" />
+
 </android.support.constraint.ConstraintLayout>
