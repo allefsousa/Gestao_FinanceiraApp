@@ -1,5 +1,6 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -103,8 +104,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btngooglelogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ExibirLoading(true);
                 Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleapi);
                 startActivityForResult(intent, SING_IN_CODE);
+
                // loginRealizadocomSucesso();
 
 
@@ -188,6 +191,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void loginRealizadocomSucesso() {
+        ExibirLoading(false);
         Intent i = new Intent(LoginActivity.this, OpcoesFinanceiraActivity.class);
         startActivity(i);
         finish();
@@ -254,6 +258,19 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         });
 
     }
+    private void ExibirLoading(Boolean exibe) {
+        SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(LoginActivity.this,SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog.setTitleText(getResources().getString(R.string.app_name));
+        sweetAlertDialog .setContentText("Aguarde ...");
+        if (exibe){
+            sweetAlertDialog.show();
+        }else {
+            sweetAlertDialog.dismiss();
+        }
+
+
+
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -286,4 +303,5 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onDestroy();
         firebaseAuth.removeAuthStateListener(authStateListener);
     }
+
 }

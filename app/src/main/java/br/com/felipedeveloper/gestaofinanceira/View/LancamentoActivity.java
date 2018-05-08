@@ -423,7 +423,7 @@ public class LancamentoActivity extends AppCompatActivity {
                     ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Credito Adicionado !"); // mensagme de sucesso.
 
                 }else {
-                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Debito Adicionado !"); // mensagme de sucesso.
+                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Debito Realizado !"); // mensagme de sucesso.
 
                 }
             }

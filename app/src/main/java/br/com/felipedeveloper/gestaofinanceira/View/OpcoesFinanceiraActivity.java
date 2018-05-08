@@ -68,9 +68,9 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_opcoes_financeira);
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-
         constraintLayout = (ConstraintLayout) findViewById(R.id.constraint);
         ButterKnife.bind(this);
+        getSupportActionBar().setSubtitle("Acompanhe seu dinheiro");
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
         IniciaFirebase();
