@@ -10,11 +10,24 @@
     <ImageView
         android:id="@+id/c"
         android:layout_width="146dp"
-        android:layout_height="105dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="26dp"
         android:layout_marginTop="31dp"
-        android:src="@drawable/um"
         android:background="@drawable/circleimage"
+        android:src="@drawable/um"
+        app:layout_constraintBottom_toTopOf="@+id/btnsair"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnsair"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="301dp"
+        android:layout_marginStart="28dp"
+        android:text="Sair"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/c"
+        app:layout_constraintTop_toBottomOf="@+id/c" />
 </android.support.constraint.ConstraintLayout>

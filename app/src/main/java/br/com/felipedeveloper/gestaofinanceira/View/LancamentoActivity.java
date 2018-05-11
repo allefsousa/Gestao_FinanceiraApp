@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -60,8 +61,8 @@ public class LancamentoActivity extends AppCompatActivity {
     TextInputLayout textInptitulo;
     @BindView(R.id.textedittitulo)
     EditText texttitulo;
-    @BindView(R.id.btnconfirmar)
-    Button btconfirmar;
+    @BindView(R.id.floatingconfirmar)
+    FloatingActionButton btconfirmar;
     @BindView(R.id.spinneropbancaria)
     Spinner spinneropcao;
     Lancamento lancamento;
@@ -414,7 +415,7 @@ public class LancamentoActivity extends AppCompatActivity {
      * @param mapsaldoatualizado hash map do banco ou cartao com os dados atuaalizados para update
      * @param debitoCredito variavel booleana para fazer tratamento da mensagem
      */
-    private void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado, final Boolean debitoCredito) {
+    public void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado, final Boolean debitoCredito) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // recuperando uma nova referenciaa do banco de dados
         reference.child("financeiro").child(firebaseUser.getUid()).child(opFinanceira).child(idcartao).updateChildren(mapsaldoatualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -512,11 +513,11 @@ public class LancamentoActivity extends AppCompatActivity {
     /**
      * metodo responsavel por inicializar as configurações do firebase na classe.
      */
-    private void configFirebase() {
+    public DatabaseReference configFirebase() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
         myreference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());// definindo qual o pont oque  a referencia do firebase ficara
-
+        return myreference;
     }
 
     /**
@@ -528,6 +529,12 @@ public class LancamentoActivity extends AppCompatActivity {
         texttitulo.setText("");
         spinneropcao.setSelection(0);
     }
+    protected int mensagemteste(){
+        int a =10 ;
+        int b = 30;
+        return b+a;
+    }
+
 
     /**
      * metodo pré configurado para exibir as menssagens assim reduzindo o codigo escrito em todas as chamadas

@@ -127,7 +127,7 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
             Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
             if (pos == 0) {
                 mTimelineView.initLine(1);
-                mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker_inactive));
+
             }
                 if (statusop != null) {
                     switch (statusop) {

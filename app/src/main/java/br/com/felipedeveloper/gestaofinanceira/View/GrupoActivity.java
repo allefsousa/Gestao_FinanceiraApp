@@ -1,81 +1,68 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
-import android.widget.TextView;
+import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class GrupoActivity extends AppCompatActivity {
+    Context context;
+    EditText editText;
+    @BindView(R.id.fabaddgrupo)
+    FloatingActionButton floatingActionButton;
 
-    MenuItem itemm;
-    BottomNavigationView navigation;
-    Fragment currentFragment = null;
-    FragmentTransaction ft;
-    private TextView mTextMessage;
-
-//    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-//            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-//
-//        @Override
-//        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//            switch (item.getItemId()) {
-//                case R.id.navigation_grupo:
-//                    mTextMessage.setText(R.string.title_home);
-//                    return true;
-//                case R.id.navigation_adduser:
-//                    mTextMessage.setText(R.string.title_dashboard);
-//                    mensagem();
-//                    return true;
-//            }
-//            return false;
-//
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grupo);
-
-        mTextMessage = (TextView) findViewById(R.id.message);
-        navigation = (BottomNavigationView) findViewById(R.id.navigation);
-//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        setContentView(R.layout.activity_grupo2);
+        ButterKnife.bind(this);
+        context = GrupoActivity.this;
+        editText = new EditText(context);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_grupo:
-
-                        return true;
-                    case R.id.navigation_adduser:
-
-//                    getSupportFragmentManager().beginTransaction().add(R.id.container,new testeFragment()).commit();
-                        return true;
-                    case R.id.lancamentos:
-                        getSupportFragmentManager().beginTransaction().add(R.id.container, new testeFragment()).commit();
-
-                        return true;
-
-                }
-                return false;
+            public void onClick(View view) {
+                startActivity(new Intent(context,AddGrupoActivity.class));
             }
         });
-    }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
     }
 
+    private void mensagem() {
 
+        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Criar Grupo")
+                .setConfirmText("Adicionar")
+                .setCustomView(editText)
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                        boolean a = ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                                editText.getWindowToken(), 0);
+                        if (a) {
+                            sweetAlertDialog.setTitleText("Deleted!")
+                                    .setContentText("Your imaginary file has been deleted!")
+                                    .setConfirmText(editText.getText().toString())
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        }
+
+
+                    }
+                })
+                .show();
+
+
+    }
 }

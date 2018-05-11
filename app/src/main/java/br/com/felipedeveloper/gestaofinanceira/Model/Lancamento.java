@@ -6,6 +6,7 @@ public class Lancamento {
     private String titulo;
     private Double valor;
     private String data;
+    private String formaPagemento;
     private int StatusOp;
     private Long createdAt;
 

@@ -119,7 +119,11 @@ public class ContasBancariasActivity extends AppCompatActivity {
 
 
     }
-
+    protected int mensagemteste(){
+        int a =10 ;
+        int b = 30;
+        return b+a;
+    }
     private void IniciaFirebase() {
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();

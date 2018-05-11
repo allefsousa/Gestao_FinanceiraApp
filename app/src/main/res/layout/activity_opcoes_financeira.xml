@@ -8,133 +8,131 @@
     android:layout_height="match_parent">
 
 
-<android.support.constraint.ConstraintLayout
-    android:id="@+id/constraint"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity"
-    tools:layout_editor_absoluteY="81dp">
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        tools:context="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity"
+        tools:layout_editor_absoluteY="81dp">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardViewcontasbancaria"
-        android:layout_width="350dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewcarteira">
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewcontasbancaria"
+            android:layout_width="350dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewcarteira">
 
-        <!--<View-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@color/cpb_blue">-->
+            <TextView
+                android:id="@+id/titulocontabancarias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="22dp"
+                android:text="CONTAS BANCARIAS"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
 
-        <!--</View>-->
+            <TextView
+                android:id="@+id/cardsaldocontabancaria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="05dp"
+                android:paddingRight="30dp"
+                android:text="R$:"
+                android:textColor="@color/cpb_blue"
+                android:textSize="16dp" />
 
-        <TextView
-            android:id="@+id/titulocontabancarias"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingLeft="22dp"
-            android:text="CONTAS BANCARIAS"
-            android:textColor="@color/primary_text"
-            android:textSize="16sp"
-            />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_gravity="bottom"
+                android:background="@color/cpb_blue"/>
 
-        <TextView
-            android:id="@+id/cardsaldocontabancaria"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="05dp"
-            android:paddingRight="30dp"
-            android:text="R$:"
-            android:textColor="@color/cpb_blue"
-            android:textSize="16dp" />
-    </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardViewcartao"
-        android:layout_width="350dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewcontasbancaria">
+        </android.support.v7.widget.CardView>
 
-        <!--<View-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@color/primaryTextColor">-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewcartao"
+            android:layout_width="350dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewcontasbancaria">
 
-        <!--</View>-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_gravity="bottom"
+                android:background="@color/cpb_blue"/>
 
-        <TextView
-            android:id="@+id/titulocartao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingLeft="22dp"
-            android:text="CARTÕES"
-            android:textColor="@color/primary_text"
-            android:textSize="16sp"
-             />
+            <TextView
+                android:id="@+id/titulocartao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="22dp"
+                android:text="CARTÕES"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/cardviewsaldocartao"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginBottom="05dp"
-            android:paddingRight="30dp"
-            android:text="R$:"
-            android:textColor="@color/cpb_blue"
-            android:textSize="16dp" />
+            <TextView
+                android:id="@+id/cardviewsaldocartao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="05dp"
+                android:paddingRight="30dp"
+                android:text="R$:"
+                android:textColor="@color/cpb_blue"
+                android:textSize="16dp" />
 
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardViewcarteira"
-        android:layout_width="350dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewcarteira"
+            android:layout_width="350dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <!--<View-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@color/roxo">-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_gravity="bottom"
+                android:background="@color/cpb_blue"/>
 
-        <!--</View>-->
+            <TextView
+                android:id="@+id/titulocarteira"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="22dp"
+                android:text="LANÇAMENTOS"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/titulocarteira"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingLeft="22dp"
-            android:text="LANÇAMENTOS"
-            android:textColor="@color/primary_text"
-            android:textSize="16sp"
-            />
-
-        <!--<TextView-->
+            <!--<TextView-->
             <!--android:id="@+id/saldocarteira"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
@@ -145,89 +143,70 @@
             <!--android:textColor="@color/cpb_blue"-->
             <!--android:textSize="16dp" />-->
 
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardViewgrupo"
-        android:layout_width="350dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewcartao">
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewgrupo"
+            android:layout_width="350dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewcartao">
 
-        <!--<View-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@color/rosa">-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_gravity="bottom"
+                android:background="@color/cpb_blue"/>
 
-        <!--</View>-->
+            <TextView
+                android:id="@+id/titulogrupo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="22dp"
+                android:text="GRUPOS"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/titulogrupo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingLeft="22dp"
-            android:text="GRUPOS"
-            android:textColor="@color/primary_text"
-            android:textSize="16sp"
-             />
+        </android.support.v7.widget.CardView>
 
-    </android.support.v7.widget.CardView>
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardViewtransa"
-        android:layout_width="350dp"
-        android:layout_height="75dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardViewgrupo">
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewtransa"
+            android:layout_width="350dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewgrupo">
 
-        <!--<View-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:background="@color/colorSwitchdebito">-->
 
-        <!--</View>-->
-        <!--<View-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:layout_gravity="bottom"-->
-            <!--android:background="@color/colorSwitchcredito">-->
 
-        <!--</View>-->
+            <TextView
+                android:id="@+id/titulotransa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="22dp"
+                android:text="TRANSAÇÕES"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/titulotransa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:paddingLeft="22dp"
-            android:text="TRANSAÇÕES"
-            android:textColor="@color/primary_text"
-            android:textSize="16sp"
-            />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_gravity="bottom"
+                android:background="@color/cpb_blue"/>
+        </android.support.v7.widget.CardView>
 
-        <!--<TextView-->
-            <!--android:id="@+id/saldogrupo"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="bottom|right"-->
-            <!--android:layout_marginBottom="05dp"-->
-            <!--android:paddingRight="30dp"-->
-            <!--android:text="R$:"-->
-            <!--android:textColor="@color/cpb_blue"-->
-            <!--android:textSize="16dp" />-->
-    </android.support.v7.widget.CardView>
-
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

@@ -56,10 +56,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     Usuario user;
     @BindView(R.id.btnfacebook)
     Button btnfacebookLogin;
-    @BindView(R.id.btngoogle)
-    Button btngooglelogin;
-    @BindView(R.id.btnemail)
-    Button btnemaillogin;
+//    @BindView(R.id.btngoogle)
+//    Button btngooglelogin;
+
+
     public static final int SING_IN_CODE = 777;
 
     private GoogleApiClient mGoogleapi;
@@ -75,6 +75,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplo_login);
         ButterKnife.bind(this);
+        Button btnemaillogin = findViewById(R.id.btnemail);
+        Button btngooglelogin = findViewById(R.id.btngoogle);
+//        Button btnfacebookLogin = findViewById(R.id.btnfacebook);
         inicializaFirebase(); // chamada de metodo que inicia firebase
         user = new Usuario();
         services_googleLogin();
@@ -95,12 +98,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             }
         });
-        btnemaillogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,LoginEmailActivity.class));
-            }
-        });
+//        btnemaillogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(LoginActivity.this,LoginEmailActivity.class));
+//            }
+//        });
         btngooglelogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +117,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
         firebaseAuth = FirebaseAuth.getInstance(); // pegando a instancia do OAuth  do firebase paar trabalhar com ela.
-        firebaseAuth.signOut(); // deslogando
 
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
