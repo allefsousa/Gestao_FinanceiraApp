@@ -16,9 +16,6 @@ import java.util.List;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
-/**
- * Created by allef on 16/04/2018.
- */
 
 public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapter.ViewHolderAgencia> {
 

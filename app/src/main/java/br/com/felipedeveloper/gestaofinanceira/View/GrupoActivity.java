@@ -2,23 +2,36 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class GrupoActivity extends AppCompatActivity {
+public class GrupoActivity extends BaseActivity {
     Context context;
     EditText editText;
     @BindView(R.id.fabaddgrupo)
     FloatingActionButton floatingActionButton;
+    DatabaseReference reference,mm;
+    String idUserlogado;
+    List<Usuario> usuarioList;
+
+
 
 
     @Override
@@ -28,10 +41,29 @@ public class GrupoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         context = GrupoActivity.this;
         editText = new EditText(context);
+        mm=  configFirebaseUsuario(reference);
+        usuarioList = new ArrayList<>();
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(context,AddGrupoActivity.class));
+            }
+        });
+        mm.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Usuario usuario;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    usuario = snapshot.getValue(Usuario.class);
+                    usuarioList.add(usuario);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
