@@ -6,8 +6,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterAdcionarUsuario;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
@@ -29,22 +35,24 @@ public class AddGrupoActivity extends BaseActivity {
     @BindView(R.id.floataddgrupo)
     FloatingActionButton floatingActionButton;
     @BindView(R.id.editnomegrupo)
-    TextInputEditText inputNomeGrupo;
+    EditText inputNomeGrupo;
     @BindView(R.id.editsaldogrupo)
-    TextInputEditText inputSaldoGrupo;
+    EditText inputSaldoGrupo;
     @BindView(R.id.editemailgrupo)
-    TextInputEditText inputEmailGrupo;
-    @BindView(R.id.textviparticipantes)
-    TextView textExibirparticipantes;
+    EditText inputEmailGrupo;
+    @BindView(R.id.recyclerusuariogrupo)
+    RecyclerView recyclerViewuser;
+
     @BindView(R.id.imageaddgrupo)
     ImageView imaAddGrupo;
-    @BindView(R.id.imagecancelparticipante)
-    ImageView imaCancela;
+    AdapterAdcionarUsuario adapterAdcionarUsuario ;
+    LinearLayoutManager layoutManager;
 
     private DatabaseReference reference;
     private Context context = AddGrupoActivity.this;
     private Grupo grupo;
     private List<Usuario> usuarioList;
+    List<Usuario>exibirList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +64,16 @@ public class AddGrupoActivity extends BaseActivity {
         grupo = new Grupo();
         reference=  configFirebaseUsuario(reference);
         usuarioList = new ArrayList<>();
+         layoutManager = new LinearLayoutManager(this);
+       layoutManager.canScrollVertically();
+        layoutManager.setOrientation(LinearLayout.VERTICAL);
+        recyclerViewuser.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewuser.getContext(),
+                layoutManager.getOrientation());
+        recyclerViewuser.addItemDecoration(dividerItemDecoration);
+        recyclerViewuser.setNestedScrollingEnabled(false);
+        exibirList = new ArrayList<>();
+
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -80,21 +98,13 @@ public class AddGrupoActivity extends BaseActivity {
                 if (!inputEmailGrupo.getText().toString().isEmpty()){
                     String emailDigitado;
                     emailDigitado = inputEmailGrupo.getText().toString();
-                    for (Usuario usuario : usuarioList){
-                        if (!usuario.getUsuarioEmail().isEmpty()){
-                            if (usuario.getUsuarioEmail().equals(emailDigitado)){
-                                if (textExibirparticipantes.getText() != "Você"){
-                                    textExibirparticipantes.setMaxLines(5);
-                                    String todoemail = textExibirparticipantes.getText().toString() + "/"+emailDigitado;
-                                  String aa[] = todoemail.split("/");
-                                  String resultf = aa[0];
-                                  resultf ="\n";
-                                  resultf =resultf + aa[1];
-                                    textExibirparticipantes.setText(resultf);
-                                }else {
-                                    textExibirparticipantes.setText(emailDigitado);
-                                }
-
+                    for (int i =0;i<usuarioList.size();i++){
+                        if (!usuarioList.get(i).getUsuarioEmail().isEmpty()){
+                            if (usuarioList.get(i).getUsuarioEmail().equals(emailDigitado)){
+                                exibirList.add(usuarioList.get(i));
+                                adapterAdcionarUsuario = new AdapterAdcionarUsuario(exibirList,context);
+                                adapterAdcionarUsuario.notifyDataSetChanged();
+                                recyclerViewuser.setAdapter(adapterAdcionarUsuario);
                                 inputEmailGrupo.getText().clear();
                             }
                         }
@@ -106,8 +116,18 @@ public class AddGrupoActivity extends BaseActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                limparCampos();
+//                grupo.setNomeGrupo(inputNomeGrupo.getText().toString());
+//                grupo.setSaldoGrupo(inputSaldoGrupo.getText().toString());
+//                grupo.setUsuarioList(exibirList);
 
             }
         });
+    }
+    private void limparCampos(){
+        inputEmailGrupo.getText().clear();
+        inputNomeGrupo.getText().clear();
+        inputSaldoGrupo.getText().clear();
+        adapterAdcionarUsuario.clear();
     }
 }

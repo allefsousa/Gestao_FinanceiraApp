@@ -121,6 +121,7 @@
         </activity>
         <activity android:name=".View.AddGrupoActivity"
             android:label="Adicionar Grupo"
+            android:windowSoftInputMode="adjustNothing"
             android:theme="@style/AppTheme">
 
             <meta-data

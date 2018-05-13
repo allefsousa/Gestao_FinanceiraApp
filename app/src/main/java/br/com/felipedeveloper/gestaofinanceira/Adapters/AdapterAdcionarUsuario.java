@@ -29,7 +29,11 @@ public class AdapterAdcionarUsuario extends RecyclerView.Adapter<AdapterAdcionar
 
     @Override
     public ViewHoderUsuario onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHoderUsuario(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grupo_add_user, parent, false));
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view = layoutInflater.inflate(R.layout.item_grupo_add_user, parent, false);
+
+
+        return new AdapterAdcionarUsuario.ViewHoderUsuario(view);
     }
 
     @Override
@@ -45,6 +49,11 @@ public class AdapterAdcionarUsuario extends RecyclerView.Adapter<AdapterAdcionar
     @Override
     public int getItemCount() {
         return usuarioList.size();
+    }
+
+    public void clear() {
+        usuarioList.clear();
+        notifyDataSetChanged();
     }
 
     public class ViewHoderUsuario extends RecyclerView.ViewHolder {
