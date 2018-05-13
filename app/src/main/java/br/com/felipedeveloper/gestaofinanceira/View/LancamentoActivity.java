@@ -90,6 +90,8 @@ public class LancamentoActivity extends AppCompatActivity {
         final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
 
+
+
         /**
          * metodo responsavel por buscar dadoso no firebase na child("financeiro")
          * neste momento busco todos os dados do firebase.

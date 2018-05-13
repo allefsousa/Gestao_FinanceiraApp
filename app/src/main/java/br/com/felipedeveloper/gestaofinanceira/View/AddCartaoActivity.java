@@ -1,5 +1,6 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 public class AddCartaoActivity extends AppCompatActivity {
 
     @BindView(R.id.btnsalvarcartao)
-    Button btnsalvarCartao;
+    FloatingActionButton btnsalvarCartao;
     @BindView(R.id.editnomecartao)
     EditText edtnomeCartao;
     @BindView(R.id.editsaldocartao)

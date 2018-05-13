@@ -2,6 +2,7 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +32,7 @@ public class AddBancoActivity extends AppCompatActivity {
     @BindView(R.id.saldo)
     EditText edtSaldoBanco;
     @BindView(R.id.btnsalvarbanco)
-    Button btnAdicionarBanco;
+    FloatingActionButton btnAdicionarBanco;
     private DatabaseReference myreference;
     private ContasBancarias contasBancarias;
 
