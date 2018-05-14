@@ -9,6 +9,7 @@ import android.view.View;
 
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempo;
+import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +35,7 @@ public class DetalhesGrupoActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                startActivity( new Intent(DetalhesGrupoActivity.this,LancamentoGrupoActivity.class));
             }
         });
 

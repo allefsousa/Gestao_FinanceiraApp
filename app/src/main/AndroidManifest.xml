@@ -128,11 +128,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.GrupoActivity" />
         </activity>
-        <activity android:name=".View.DetalhesGrupoActivity"
+        <activity
+            android:name=".View.DetalhesGrupoActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.GrupoActivity" />
+        </activity>
+        <activity android:name=".View.LancamentoGrupoActivity"
+            android:theme="@style/AppTheme"
+            android:label="Lançamentos Grupo">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.DetalhesGrupoActivity" />
         </activity>
     </application>
 
