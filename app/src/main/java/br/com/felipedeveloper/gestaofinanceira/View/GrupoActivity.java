@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.felipedeveloper.gestaofinanceira.Adapters.GrupoAdapter;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
@@ -32,6 +37,9 @@ public class GrupoActivity extends BaseActivity {
     String idUserlogado;
     List<Grupo> grupoList;
     Grupo grupo;
+    @BindView(R.id.recyclertitulogrupo)
+    RecyclerView recyclerViewGrupos;
+    GrupoAdapter grupoAdapter;
 
 
 
@@ -47,20 +55,31 @@ public class GrupoActivity extends BaseActivity {
         grupoList = new ArrayList<>();
         grupo = new Grupo();
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.canScrollVertically();
+        layoutManager.setOrientation(LinearLayout.VERTICAL);
+        recyclerViewGrupos.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewGrupos.getContext(),
+                layoutManager.getOrientation());
+        recyclerViewGrupos.addItemDecoration(dividerItemDecoration);
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(context,AddGrupoActivity.class));
             }
         });
-        mm.child("grupos").addValueEventListener(new ValueEventListener() {
+        mm.child("grupo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Usuario usuario;
+                Grupo grupo;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    usuario = snapshot.getValue(Usuario.class);
-                    usuarioList.add(usuario);
+                    grupo = snapshot.getValue(Grupo.class);
+                    grupoList.add(grupo);
                 }
+                grupoAdapter = new GrupoAdapter(context,grupoList);
+                recyclerViewGrupos.setAdapter(grupoAdapter);
+
 
             }
 
