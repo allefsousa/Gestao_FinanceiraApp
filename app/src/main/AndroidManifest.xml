@@ -60,7 +60,7 @@
         <activity
             android:name=".View.UsuarioConfiguracaoActivity"
             android:label="Configuração"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
@@ -119,15 +119,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
         </activity>
-        <activity android:name=".View.AddGrupoActivity"
+        <activity
+            android:name=".View.AddGrupoActivity"
             android:label="Adicionar Grupo"
-            android:windowSoftInputMode="adjustNothing"
-            android:theme="@style/AppTheme">
-
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.GrupoActivity" />
-
+        </activity>
+        <activity android:name=".View.DetalhesGrupoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.GrupoActivity" />
         </activity>
     </application>
 

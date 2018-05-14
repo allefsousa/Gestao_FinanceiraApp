@@ -16,6 +16,7 @@ public class myApplication extends Application {
         super.onCreate();
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FacebookSdk.sdkInitialize(getApplicationContext());
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         AppEventsLogger.activateApp(this);
     }
 

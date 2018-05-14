@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
+import br.com.felipedeveloper.gestaofinanceira.View.DetalhesGrupoActivity;
 
 /**
  * Created by allef on 09/05/2018.
@@ -45,11 +47,13 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
         render(holder, position);
     }
 
-    private void render(ViewHolderGrupo holder, int position) {
+    private void render(final ViewHolderGrupo holder, final int position) {
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context,DetalhesGrupoActivity.class);
+                intent.putExtra("nomegrupo",grupoList.get(position).getNomeGrupo());
+               context.startActivity(intent);
             }
         });
     }

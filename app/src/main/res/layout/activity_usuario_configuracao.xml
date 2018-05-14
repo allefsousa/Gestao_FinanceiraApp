@@ -7,7 +7,7 @@
     tools:context="br.com.felipedeveloper.gestaofinanceira.View.UsuarioConfiguracaoActivity">
 
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/c"
         android:layout_width="146dp"
         android:layout_height="0dp"
