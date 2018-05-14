@@ -10,6 +10,7 @@ public class Grupo {
     private String nomeGrupo;
     private String saldoGrupo;
     private List<Usuario> usuarioList;
+    private String idGrupo;
 
 
 
@@ -38,5 +39,13 @@ public class Grupo {
 
     public void setSaldoGrupo(String saldoGrupo) {
         this.saldoGrupo = saldoGrupo;
+    }
+
+    public String getIdGrupo() {
+        return idGrupo;
+    }
+
+    public void setIdGrupo(String idGrupo) {
+        this.idGrupo = idGrupo;
     }
 }

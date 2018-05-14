@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -29,7 +30,8 @@ public class GrupoActivity extends BaseActivity {
     FloatingActionButton floatingActionButton;
     DatabaseReference reference,mm;
     String idUserlogado;
-    List<Usuario> usuarioList;
+    List<Grupo> grupoList;
+    Grupo grupo;
 
 
 
@@ -41,8 +43,9 @@ public class GrupoActivity extends BaseActivity {
         ButterKnife.bind(this);
         context = GrupoActivity.this;
         editText = new EditText(context);
-        mm=  configFirebaseUsuario(reference);
-        usuarioList = new ArrayList<>();
+        mm=  configFirebase(reference);
+        grupoList = new ArrayList<>();
+        grupo = new Grupo();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +53,7 @@ public class GrupoActivity extends BaseActivity {
                 startActivity(new Intent(context,AddGrupoActivity.class));
             }
         });
-        mm.addValueEventListener(new ValueEventListener() {
+        mm.child("grupos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario usuario;

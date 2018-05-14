@@ -1,27 +1,32 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterAdcionarUsuario;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
@@ -48,11 +53,13 @@ public class AddGrupoActivity extends BaseActivity {
     AdapterAdcionarUsuario adapterAdcionarUsuario ;
     LinearLayoutManager layoutManager;
 
-    private DatabaseReference reference;
+    private DatabaseReference Usuariosreference;
+    private DatabaseReference Financeiroreference;
     private Context context = AddGrupoActivity.this;
     private Grupo grupo;
     private List<Usuario> usuarioList;
     List<Usuario>exibirList;
+    Usuario usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +68,14 @@ public class AddGrupoActivity extends BaseActivity {
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
-        grupo = new Grupo();
-        reference=  configFirebaseUsuario(reference);
+
+        Financeiroreference = configFirebase(Financeiroreference);
+        Usuariosreference =  configFirebaseUsuario(Usuariosreference);
         usuarioList = new ArrayList<>();
+        exibirList = new ArrayList<>();
+        grupo = new Grupo();
+        usuarioLogado = new Usuario();
+
          layoutManager = new LinearLayoutManager(this);
        layoutManager.canScrollVertically();
         layoutManager.setOrientation(LinearLayout.VERTICAL);
@@ -72,10 +84,11 @@ public class AddGrupoActivity extends BaseActivity {
                 layoutManager.getOrientation());
         recyclerViewuser.addItemDecoration(dividerItemDecoration);
         recyclerViewuser.setNestedScrollingEnabled(false);
-        exibirList = new ArrayList<>();
 
 
-        reference.addValueEventListener(new ValueEventListener() {
+
+
+        Usuariosreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario usuario;
@@ -83,6 +96,7 @@ public class AddGrupoActivity extends BaseActivity {
                     usuario = snapshot.getValue(Usuario.class);
                     usuarioList.add(usuario);
                 }
+                usuarioLogado = meuUsuario(usuarioList);
 
             }
 
@@ -92,9 +106,12 @@ public class AddGrupoActivity extends BaseActivity {
 
             }
         });
+
+
         imaAddGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                fechaTeclado(view);
                 if (!inputEmailGrupo.getText().toString().isEmpty()){
                     String emailDigitado;
                     emailDigitado = inputEmailGrupo.getText().toString();
@@ -102,6 +119,7 @@ public class AddGrupoActivity extends BaseActivity {
                         if (!usuarioList.get(i).getUsuarioEmail().isEmpty()){
                             if (usuarioList.get(i).getUsuarioEmail().equals(emailDigitado)){
                                 exibirList.add(usuarioList.get(i));
+                                exibirList.add(usuarioLogado);
                                 adapterAdcionarUsuario = new AdapterAdcionarUsuario(exibirList,context);
                                 adapterAdcionarUsuario.notifyDataSetChanged();
                                 recyclerViewuser.setAdapter(adapterAdcionarUsuario);
@@ -113,21 +131,72 @@ public class AddGrupoActivity extends BaseActivity {
 
             }
         });
+        // fechar teclado quando apertar o botão OK
+        inputEmailGrupo.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                            textView.getWindowToken(), 0);
+                    textView.clearFocus();
+                }
+                return false;
+            }
+        });
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // TODO: 13/05/2018 validar entradas nulas e vazias
+                String uid = UUID.randomUUID().toString();
+                grupo.setIdGrupo(uid);
+                grupo.setNomeGrupo(inputNomeGrupo.getText().toString());
+                grupo.setSaldoGrupo(inputSaldoGrupo.getText().toString());
+                grupo.setUsuarioList(exibirList);
+                for (int i =0; i < exibirList.size();i++){
+                    Financeiroreference.child(exibirList.get(i).getIdUsuario()).child("grupo").child(uid).setValue(grupo);
+                }
                 limparCampos();
-//                grupo.setNomeGrupo(inputNomeGrupo.getText().toString());
-//                grupo.setSaldoGrupo(inputSaldoGrupo.getText().toString());
-//                grupo.setUsuarioList(exibirList);
+
 
             }
         });
     }
+
+    private void fechaTeclado(View v) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+    private Usuario meuUsuario(List<Usuario> usuarioList) {
+        Usuario usuario = new Usuario();
+        String minhaId = UserRetornoId();
+
+        for (Usuario ll : usuarioList){
+            if (ll.getIdUsuario().equals(minhaId)){
+              usuario.setUsuarioNome("Você");
+              usuario.setUsuarioEmail(ll.getUsuarioEmail());
+              usuario.setIdUsuario(ll.getIdUsuario());
+              usuario.setFotoUrl(ll.getFotoUrl());
+
+            }
+        }
+
+        return usuario;
+    }
+
     private void limparCampos(){
         inputEmailGrupo.getText().clear();
         inputNomeGrupo.getText().clear();
         inputSaldoGrupo.getText().clear();
         adapterAdcionarUsuario.clear();
+    }
+    @Override
+    public DatabaseReference configFirebase(DatabaseReference reference) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
+        reference = firebaseDatabase.getReference().child("financeiro");// definindo qual o pont oque  a referencia do firebase ficara
+        return reference;
     }
 }

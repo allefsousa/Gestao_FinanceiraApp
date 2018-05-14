@@ -40,9 +40,15 @@ public class BaseActivity extends AppCompatActivity {
         reference = firebaseDatabase.getReference().child("usuario");// definindo qual o pont oque  a referencia do firebase ficara
         return reference;
     }
-    public String userretorno(){
+    public String UserRetornoId(){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String retorno = firebaseUser.getUid();
+        String retorno = null;
+        try{
+             retorno = firebaseUser.getUid();
+        }catch (Exception e){
+            retorno = "Erro retorno uid";
+        }
+
         return retorno;
     }
 }
