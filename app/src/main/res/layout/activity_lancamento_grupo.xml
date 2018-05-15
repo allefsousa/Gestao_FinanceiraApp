@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="br.com.felipedeveloper.gestaofinanceira.View.LancamentoGrupoActivity">
 
-    <include layout="@layout/content_carteira" />
+    <include layout="@layout/content_lancamento" />
 
 
 </android.support.design.widget.CoordinatorLayout>
