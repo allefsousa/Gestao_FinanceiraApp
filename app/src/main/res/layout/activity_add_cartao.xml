@@ -8,17 +8,19 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnsalvarcartao"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.921"
+        app:layout_constraintHorizontal_bias="0.927"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_check_white_24dp"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout9"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintVertical_bias="0.87"
+        app:srcCompat="@drawable/ic_check_white_24dp" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout8"
@@ -26,11 +28,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="72dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2">
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/editnomecartao"
@@ -58,26 +59,13 @@
             android:id="@+id/editsaldocartao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Limite do Cartão"
             android:inputType="numberDecimal"
-            android:maxLines="1"
             android:maxLength="15"
-            android:hint="LIMITE CARTÂO"
+            android:maxLines="1"
             android:textSize="13dp" />
     </android.support.design.widget.TextInputLayout>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:text="Adicionar Novo Cartão"
-        android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
 
 

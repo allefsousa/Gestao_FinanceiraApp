@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -17,11 +18,14 @@ import com.google.firebase.database.DatabaseReference;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsuarioConfiguracaoActivity extends AppCompatActivity {
 
     @BindView(R.id.btnsair)
     Button btsair;
+    @BindView(R.id.circleimageusuario)
+    CircleImageView circleImageView;
     private String idUser;
 
 
@@ -38,6 +42,9 @@ public class UsuarioConfiguracaoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
+        if (!idUser.isEmpty()){
+            Glide.with(UsuarioConfiguracaoActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(circleImageView);
+        }
         btsair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

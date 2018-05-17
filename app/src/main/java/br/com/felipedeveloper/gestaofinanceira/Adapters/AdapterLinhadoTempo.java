@@ -23,6 +23,7 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTempo.ViewHolder> {
 
     private Context context;
+    private String idGrupoSelecionado;
 
     private SortedList<DataSnapshot> sortedList = new SortedList<>(DataSnapshot.class, new SortedList.Callback<DataSnapshot>() {
         @Override
@@ -68,6 +69,11 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
         this.context = context;
     }
 
+    public AdapterLinhadoTempo(Context context, String nomeGrupo) {
+        this.context = context;
+        idGrupoSelecionado = nomeGrupo;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -82,8 +88,14 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
     }
 
     public void addItem(DataSnapshot data) {
-        sortedList.add(data);
-        notifyDataSetChanged();
+        Lancamento lancamento = data.getValue(Lancamento.class); // recuperando o lançamento
+        if (!lancamento.getNomeGrupo().isEmpty()) {
+            if (lancamento.getNomeGrupo().equals(idGrupoSelecionado)) { // comparando a id do grupo selecionado com  o nome do grupo
+                // caso sejam iguais exibir seus gastos
+                sortedList.add(data);
+                notifyDataSetChanged();
+            }
+        }
     }
 
     public void removeItem(DataSnapshot data) {

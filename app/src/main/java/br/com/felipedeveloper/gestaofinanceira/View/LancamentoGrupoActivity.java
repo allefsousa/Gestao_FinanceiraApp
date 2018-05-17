@@ -5,9 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -18,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +39,7 @@ import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
+import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -66,6 +66,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
     Spinner spinneropcao;
     Lancamento lancamento;
 
+
     List<ContasBancarias> contasBancariasList;
     List<Cartao> cartaoList;
     List<String> financeiroSpinnerlist;
@@ -75,15 +76,21 @@ public class LancamentoGrupoActivity extends BaseActivity {
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
     Context context = LancamentoGrupoActivity.this;
+    private  String Idgrupo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lancamento);
+        setContentView(R.layout.activity_lancamento_grupo);
+        ButterKnife.bind(this);
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Lançamentos");
-        ButterKnife.bind(this);
+        getSupportActionBar().setTitle("Lançamentos Grupo");
+
+        Bundle extras = getIntent().getExtras();
+        Idgrupo = extras.getString("idgrupo");
+
         configFirebase();
         myCalendar = Calendar.getInstance();
         final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
@@ -114,7 +121,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 contasBancariasList.clear();
                 cartaoList.clear();
                 financeiroSpinnerlist.clear();
-                financeiroSpinnerlist.add("Forma de Pagamento"); // adicionando primeiro elemento do spinner
+                financeiroSpinnerlist.add("Origem dinheiro"); // adicionando primeiro elemento do spinner
 
                 /**
                  * Iterando o snapshot do firebase no nó ("banco") e passando a UUID do usuario logado para trazer somente os seus bancos.
@@ -173,10 +180,10 @@ public class LancamentoGrupoActivity extends BaseActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    aSwitch.setText("Lançamento Credito");
+                    aSwitch.setText("Adicionar Dinheiro no Grupo");
                     aSwitch.setTextColor(getResources().getColor(R.color.colorSwitchcredito));
                 } else {
-                    aSwitch.setText("Lançamento Debito");
+                    aSwitch.setText("Retirar Dinheiro do Grupo");
                     aSwitch.setTextColor(getResources().getColor(R.color.colorSwitchdebito));
                 }
             }
@@ -249,6 +256,10 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 String ret = verificaOpcaoFinanceira(nomeopFinanceira);
                 // TODO: 15/05/2018 op financeira vazio 
                 if (!ret.isEmpty()) {
+                    
+                    lancamento.setNomeColaborador(firebaseUser.getDisplayName());// TODO: 16/05/2018 validar vazio
+                    lancamento.setNomeopFinanceira(nomeopFinanceira);
+                    Grupo g = globalSnapshot.child("grupo").child(Idgrupo).getValue(Grupo.class);
 
 
                     /**
@@ -262,18 +273,45 @@ public class LancamentoGrupoActivity extends BaseActivity {
                          * codigo responsavel por enviar o objeto lançamento para o firebase
                          */
                         salvarLancamentoFirebase(lancamento);
+                        // Metodos para adicionar Debito ao cartao ou banco
+                        operacaoDebitoCartao(ret);
+                        adicionandoDebitoConta(ret);
 
-                        // Metodos para adicionar credito ao cartao ou banco
-                        adicionandoCreditoCartao(ret);
-                        adicionandoCreditoBanco(ret);
+
+                        Map<String, Object> retorno =g.mapCreditaGrupo(g,lancamento.getValor());
+                        if (retorno!= null){
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                            reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+                        }
+
+                        // TODO: 16/05/2018  creditar valores no grupo
+
+
 
 
                     } else {
                         lancamento.setStatusOp(0);
                         salvarLancamentoFirebase(lancamento);
-                        // Metodos para adicionar Debito ao cartao ou banco
-                        operacaoDebitoCartao(ret);
-                        adicionandoDebitoConta(ret);
+
+                        // Metodos para adicionar credito ao cartao ou banco
+                        adicionandoCreditoCartao(ret);
+                        adicionandoCreditoBanco(ret);
+                        // remover valores no grupo
+                        Map<String, Object> retorno=g.mapDebitaGrupo(g,lancamento.getValor());
+                        if (retorno!= null){
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                            reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            });
+                        }
 
 
                     }
@@ -447,9 +485,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
         // TODO: 05/05/2018 validar dados inpedir nulo e vazio
         lancamento.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
         lancamento.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
-        lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String
-        //  e o converte para Double conforme a classe espera
-
+        lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String //  e o converte para Double conforme a classe espera
+        lancamento.setNomeGrupo(Idgrupo);
     }
 
     /**

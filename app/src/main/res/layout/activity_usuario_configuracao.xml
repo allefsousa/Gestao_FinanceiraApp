@@ -8,12 +8,11 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/c"
+        android:id="@+id/circleimageusuario"
         android:layout_width="146dp"
         android:layout_height="0dp"
         android:layout_marginBottom="26dp"
         android:layout_marginTop="31dp"
-        android:background="@drawable/circleimage"
         android:src="@drawable/um"
         app:layout_constraintBottom_toTopOf="@+id/btnsair"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,6 +27,6 @@
         android:layout_marginStart="28dp"
         android:text="Sair"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/c"
-        app:layout_constraintTop_toBottomOf="@+id/c" />
+        app:layout_constraintStart_toStartOf="@+id/circleimageusuario"
+        app:layout_constraintTop_toBottomOf="@+id/circleimageusuario" />
 </android.support.constraint.ConstraintLayout>

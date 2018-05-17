@@ -12,15 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.DataOutputStream;
+import java.io.Serializable;
 import java.util.List;
 
+import br.com.felipedeveloper.gestaofinanceira.Helper.teste;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import br.com.felipedeveloper.gestaofinanceira.View.DetalhesGrupoActivity;
 
-/**
- * Created by allef on 09/05/2018.
- */
+
 
 public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGrupo> {
     private Context context;
@@ -43,16 +43,21 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
     @Override
     public void onBindViewHolder(@NonNull GrupoAdapter.ViewHolderGrupo holder, int position) {
         holder.textTituloGrupo.setText(grupoList.get(position).getNomeGrupo());
-        holder.textSaldoGrupo.setText(grupoList.get(position).getSaldoGrupo());
+        holder.textSaldoGrupo.setText(String.valueOf(grupoList.get(position).getSaldoGrupo()));
         render(holder, position);
     }
 
+    /**
+     * neste cenario é necessario passar o nome do grupo para ser salvo junto com o lançamento para facilicatr o filtro
+     * @param holder
+     * @param position
+     */
     private void render(final ViewHolderGrupo holder, final int position) {
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context,DetalhesGrupoActivity.class);
-                intent.putExtra("nomegrupo",grupoList.get(position).getNomeGrupo());
+                intent.putExtra("idgrupo",grupoList.get(position).getIdGrupo());
                context.startActivity(intent);
             }
         });

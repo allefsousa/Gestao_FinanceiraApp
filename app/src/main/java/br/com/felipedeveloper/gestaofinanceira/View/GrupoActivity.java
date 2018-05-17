@@ -63,12 +63,15 @@ public class GrupoActivity extends BaseActivity {
                 layoutManager.getOrientation());
         recyclerViewGrupos.addItemDecoration(dividerItemDecoration);
 
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(context,AddGrupoActivity.class));
             }
         });
+
+
         mm.child("grupo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -45,6 +45,7 @@ public class AddCartaoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_cartao);
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Adicionar Cartão");
         ButterKnife.bind(this);
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();

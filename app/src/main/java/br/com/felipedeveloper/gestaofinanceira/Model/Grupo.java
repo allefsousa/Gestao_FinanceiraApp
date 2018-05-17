@@ -1,6 +1,10 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by allef on 09/05/2018.
@@ -8,7 +12,7 @@ import java.util.List;
 
 public class Grupo {
     private String nomeGrupo;
-    private String saldoGrupo;
+    private Double saldoGrupo;
     private List<Usuario> usuarioList;
     private String idGrupo;
 
@@ -33,11 +37,11 @@ public class Grupo {
         this.nomeGrupo = nomeGrupo;
     }
 
-    public String getSaldoGrupo() {
+    public Double getSaldoGrupo() {
         return saldoGrupo;
     }
 
-    public void setSaldoGrupo(String saldoGrupo) {
+    public void setSaldoGrupo(Double saldoGrupo) {
         this.saldoGrupo = saldoGrupo;
     }
 
@@ -47,5 +51,26 @@ public class Grupo {
 
     public void setIdGrupo(String idGrupo) {
         this.idGrupo = idGrupo;
+    }
+
+    @Exclude
+    public Map<String, Object> mapCreditaGrupo(Grupo c, Double v2) {
+        HashMap<String, Object> result = new HashMap<>();
+        Double saldoAtualizado = c.getSaldoGrupo() + v2;
+        result.put("idGrupo", c.getIdGrupo());
+        result.put("saldoGrupo", saldoAtualizado);
+        result.put("nomeGrupo", c.getNomeGrupo());
+        result.put("usuarioList", c.getUsuarioList());
+        return result;
+    }
+    @Exclude
+    public Map<String, Object> mapDebitaGrupo(Grupo c, Double v2) {
+        HashMap<String, Object> result = new HashMap<>();
+        Double saldoAtualizado = c.getSaldoGrupo() - v2;
+        result.put("idGrupo", c.getIdGrupo());
+        result.put("saldoGrupo", saldoAtualizado);
+        result.put("nomeGrupo", c.getNomeGrupo());
+        result.put("usuarioList", c.getUsuarioList());
+        return result;
     }
 }

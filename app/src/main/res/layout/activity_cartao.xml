@@ -19,9 +19,12 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatnovo"
-        android:layout_width="@dimen/floatactionwidth"
-        android:layout_height="@dimen/floatactionheight"
-        android:layout_marginBottom="40dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:srcCompat="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

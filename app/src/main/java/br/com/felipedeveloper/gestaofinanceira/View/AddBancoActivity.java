@@ -42,6 +42,7 @@ public class AddBancoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addbanco);
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Adicionar Conta");
         ButterKnife.bind(this);
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();

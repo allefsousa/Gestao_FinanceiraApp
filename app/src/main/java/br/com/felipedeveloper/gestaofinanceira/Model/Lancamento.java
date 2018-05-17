@@ -4,12 +4,29 @@ package br.com.felipedeveloper.gestaofinanceira.Model;
 public class Lancamento {
 
     private String titulo;
+    private String nomeColaborador;
     private Double valor;
     private String data;
-    private String formaPagemento;
+    private String nomeopFinanceira;
+    private String nomeGrupo;
     private int StatusOp;
     private Long createdAt;
 
+    public String getNomeColaborador() {
+        return nomeColaborador;
+    }
+
+    public void setNomeColaborador(String nomeColaborador) {
+        this.nomeColaborador = nomeColaborador;
+    }
+
+    public String getNomeopFinanceira() {
+        return nomeopFinanceira;
+    }
+
+    public void setNomeopFinanceira(String nomeopFinanceira) {
+        this.nomeopFinanceira = nomeopFinanceira;
+    }
 
     public Lancamento() {
     }
@@ -52,6 +69,14 @@ public class Lancamento {
 
     public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getNomeGrupo() {
+        return nomeGrupo;
+    }
+
+    public void setNomeGrupo(String nomeGrupo) {
+        this.nomeGrupo = nomeGrupo;
     }
 
     public Double adicionaDinheiro(Double dinheiro){

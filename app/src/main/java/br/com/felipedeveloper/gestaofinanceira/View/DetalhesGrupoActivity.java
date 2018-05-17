@@ -50,31 +50,37 @@ public class DetalhesGrupoActivity extends AppCompatActivity {
     private AdapterLinhadoTempo adapterLinhadoTempo;
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
+    String nomeGrupo;
+    Bundle saved;
+    boolean aa = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_grupo);
         ButterKnife.bind(this);
-
-        String newString1 = retornoNomeGrupo(savedInstanceState);
+         nomeGrupo = retornoNomeGrupo(savedInstanceState);
 
         setSupportActionBar(toolbarGrupo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(newString1);
+        getSupportActionBar().setTitle("Transações");
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetalhesGrupoActivity.this, LancamentoGrupoActivity.class));
+                Intent i = new Intent(DetalhesGrupoActivity.this,LancamentoGrupoActivity.class);
+                i.putExtra("idgrupo",nomeGrupo);
+                startActivity(i);
             }
         });
         configFirebase();
         list = new ArrayList<>();
-        adapterLinhadoTempo = new AdapterLinhadoTempo(context);
+        adapterLinhadoTempo = new AdapterLinhadoTempo(context,nomeGrupo);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);
+
         myreference.child("lancamentosgrupo").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -110,7 +116,10 @@ public class DetalhesGrupoActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Lancamento lancamento = snapshot.getValue(Lancamento.class);
-                    list.add(lancamento);
+                    if (lancamento.getNomeGrupo().equals(nomeGrupo)){
+                        list.add(lancamento);
+                    }
+
                 }
                 totalGastoPeriodo(list);
 
@@ -160,12 +169,28 @@ public class DetalhesGrupoActivity extends AppCompatActivity {
             if (extras == null) {
                 newString = null;
             } else {
-                newString = extras.getString("nomegrupo");
+                newString = extras.getString("idgrupo");
             }
         } else {
-            newString = (String) savedInstanceState.getSerializable("nomegrupo");
+            newString = (String) savedInstanceState.getSerializable("idgrupo");
         }
         return newString;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+
+
+    }
 }

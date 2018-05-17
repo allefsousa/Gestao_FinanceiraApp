@@ -152,7 +152,7 @@ public class AddGrupoActivity extends BaseActivity {
                 String uid = UUID.randomUUID().toString();
                 grupo.setIdGrupo(uid);
                 grupo.setNomeGrupo(inputNomeGrupo.getText().toString());
-                grupo.setSaldoGrupo(inputSaldoGrupo.getText().toString());
+                grupo.setSaldoGrupo(Double.parseDouble(inputSaldoGrupo.getText().toString()));
                 grupo.setUsuarioList(exibirList);
                 for (int i =0; i < exibirList.size();i++){
                     Financeiroreference.child(exibirList.get(i).getIdUsuario()).child("grupo").child(uid).setValue(grupo);
