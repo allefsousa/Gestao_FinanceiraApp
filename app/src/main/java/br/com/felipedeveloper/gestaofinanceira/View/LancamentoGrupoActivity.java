@@ -263,10 +263,6 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 final Long a = criaTimeStamp(); // recuperando o timestamp criado
                 lancamento.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
 
-
-                Toast.makeText(context, "position"+ spinneropcao.getSelectedItemPosition(), Toast.LENGTH_LONG).show();
-
-
                 /**
                  * verificando se a opçao de deposito é para conta corrente ou cartao.
                  */
@@ -286,7 +282,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                  */
                 if (aSwitch.isChecked()) {
                     lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
-
+                    Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamento.getValor());
                     /**
                      * Debitando cartao de credito ou conta
                      */
@@ -303,6 +299,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                 case "DebitocartaoOK":
                                     ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartao e adicionados ao grupo");
                                     salvarLancamentoFirebase(lancamento);
+                                    UpdateSaldoGrupo(retorno);
                                     break;
 
                                 case "saldoInsulficientecartao":
@@ -311,6 +308,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                     break;
                                 case "DebitocontaoOK":
                                     salvarLancamentoFirebase(lancamento);
+                                    UpdateSaldoGrupo(retorno);
                                     ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da conta e adicionados ao grupo");
                                     break;
                                 case "saldoInsulficienteconta":
@@ -325,14 +323,13 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     }
 
                     if (checkBox.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
-                        Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamento.getValor());
+
                         if (retorno != null) {
                             /**
                              * codigo responsavel por enviar o objeto lançamento para o firebase
                              */
                             salvarLancamentoFirebase(lancamento);
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                            reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno);
+                            UpdateSaldoGrupo(retorno);
 
                         }
                     }
@@ -407,6 +404,11 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void UpdateSaldoGrupo(Map<String, Object> retorno) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno);
     }
 
     private void InitObjetos() {
