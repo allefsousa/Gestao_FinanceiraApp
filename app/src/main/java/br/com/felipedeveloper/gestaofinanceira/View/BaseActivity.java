@@ -23,7 +23,7 @@ public class BaseActivity extends AppCompatActivity {
         finish();
 
     }
-    private void ExibirMensagem(Context context, int successType, String s) {
+    public void ExibirMensagem(Context context, int successType, String s) {
         new SweetAlertDialog(context, successType)
                 .setTitleText(getResources().getString(R.string.app_name))
                 .setContentText(s)

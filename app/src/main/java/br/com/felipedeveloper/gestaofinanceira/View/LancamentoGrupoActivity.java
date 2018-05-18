@@ -2,15 +2,16 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -64,6 +64,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
     FloatingActionButton btconfirmar;
     @BindView(R.id.spinneropbancaria)
     Spinner spinneropcao;
+    @BindView(R.id.checkedTextView)
+    CheckBox checkBox;
     Lancamento lancamento;
 
 
@@ -72,11 +74,11 @@ public class LancamentoGrupoActivity extends BaseActivity {
     List<String> financeiroSpinnerlist;
     DataSnapshot globalSnapshot;
     String nomeopFinanceira;
+    Context context = LancamentoGrupoActivity.this;
     private DatabaseReference myreference;
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
-    Context context = LancamentoGrupoActivity.this;
-    private  String Idgrupo;
+    private String Idgrupo;
 
 
     @Override
@@ -95,7 +97,6 @@ public class LancamentoGrupoActivity extends BaseActivity {
         myCalendar = Calendar.getInstance();
         final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
-
 
 
         /**
@@ -188,6 +189,20 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 }
             }
         });
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+
+                    spinneropcao.setEnabled(false);
+                } else {
+
+                    spinneropcao.setEnabled(true);
+                }
+            }
+        });
+
+
         /**
          * Metodo responsavel por exibir a data no formato
          * dd/mm/aa  apos o dialog de data ser fechado
@@ -249,75 +264,146 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 lancamento.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
 
 
+                Toast.makeText(context, "position"+ spinneropcao.getSelectedItemPosition(), Toast.LENGTH_LONG).show();
+
+
                 /**
                  * verificando se a opçao de deposito é para conta corrente ou cartao.
                  */
                 nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
                 String ret = verificaOpcaoFinanceira(nomeopFinanceira);
                 // TODO: 15/05/2018 op financeira vazio 
-                if (!ret.isEmpty()) {
-                    
-                    lancamento.setNomeColaborador(firebaseUser.getDisplayName());// TODO: 16/05/2018 validar vazio
-                    lancamento.setNomeopFinanceira(nomeopFinanceira);
-                    Grupo g = globalSnapshot.child("grupo").child(Idgrupo).getValue(Grupo.class);
 
+
+                lancamento.setNomeColaborador(firebaseUser.getDisplayName());// TODO: 16/05/2018 validar vazio
+                lancamento.setNomeopFinanceira(nomeopFinanceira);
+                Grupo g = globalSnapshot.child("grupo").child(Idgrupo).getValue(Grupo.class);
+
+
+                /**
+                 * verificando se o switch esta selecionado ou nao.
+                 * neste caso se é CREDITO ou DEBITO a operação a ser feita
+                 */
+                if (aSwitch.isChecked()) {
+                    lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
 
                     /**
-                     * verificando se o switch esta selecionado ou nao.
-                     * neste caso se é CREDITO ou DEBITO a operação a ser feita
+                     * Debitando cartao de credito ou conta
                      */
-                    if (aSwitch.isChecked()) {
-                        lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+                    if (spinneropcao.getSelectedItemPosition() != 0) {
+                        String statusSaldo = null;
+                        if (!ret.isEmpty()) {
+                            if (ret.equals("cartao")) {
+                                statusSaldo = operacaoDebitoCartao(ret);
+                            } else if (ret.equals("banco")) {
+                                statusSaldo = adicionandoDebitoConta(ret);
+                            }
 
-                        /**
-                         * codigo responsavel por enviar o objeto lançamento para o firebase
-                         */
-                        salvarLancamentoFirebase(lancamento);
-                        // Metodos para adicionar Debito ao cartao ou banco
-                        operacaoDebitoCartao(ret);
-                        adicionandoDebitoConta(ret);
+                            switch (statusSaldo) {
+                                case "DebitocartaoOK":
+                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartao e adicionados ao grupo");
+                                    salvarLancamentoFirebase(lancamento);
+                                    break;
+
+                                case "saldoInsulficientecartao":
+                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "O Cartão não possui limite disponivel !");
+
+                                    break;
+                                case "DebitocontaoOK":
+                                    salvarLancamentoFirebase(lancamento);
+                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da conta e adicionados ao grupo");
+                                    break;
+                                case "saldoInsulficienteconta":
+                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui saldo sulficiente");
+
+                                    break;
 
 
-                        Map<String, Object> retorno =g.mapCreditaGrupo(g,lancamento.getValor());
-                        if (retorno!= null){
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                            reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+                            }
 
-                                }
-                            });
                         }
+                    }
 
-                        // TODO: 16/05/2018  creditar valores no grupo
-
-
-
-
-                    } else {
-                        lancamento.setStatusOp(0);
-                        salvarLancamentoFirebase(lancamento);
-
-                        // Metodos para adicionar credito ao cartao ou banco
-                        adicionandoCreditoCartao(ret);
-                        adicionandoCreditoBanco(ret);
-                        // remover valores no grupo
-                        Map<String, Object> retorno=g.mapDebitaGrupo(g,lancamento.getValor());
-                        if (retorno!= null){
+                    if (checkBox.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
+                        Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamento.getValor());
+                        if (retorno != null) {
+                            /**
+                             * codigo responsavel por enviar o objeto lançamento para o firebase
+                             */
+                            salvarLancamentoFirebase(lancamento);
                             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                            reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+                            reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno);
 
-                                }
-                            });
+                        }
+                    }
+                    if (!checkBox.isChecked()) {
+                        if (spinneropcao.getSelectedItemPosition() ==0){
+                            ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.WARNING_TYPE, "Selecione uma conta !");
                         }
 
 
                     }
-                }else {
-                    ExibirMensagem(context, SweetAlertDialog.ERROR_TYPE,"Erro !! Tente novamente");
+
+                } else {
+
+                    lancamento.setStatusOp(0);
+                    if (spinneropcao.getSelectedItemPosition() != 0) {
+                        // so vai entrat aqui quando uma fonte de reda for selecionada
+                        if (!ret.isEmpty()) {
+                            // Metodos para adicionar credito ao cartao ou banco
+                            adicionandoCreditoCartao(ret);
+                            adicionandoCreditoBanco(ret);
+                            salvarLancamentoFirebase(lancamento);
+                        }
+                    }
+                    if (checkBox.isChecked()) {
+                        final Map<String, Object> retorno = g.mapDebitaGrupo(g, lancamento.getValor());
+                        //passar o saldo do grupo para comparar com o valor do debito e analisar como foi feito em lancamento
+                        if (retorno != null) {
+                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Team Money")
+                                    .setContentText("Os valores removidos do grupo não seram adicionados a nenhuma conta, Gostaria de continuar ?")
+                                    .setCancelText("Cancelar")
+                                    .setConfirmText("Remover")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            sweetAlertDialog.showCancelButton(false);
+                                            salvarLancamentoFirebase(lancamento);
+                                            myreference.child("grupo").child(Idgrupo).updateChildren(retorno);
+
+                                            sweetAlertDialog.setTitle("Team Money");
+                                            sweetAlertDialog.setConfirmText("OK");
+                                            sweetAlertDialog.setContentText("Valores Retirados do Grupo");
+                                            sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                            sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                    sweetAlertDialog.cancel();
+                                                }
+                                            });
+                                            sweetAlertDialog.show();
+                                        }
+                                    })
+                                    .showCancelButton(true)
+                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.cancel();
+
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Saldo Grupo Insulficiente !");
+                        }
+                    } else {
+                        ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Selecione uma conta para recebimento. !");
+                    }
+
+
                 }
+
 
             }
         });
@@ -330,7 +416,12 @@ public class LancamentoGrupoActivity extends BaseActivity {
         lancamento = new Lancamento();
     }
 
-    private void operacaoDebitoCartao(String ret) {
+    /**
+     * @param ret
+     * @return boolean false sem saldo, True com saldo
+     */
+    private String operacaoDebitoCartao(String ret) {
+        String retorno = "";
         if (ret.equals("cartao")) {
             for (Cartao b : cartaoList) {
                 if (b.getTituloCartao().equals(nomeopFinanceira)) {
@@ -339,18 +430,22 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     Cartao cardatualiza = globalSnapshot.child(ret).child(aux.getIdcartao()).getValue(Cartao.class);
                     Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamento.getValor());
                     if (rec != null) {
-                        atualizaSaldoCartaoBancoFirebase(ret, cardatualiza.getIdcartao(),rec,false);
+                        atualizaSaldoCartaoBancoFirebase(ret, cardatualiza.getIdcartao(), rec);
+                        retorno = "DebitocartaoOK";
                     } else {
-                        ExibirMensagem(context, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                        retorno = "saldoInsulficientecartao";
                     }
 
                 }
 
             }
         }
+
+        return retorno;
     }
 
-    private void adicionandoDebitoConta(String ret) {
+    private String adicionandoDebitoConta(String ret) {
+        String retornoStatus = "";
         if (ret.equals("banco")) {
             for (ContasBancarias contas : contasBancariasList) {
                 if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
@@ -359,16 +454,16 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     ContasBancarias ban = globalSnapshot.child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
                     Map<String, Object> rec = ban.MapBancoDebita(ban, lancamento.getValor());
                     if (rec != null) {
-                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec,false);
+                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec);
+                        retornoStatus = "DebitocontaoOK";
                     } else {
-                        ExibirMensagem(context, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                        retornoStatus = "saldoInsulficienteconta";
                     }
-
-
                 }
 
             }
         }
+        return retornoStatus;
     }
 
 
@@ -384,7 +479,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, lancamento.getValor());
                     if (rec != null) {
 
-                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec,true);
+                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec);
                     }
 
 
@@ -427,7 +522,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                         /**
                          * passando os caminhos e o map que vai atualizar o que esta no firebase
                          */
-                        atualizaSaldoCartaoBancoFirebase(opFinanceira, cardatualiza.getIdcartao(), Mapsaldoatualizado,true);
+                        atualizaSaldoCartaoBancoFirebase(opFinanceira, cardatualiza.getIdcartao(), Mapsaldoatualizado);
                     }
 
 
@@ -445,22 +540,11 @@ public class LancamentoGrupoActivity extends BaseActivity {
      * @param opFinanceira       nome do nó .EX ou cartao ou banco
      * @param idcartao           id do cartao ou do banco
      * @param mapsaldoatualizado hash map do banco ou cartao com os dados atuaalizados para update
-     * @param debitoCredito variavel booleana para fazer tratamento da mensagem
+     *
      */
-    public void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado, final Boolean debitoCredito) {
+    public void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // recuperando uma nova referenciaa do banco de dados
-        reference.child("financeiro").child(firebaseUser.getUid()).child(opFinanceira).child(idcartao).updateChildren(mapsaldoatualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                if (debitoCredito){
-                    ExibirMensagem(context, SweetAlertDialog.SUCCESS_TYPE, "Credito Adicionado !"); // mensagme de sucesso.
-
-                }else {
-                    ExibirMensagem(context, SweetAlertDialog.SUCCESS_TYPE, "Debito Realizado !"); // mensagme de sucesso.
-
-                }
-            }
-        });
+        reference.child("financeiro").child(firebaseUser.getUid()).child(opFinanceira).child(idcartao).updateChildren(mapsaldoatualizado);
     }
 
     /**
@@ -469,12 +553,9 @@ public class LancamentoGrupoActivity extends BaseActivity {
      * @param ll é o lançamento que foi digitado na tela pelo usuario. neste momento o envio ao firebase é feito
      */
     private void salvarLancamentoFirebase(Lancamento ll) {
-        myreference.child("lancamentosgrupo").child(UUID.randomUUID().toString()).setValue(ll).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                limpar();// limpando a view apos inserir os dados
-            }
-        });
+        myreference.child("lancamentosgrupo").child(UUID.randomUUID().toString()).setValue(ll);
+        limpar();// limpando a view apos inserir os dados
+
     }
 
     /**
@@ -558,28 +639,10 @@ public class LancamentoGrupoActivity extends BaseActivity {
         textdata.setText("");
         textvalor.setText("");
         texttitulo.setText("");
-        spinneropcao.setSelection(0);
-    }
-    protected int mensagemteste(){
-        int a =10 ;
-        int b = 30;
-        return b+a;
+//        spinneropcao.setSelection(0);
+        checkBox.setChecked(false);
     }
 
-
-    /**
-     * metodo pré configurado para exibir as menssagens assim reduzindo o codigo escrito em todas as chamadas
-     *
-     * @param context
-     * @param successType
-     * @param s
-     */
-    private void ExibirMensagem(Context context, int successType, String s) {
-        new SweetAlertDialog(context, successType)
-                .setTitleText(getResources().getString(R.string.app_name))
-                .setContentText(s)
-                .show();
-    }
 
     /**
      * meotdo responsavel por tratar o botão fisico de voltar do celular
@@ -589,5 +652,12 @@ public class LancamentoGrupoActivity extends BaseActivity {
         super.onBackPressed();
         finish();
 
+    }
+
+    private void ExibirMensageeem(Context context, int successType, String s) {
+        new SweetAlertDialog(context, successType)
+                .setTitleText(getResources().getString(R.string.app_name))
+                .setContentText(s)
+                .show();
     }
 }
