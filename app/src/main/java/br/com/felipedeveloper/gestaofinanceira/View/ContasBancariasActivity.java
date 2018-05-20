@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -54,7 +55,12 @@ public class ContasBancariasActivity extends AppCompatActivity {
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         contasBancariasList = new ArrayList<>();
+        recyclerView = findViewById(R.id.recyclerContasbancarias);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         myreference.addValueEventListener(new ValueEventListener() {
 
@@ -78,8 +84,7 @@ public class ContasBancariasActivity extends AppCompatActivity {
         });
 
 
-        recyclerView = findViewById(R.id.recyclerContasbancarias);
-        recyclerView.setLayoutManager(layoutManager);
+
 
 
         btnaddbanco.setOnClickListener(new View.OnClickListener() {
@@ -119,11 +124,6 @@ public class ContasBancariasActivity extends AppCompatActivity {
         });
 
 
-    }
-    protected int mensagemteste(){
-        int a =10 ;
-        int b = 30;
-        return b+a;
     }
     private void IniciaFirebase() {
         auth = FirebaseAuth.getInstance();

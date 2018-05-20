@@ -9,19 +9,19 @@
         android:layout_width="350dp"
         android:layout_height="80dp"
         android:layout_marginTop="04dp"
-        app:cardCornerRadius="7dp"
-        app:cardElevation="5dp"
-        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="6dp"
+        app:contentPadding="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <View
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:background="@color/cpb_blue">
+        <!--<View-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/cpb_blue">-->
 
-        </View>
+        <!--</View>-->
 
         <TextView
             android:id="@+id/itemcartaoTitulo"
