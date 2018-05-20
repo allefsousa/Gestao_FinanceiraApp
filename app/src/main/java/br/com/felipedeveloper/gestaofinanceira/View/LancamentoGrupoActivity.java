@@ -429,7 +429,6 @@ public class LancamentoGrupoActivity extends BaseActivity {
     }
 
     private void UpdateSaldoGrupo(Map<String, Object> retorno) {
-        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno);
     }
