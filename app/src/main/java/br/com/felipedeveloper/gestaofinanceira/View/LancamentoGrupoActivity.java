@@ -2,6 +2,7 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -17,7 +18,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,7 +47,8 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class LancamentoGrupoActivity extends BaseActivity {
-    DatePickerDialog.OnDateSetListener date;
+
+    //region Elementos da View Botoes campos
     @BindView(R.id.textInpvalor)
     TextInputLayout layoutvalor;
     @BindView(R.id.texteditvalor)
@@ -66,9 +67,12 @@ public class LancamentoGrupoActivity extends BaseActivity {
     Spinner spinneropcao;
     @BindView(R.id.checkedTextView)
     CheckBox checkBox;
+    android.support.v7.widget.SwitchCompat aSwitch;
+    //endregion
+
+    //region Variaveis Globais
+    DatePickerDialog.OnDateSetListener date;
     Lancamento lancamento;
-
-
     List<ContasBancarias> contasBancariasList;
     List<Cartao> cartaoList;
     List<String> financeiroSpinnerlist;
@@ -79,6 +83,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
     private String Idgrupo;
+    //endregion
 
 
     @Override
@@ -86,16 +91,14 @@ public class LancamentoGrupoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lancamento_grupo);
         ButterKnife.bind(this);
-        getSupportActionBar();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Lançamentos Grupo");
+        InitActionBarSupport();
 
         Bundle extras = getIntent().getExtras();
         Idgrupo = extras.getString("idgrupo");
 
         configFirebase();
         myCalendar = Calendar.getInstance();
-        final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
+        aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
 
 
@@ -177,6 +180,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
          * caso seja falso muda se o testo para debito
          * e mudando as cores do botão
          */
+        //region click Switch
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -189,6 +193,9 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 }
             }
         });
+        //endregion
+
+        //region click CheckBox fontes desconhecidas
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -201,6 +208,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 }
             }
         });
+        //endregion
 
 
         /**
@@ -281,7 +289,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                  */
                 if (aSwitch.isChecked()) { // creditar valor no grupo
                     lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
-                    Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamento.getValor());
+                    final Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamento.getValor());
                     /**
                      * Debitando cartao de credito ou conta
                      */
@@ -296,22 +304,22 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
                             switch (statusSaldo) {
                                 case "DebitocartaoOK":
-                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartao e adicionados ao grupo");
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartao e adicionados ao grupo");
                                     salvarLancamentoFirebase(lancamento);
                                     UpdateSaldoGrupo(retorno);
                                     break;
 
                                 case "saldoInsulficientecartao":
-                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "O Cartão não possui limite disponivel !");
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "O Cartão não possui limite disponivel !");
 
                                     break;
                                 case "DebitocontaoOK":
                                     salvarLancamentoFirebase(lancamento);
                                     UpdateSaldoGrupo(retorno);
-                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da conta e adicionados ao grupo");
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da conta e adicionados ao grupo");
                                     break;
                                 case "saldoInsulficienteconta":
-                                    ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui saldo sulficiente");
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui saldo sulficiente");
 
                                     break;
 
@@ -324,17 +332,48 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     if (checkBox.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
 
                         if (retorno != null) {
-                            /**
-                             * codigo responsavel por enviar o objeto lançamento para o firebase
-                             */
-                            salvarLancamentoFirebase(lancamento);
-                            UpdateSaldoGrupo(retorno);
+
+                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Team Money")
+                                    .setContentText("Os valores adicionados no grupo\n não seram removidos de nenhuma conta,\n Gostaria de continuar ?")
+                                    .setCancelText("Cancelar")
+                                    .setConfirmText("Adicionar")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            sweetAlertDialog.showCancelButton(false);
+                                            salvarLancamentoFirebase(lancamento);
+                                            UpdateSaldoGrupo(retorno);
+
+
+                                            sweetAlertDialog.setTitle("Team Money");
+                                            sweetAlertDialog.setConfirmText("OK");
+                                            sweetAlertDialog.setContentText("Valores Adicionados !");
+                                            sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                            sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                    sweetAlertDialog.cancel();
+                                                }
+                                            });
+                                            sweetAlertDialog.show();
+                                        }
+                                    })
+                                    .showCancelButton(true)
+                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.cancel();
+
+                                        }
+                                    })
+                                    .show();
 
                         }
                     }
                     if (!checkBox.isChecked()) {
                         if (spinneropcao.getSelectedItemPosition() == 0) {
-                            ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.WARNING_TYPE, "Selecione uma conta !");
+                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.WARNING_TYPE, "Selecione uma conta !");
                         }
 
 
@@ -344,7 +383,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
                     lancamento.setStatusOp(0);
                     if (g.getSaldoGrupo() < lancamento.getValor()) {
-                        ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Operação não realizada.\nO grupo não possui saldo sulficiente !");
+                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Operação não realizada.\nO grupo não possui saldo sulficiente !");
                     } else {
                         final Map<String, Object> retorno = g.mapDebitaGrupo(g, lancamento.getValor());
                         if (!lancamento.getNomeopFinanceira().equals("Origem dinheiro")) {
@@ -361,13 +400,13 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                     case "CreditoCartaoOK":
                                         salvarLancamentoFirebase(lancamento);
                                         UpdateSaldoGrupo(retorno);
-                                        ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para seu cartão !");
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para seu cartão !");
 
                                         break;
                                     case "CreditoBancoOK":
                                         salvarLancamentoFirebase(lancamento);
                                         UpdateSaldoGrupo(retorno);
-                                        ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua conta bancaria !");
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua conta bancaria !");
                                         break;
                                 }
 
@@ -413,19 +452,23 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                         })
                                         .show();
                             } else {
-                                ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Saldo Grupo Insulficiente !");
+                                ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Saldo Grupo Insulficiente !");
                             }
                         } else if (spinneropcao.getSelectedItemPosition() == 0) {
-                            ExibirMensageeem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Selecione uma conta para recebimento. !");
+                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Selecione uma conta para recebimento. !");
                         }
 
-
                     }
-
 
                 }
             }
         });
+    }
+
+    private void InitActionBarSupport() {
+        getSupportActionBar();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Lançamentos Grupo");
     }
 
     private void UpdateSaldoGrupo(Map<String, Object> retorno) {
@@ -569,7 +612,6 @@ public class LancamentoGrupoActivity extends BaseActivity {
      * @param opFinanceira       nome do nó .EX ou cartao ou banco
      * @param idcartao           id do cartao ou do banco
      * @param mapsaldoatualizado hash map do banco ou cartao com os dados atuaalizados para update
-     *
      */
     public void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // recuperando uma nova referenciaa do banco de dados
@@ -593,6 +635,10 @@ public class LancamentoGrupoActivity extends BaseActivity {
      */
     private void RecuperandoDadosdaView() {
         // TODO: 05/05/2018 validar dados inpedir nulo e vazio
+        if (textdata.getText().toString().isEmpty()) {
+
+        }
+
         lancamento.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
         lancamento.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
         lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String //  e o converte para Double conforme a classe espera
@@ -673,20 +719,27 @@ public class LancamentoGrupoActivity extends BaseActivity {
     }
 
 
+    //region Funcionalidades Botoes de voltar View
+    private void VoltarViewAnterior() {
+        Intent i = new Intent(LancamentoGrupoActivity.this, TransacoesGrupoActivity.class);
+        i.putExtra("idgrupo", Idgrupo);
+        startActivity(i);
+        finish();
+    }
+
     /**
      * meotdo responsavel por tratar o botão fisico de voltar do celular
      */
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+        VoltarViewAnterior();
 
     }
 
-    private void ExibirMensageeem(Context context, int successType, String s) {
-        new SweetAlertDialog(context, successType)
-                .setTitleText(getResources().getString(R.string.app_name))
-                .setContentText(s)
-                .show();
+    @Override
+    public boolean onSupportNavigateUp() {
+        VoltarViewAnterior();
+        return true;
     }
+    //endregion
 }

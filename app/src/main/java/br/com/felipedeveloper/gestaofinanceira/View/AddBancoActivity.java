@@ -1,11 +1,10 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,9 +19,10 @@ import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
-public class AddBancoActivity extends AppCompatActivity {
+public class AddBancoActivity extends BaseActivity {
 
     private FirebaseAuth auth;
     private FirebaseUser firebaseUser;
@@ -47,9 +47,9 @@ public class AddBancoActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
         IniciaFirebase();
+        
         contasBancarias = new ContasBancarias();
-
-        btnAdicionarBanco.setOnClickListener(new View.OnClickListener() {
+                btnAdicionarBanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 contasBancarias.setIdContaBanco(UUID.randomUUID().toString());
@@ -62,10 +62,10 @@ public class AddBancoActivity extends AppCompatActivity {
                 if (contasBancarias.getSaldoContabancaria()!= null) {
                     if (!contasBancarias.getTituloContabanco().isEmpty()) {
                         myreference.child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);
-                        Toast.makeText(AddBancoActivity.this, "Conta Adicionada com sucesso !", Toast.LENGTH_LONG).show();
+                        ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Conta Adicionada com sucesso !");
                         clear();
                     } else {
-
+                        // TODO: 20/05/2018 validar 
                     }
                 } else {
 

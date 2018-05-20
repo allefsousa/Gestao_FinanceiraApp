@@ -9,17 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.DataOutputStream;
-import java.io.Serializable;
 import java.util.List;
 
-import br.com.felipedeveloper.gestaofinanceira.Helper.teste;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
-import br.com.felipedeveloper.gestaofinanceira.View.DetalhesGrupoActivity;
-
+import br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity;
 
 
 public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGrupo> {
@@ -56,7 +51,7 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,DetalhesGrupoActivity.class);
+                Intent intent = new Intent(context,TransacoesGrupoActivity.class);
                 intent.putExtra("idgrupo",grupoList.get(position).getIdGrupo());
                context.startActivity(intent);
             }

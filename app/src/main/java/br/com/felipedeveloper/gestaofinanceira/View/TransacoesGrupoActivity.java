@@ -29,7 +29,7 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetalhesGrupoActivity extends AppCompatActivity {
+public class TransacoesGrupoActivity extends AppCompatActivity {
     @BindView(R.id.recyclergrupotrans)
     RecyclerView recyclerViewtran;
     @BindView(R.id.edittotaladicionado)
@@ -46,13 +46,11 @@ public class DetalhesGrupoActivity extends AppCompatActivity {
     Toolbar toolbarGrupo;
     @BindView(R.id.floatlancamentogrupo)
     FloatingActionButton floatingActionButton;
-    Context context = DetalhesGrupoActivity.this;
+    Context context = TransacoesGrupoActivity.this;
     private AdapterLinhadoTempo adapterLinhadoTempo;
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
     String nomeGrupo;
-    Bundle saved;
-    boolean aa = false;
 
 
     @Override
@@ -69,9 +67,10 @@ public class DetalhesGrupoActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(DetalhesGrupoActivity.this,LancamentoGrupoActivity.class);
+                Intent i = new Intent(TransacoesGrupoActivity.this,LancamentoGrupoActivity.class);
                 i.putExtra("idgrupo",nomeGrupo);
                 startActivity(i);
+                finish();
             }
         });
         configFirebase();

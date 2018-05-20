@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
 public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
 
+    //region Variaveis Globais
     Animation scaledown;
     Animation scaleup;
-    ConstraintLayout constraintLayout;
     @BindView(R.id.cardViewcarteira)
     CardView cardCarteira;
     @BindView(R.id.cardViewcartao)
@@ -61,6 +61,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     private NumberFormat df;
     private Cartao cartaoModel;
     private List<Cartao> cartaoList;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,6 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_opcoes_financeira);
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-        constraintLayout = (ConstraintLayout) findViewById(R.id.constraint);
         ButterKnife.bind(this);
         getSupportActionBar().setSubtitle("Acompanhe seu dinheiro");
         auth = FirebaseAuth.getInstance();
@@ -78,6 +78,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         cartaoList = new ArrayList<>();
         cartaoModel = new Cartao();
         df = new DecimalFormat("#0.00");
+
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,6 +141,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
             }
         });
 
+        //region Listners de Ação dos botoes
         cardCartao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,6 +176,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
                 startActivity(new Intent(OpcoesFinanceiraActivity.this, TransacoesActivity.class));
             }
         });
+        //endregion
 
 
     }
