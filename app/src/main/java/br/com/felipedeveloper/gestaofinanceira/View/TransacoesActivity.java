@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class TransacoesActivity extends AppCompatActivity {
     private AdapterLinhadoTempoPessoal adapterLinhadoTempo;
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
+    private DecimalFormat df;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,11 @@ public class TransacoesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Transações");
         list = new ArrayList<>();
+        df = new DecimalFormat("#0.00");
 
 
         configFirebase();
+
 
         adapterLinhadoTempo = new AdapterLinhadoTempoPessoal(TransacoesActivity.this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(TransacoesActivity.this);
@@ -127,9 +131,9 @@ public class TransacoesActivity extends AppCompatActivity {
             }
 
         totalstatus = totaladcionado + totalgasto;
-        totalGasto.setText("Total Gasto: " + String.valueOf(totalgasto));
-        totaladiconado.setText("Total Adicionado: " + String.valueOf(totaladcionado));
-        statusfinal.setText("Ver se utiliza: " + String.valueOf(totalstatus));
+        totalGasto.setText("Credito: " + String.valueOf(df.format(totalgasto)));
+        totaladiconado.setText("Debito: " + String.valueOf(df.format(totaladcionado)));
+        statusfinal.setText("Liquido: " + String.valueOf(df.format(totalstatus)));
     }
 
     private void configFirebase() {

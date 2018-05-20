@@ -1,7 +1,9 @@
 package br.com.felipedeveloper.gestaofinanceira.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +17,17 @@ import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
+import br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity;
 
 
-public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapter.ViewHolderAgencia> {
+public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAgencia> {
 
     private List<ContasBancarias> contasBancariasArray;
     private Context context;
     private int clickFlag = 0;
     private NumberFormat df;
 
-    public AgenciaBancoAdapter(List<ContasBancarias> contasBancarias, Context context) {
+    public BancoAdapter(List<ContasBancarias> contasBancarias, Context context) {
         this.contasBancariasArray = contasBancarias;
         this.context = context;
     }
@@ -45,9 +48,18 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
 
             holder.tituloConta.setText(contasBancariasArray.get(position).getTituloContabanco());
             holder.saldoConta.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria()) + " Reais"));
+            render(holder,position);
         }
-
-
+    }
+    private void render(final ViewHolderAgencia holder, final int position) {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context,TransacoesGrupoActivity.class);
+                intent.putExtra("tituloConta",contasBancariasArray.get(position).getTituloContabanco());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -58,12 +70,14 @@ public class AgenciaBancoAdapter extends RecyclerView.Adapter<AgenciaBancoAdapte
     public class ViewHolderAgencia extends RecyclerView.ViewHolder {
         TextView tituloConta;
         TextView saldoConta;
+        CardView cardView;
 
         public ViewHolderAgencia(View itemView) {
             super(itemView);
             tituloConta = itemView.findViewById(R.id.titulocontabancarias);
             saldoConta = itemView.findViewById(R.id.cardsaldocontabancaria);
             df = new DecimalFormat("#0.00");
+            cardView = itemView.findViewById(R.id.cardViewcontasbancaria);
             click(itemView);
             remove(itemView);
         }

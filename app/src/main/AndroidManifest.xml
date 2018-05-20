@@ -135,14 +135,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.GrupoActivity" />
         </activity>
-        <activity android:name=".View.LancamentoGrupoActivity"
+        <activity
+            android:name=".View.LancamentoGrupoActivity"
+            android:label="Lançamentos Grupo"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"
-            android:label="Lançamentos Grupo">
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity" />
         </activity>
+        <activity android:name=".View.TransacoesCartaoActivity" />
+        <activity android:name=".View.TransacoesContaActivity"></activity>
     </application>
 
 </manifest>

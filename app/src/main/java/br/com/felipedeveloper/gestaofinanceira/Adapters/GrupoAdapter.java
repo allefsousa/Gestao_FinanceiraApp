@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
@@ -20,6 +22,7 @@ import br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity;
 public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGrupo> {
     private Context context;
     private List<Grupo> grupoList;
+    private NumberFormat df;
 
     public GrupoAdapter(Context context, List<Grupo> grupoList) {
         this.context = context;
@@ -38,7 +41,7 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
     @Override
     public void onBindViewHolder(@NonNull GrupoAdapter.ViewHolderGrupo holder, int position) {
         holder.textTituloGrupo.setText(grupoList.get(position).getNomeGrupo());
-        holder.textSaldoGrupo.setText(String.valueOf(grupoList.get(position).getSaldoGrupo()));
+        holder.textSaldoGrupo.setText(String.valueOf(df.format(grupoList.get(position).getSaldoGrupo())));
         render(holder, position);
     }
 
@@ -70,6 +73,7 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
 
         public ViewHolderGrupo(View itemView) {
             super(itemView);
+            df = new DecimalFormat("#0.00");
             textTituloGrupo = itemView.findViewById(R.id.titulogrupo);
             textSaldoGrupo = itemView.findViewById(R.id.textsaldogrupo);
             cardView = itemView.findViewById(R.id.cardViewcontasbancaria);

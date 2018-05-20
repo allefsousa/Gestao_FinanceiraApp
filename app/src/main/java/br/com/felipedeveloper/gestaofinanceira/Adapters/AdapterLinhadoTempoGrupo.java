@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.github.vipulasri.timelineview.TimelineView;
 import com.google.firebase.database.DataSnapshot;
 
+import java.text.DecimalFormat;
+
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
@@ -20,6 +22,7 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
 
     private Context context;
     private String idGrupoSelecionado;
+    private DecimalFormat df;
 
     private SortedList<DataSnapshot> sortedList = new SortedList<>(DataSnapshot.class, new SortedList.Callback<DataSnapshot>() {
         @Override
@@ -117,6 +120,7 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
 
         public ViewHolder(View itemView) {
             super(itemView);
+            df = new DecimalFormat("#0.00");
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
             mTimelineView = itemView.findViewById(R.id.time_marker);
             titulo = itemView.findViewById(R.id.text_timeline_title);
@@ -162,7 +166,7 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
                 mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
             }
             String sTitulo = "Titulo: "+(dataSnapshot.child("titulo").getValue(String.class));
-            String sValor   = "Valor: "+(String.valueOf(dataSnapshot.child("valor").getValue(Double.class)));
+            String sValor   = "Valor: "+(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
             String sData    = "Data: "+(dataSnapshot.child("data").getValue(String.class));
             String sNome    = "Nome: "+(dataSnapshot.child("nomeColaborador").getValue(String.class));
             titulo.setText(sTitulo);

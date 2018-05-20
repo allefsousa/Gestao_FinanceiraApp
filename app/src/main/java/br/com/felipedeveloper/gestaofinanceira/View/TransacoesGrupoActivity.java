@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
     String nomeGrupo;
+    private DecimalFormat df;
 
 
     @Override
@@ -62,7 +64,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbarGrupo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Transações");
+        getSupportActionBar().setTitle(nomeGrupo);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +77,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
         });
         configFirebase();
         list = new ArrayList<>();
+        df = new DecimalFormat("#0.00");
         adapterLinhadoTempo = new AdapterLinhadoTempoGrupo(context,nomeGrupo);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerViewtran.setLayoutManager(layoutManager);
@@ -146,9 +149,9 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
             }
 
         totalstatus = totaladcionado + totalgasto;
-        totalGasto.setText("Total Gasto: " + String.valueOf(totalgasto));
-        totaladiconado.setText("Total Adicionado: " + String.valueOf(totaladcionado));
-        statusfinal.setText("Ver se utiliza: " + String.valueOf(totalstatus));
+        totalGasto.setText("Debito: " + String.valueOf(df.format(totalgasto)));
+        totaladiconado.setText("Credito: " + String.valueOf(df.format(totaladcionado)));
+        statusfinal.setText("Liquido: " + String.valueOf(df.format(totalstatus)));
     }
 
     private void configFirebase() {

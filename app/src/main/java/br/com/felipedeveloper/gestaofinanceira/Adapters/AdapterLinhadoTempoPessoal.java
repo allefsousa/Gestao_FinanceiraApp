@@ -13,11 +13,14 @@ import android.widget.TextView;
 import com.github.vipulasri.timelineview.TimelineView;
 import com.google.firebase.database.DataSnapshot;
 
+import java.text.DecimalFormat;
+
 import br.com.felipedeveloper.gestaofinanceira.R;
 
 public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinhadoTempoPessoal.ViewHolder> {
 
     private Context context;
+    private DecimalFormat df;
 
     private SortedList<DataSnapshot> sortedList = new SortedList<>(DataSnapshot.class, new SortedList.Callback<DataSnapshot>() {
         @Override
@@ -103,6 +106,7 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
 
         public ViewHolder(View itemView) {
             super(itemView);
+            df = new DecimalFormat("#0.00");
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
             mTimelineView = itemView.findViewById(R.id.time_marker);
             titulo = itemView.findViewById(R.id.text_timeline_title);
@@ -146,7 +150,7 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
                 mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
             }
             titulo.setText((dataSnapshot.child("titulo").getValue(String.class)));
-            valor.setText(String.valueOf(dataSnapshot.child("valor").getValue(Double.class)));
+            valor.setText(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
             data.setText((dataSnapshot.child("data").getValue(String.class)));
 
 

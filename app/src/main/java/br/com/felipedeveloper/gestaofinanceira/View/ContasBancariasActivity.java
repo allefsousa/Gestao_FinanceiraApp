@@ -9,10 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.felipedeveloper.gestaofinanceira.Adapters.AgenciaBancoAdapter;
+import br.com.felipedeveloper.gestaofinanceira.Adapters.BancoAdapter;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -73,8 +71,8 @@ public class ContasBancariasActivity extends AppCompatActivity {
                   contasBancarias= dd.getValue(ContasBancarias.class);
                     contasBancariasList.add(contasBancarias);
                 }
-                AgenciaBancoAdapter agenciaBancoAdapter = new AgenciaBancoAdapter(contasBancariasList,ContasBancariasActivity.this);
-                recyclerView.setAdapter(agenciaBancoAdapter);
+                BancoAdapter bancoAdapter = new BancoAdapter(contasBancariasList,ContasBancariasActivity.this);
+                recyclerView.setAdapter(bancoAdapter);
             }
 
             @Override
