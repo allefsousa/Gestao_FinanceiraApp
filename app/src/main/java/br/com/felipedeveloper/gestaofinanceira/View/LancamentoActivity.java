@@ -43,6 +43,7 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -66,6 +67,8 @@ public class LancamentoActivity extends AppCompatActivity {
     @BindView(R.id.spinneropbancaria)
     Spinner spinneropcao;
     Lancamento lancamento;
+    @BindColor(R.color.vermelho)
+            int riplecolor;
 
     List<ContasBancarias> contasBancariasList;
     List<Cartao> cartaoList;
@@ -231,6 +234,7 @@ public class LancamentoActivity extends AppCompatActivity {
                 return false;
             }
         });
+        btconfirmar.setRippleColor(riplecolor);
 
         /**
          * listner do botão de confirmar a operação de credito ou debito;

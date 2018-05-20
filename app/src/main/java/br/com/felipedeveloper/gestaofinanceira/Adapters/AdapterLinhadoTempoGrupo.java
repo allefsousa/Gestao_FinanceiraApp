@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,10 @@ import android.widget.TextView;
 import com.github.vipulasri.timelineview.TimelineView;
 import com.google.firebase.database.DataSnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
-public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTempo.ViewHolder> {
+public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhadoTempoGrupo.ViewHolder> {
 
     private Context context;
     private String idGrupoSelecionado;
@@ -65,11 +61,11 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
         }
     });
 
-    public AdapterLinhadoTempo(Context context) {
+    public AdapterLinhadoTempoGrupo(Context context) {
         this.context = context;
     }
 
-    public AdapterLinhadoTempo(Context context, String nomeGrupo) {
+    public AdapterLinhadoTempoGrupo(Context context, String nomeGrupo) {
         this.context = context;
         idGrupoSelecionado = nomeGrupo;
     }
@@ -78,7 +74,7 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_movimentacoes, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_movimentacoes_grupo, parent, false);
         return new ViewHolder(view);
     }
 
@@ -116,6 +112,7 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
         TextView titulo;
         TextView valor;
         TextView status;
+        TextView nomeUsuario;
         CardView cardViewlinha;
 
         public ViewHolder(View itemView) {
@@ -126,6 +123,7 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
             valor = itemView.findViewById(R.id.text_timeline_valor);
             data = itemView.findViewById(R.id.text_timeline_date);
             status = itemView.findViewById(R.id.editstatusop);
+            nomeUsuario = itemView.findViewById(R.id.text_timeline_nomeusuario);
             cardViewlinha.setUseCompatPadding(true);
         }
 
@@ -147,6 +145,7 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
                             mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
                             cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
                             mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
+
                             status.setText("DEBITO");
                             break;
                         case 1:
@@ -162,9 +161,14 @@ public class AdapterLinhadoTempo extends RecyclerView.Adapter<AdapterLinhadoTemp
             if (pos == (sortedList.size() - 1)) {
                 mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
             }
-            titulo.setText((dataSnapshot.child("titulo").getValue(String.class)));
-            valor.setText(String.valueOf(dataSnapshot.child("valor").getValue(Double.class)));
-            data.setText((dataSnapshot.child("data").getValue(String.class)));
+            String sTitulo = "Titulo: "+(dataSnapshot.child("titulo").getValue(String.class));
+            String sValor   = "Valor: "+(String.valueOf(dataSnapshot.child("valor").getValue(Double.class)));
+            String sData    = "Data: "+(dataSnapshot.child("data").getValue(String.class));
+            String sNome    = "Nome: "+(dataSnapshot.child("nomeColaborador").getValue(String.class));
+            titulo.setText(sTitulo);
+            valor.setText(sValor);
+            data.setText(sData);
+            nomeUsuario.setText(sNome);
 
 
         }

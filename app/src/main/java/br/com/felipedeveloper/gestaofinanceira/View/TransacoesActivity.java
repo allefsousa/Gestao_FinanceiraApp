@@ -19,7 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempo;
+import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempoGrupo;
+import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempoPessoal;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -28,24 +29,22 @@ import butterknife.ButterKnife;
 
 public class TransacoesActivity extends AppCompatActivity {
     @BindView(R.id.recyclertransacoes)
-     RecyclerView recyclerViewtran;
-    private AdapterLinhadoTempo adapterLinhadoTempo;
-    private DatabaseReference myreference;
-    private FirebaseUser firebaseUser;
+    RecyclerView recyclerViewtran;
     @BindView(R.id.edittotaladicionado)
     TextView totaladiconado;
     @BindView(R.id.edittotalgasto)
     TextView totalGasto;
     @BindView(R.id.editstatusfinal)
     TextView statusfinal;
-    Double totalstatus=0.0;
-    Double totaladcionado=0.0;
-    Double totalgasto=0.0;
-    List<Lancamento> list ;
-
-
+    Double totalstatus = 0.0;
+    Double totaladcionado = 0.0;
+    Double totalgasto = 0.0;
+    List<Lancamento> list;
     @BindView(R.id.toolbarcontet)
     Toolbar toolbar;
+    private AdapterLinhadoTempoPessoal adapterLinhadoTempo;
+    private DatabaseReference myreference;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,7 @@ public class TransacoesActivity extends AppCompatActivity {
 
         configFirebase();
 
-        adapterLinhadoTempo = new AdapterLinhadoTempo(TransacoesActivity.this);
+        adapterLinhadoTempo = new AdapterLinhadoTempoPessoal(TransacoesActivity.this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(TransacoesActivity.this);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);
@@ -69,7 +68,7 @@ public class TransacoesActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 adapterLinhadoTempo.addItem(dataSnapshot);
-               // totalGastoPeriodo(dataSnapshot);
+                // totalGastoPeriodo(dataSnapshot);
             }
 
             @Override
@@ -98,7 +97,7 @@ public class TransacoesActivity extends AppCompatActivity {
         myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Lancamento lancamento = snapshot.getValue(Lancamento.class);
                     list.add(lancamento);
                 }
@@ -114,30 +113,29 @@ public class TransacoesActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     private void totalGastoPeriodo(List<Lancamento> a) {
         if (!a.isEmpty())
-        for (Lancamento lan : a) {
+            for (Lancamento lan : a) {
 
-            if (lan.getStatusOp()==1){
-                totaladcionado = totaladcionado + lan.getValor();
-            }else {
-                totalgasto = totalgasto - lan.getValor();
+                if (lan.getStatusOp() == 1) {
+                    totaladcionado = totaladcionado + lan.getValor();
+                } else {
+                    totalgasto = totalgasto - lan.getValor();
+                }
             }
-        }
 
-        totalstatus= totaladcionado+totalgasto;
-        totalGasto.setText("Total Gasto: "+String.valueOf(totalgasto));
-        totaladiconado.setText("Total Adicionado: "+String.valueOf(totaladcionado));
-        statusfinal.setText("Ver se utiliza: "+String.valueOf(totalstatus));
+        totalstatus = totaladcionado + totalgasto;
+        totalGasto.setText("Total Gasto: " + String.valueOf(totalgasto));
+        totaladiconado.setText("Total Adicionado: " + String.valueOf(totaladcionado));
+        statusfinal.setText("Ver se utiliza: " + String.valueOf(totalstatus));
     }
 
     private void configFirebase() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-         myreference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());
+        myreference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());
 
     }
 }

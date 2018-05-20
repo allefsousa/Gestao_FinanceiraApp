@@ -23,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempo;
+import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -47,7 +47,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
     @BindView(R.id.floatlancamentogrupo)
     FloatingActionButton floatingActionButton;
     Context context = TransacoesGrupoActivity.this;
-    private AdapterLinhadoTempo adapterLinhadoTempo;
+    private AdapterLinhadoTempoGrupo adapterLinhadoTempo;
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
     String nomeGrupo;
@@ -75,7 +75,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
         });
         configFirebase();
         list = new ArrayList<>();
-        adapterLinhadoTempo = new AdapterLinhadoTempo(context,nomeGrupo);
+        adapterLinhadoTempo = new AdapterLinhadoTempoGrupo(context,nomeGrupo);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);

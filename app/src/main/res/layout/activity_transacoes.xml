@@ -90,6 +90,6 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_movimentacoes" />
+        tools:listitem="@layout/item_movimentacoes_pessoal" />
 
 </android.support.design.widget.CoordinatorLayout>
