@@ -14,14 +14,18 @@ import com.github.vipulasri.timelineview.TimelineView;
 import com.google.firebase.database.DataSnapshot;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
+import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
 public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinhadoTempoPessoal.ViewHolder> {
 
+    String nomefinanceiro;
+    List<String> lancamentoList;
     private Context context;
     private DecimalFormat df;
-
     private SortedList<DataSnapshot> sortedList = new SortedList<>(DataSnapshot.class, new SortedList.Callback<DataSnapshot>() {
         @Override
         public void onInserted(int position, int count) {
@@ -62,8 +66,10 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
         }
     });
 
-    public AdapterLinhadoTempoPessoal(Context context) {
+    public AdapterLinhadoTempoPessoal(Context context, String nomeGrupo) {
         this.context = context;
+        this.nomefinanceiro = nomeGrupo;
+        lancamentoList = new ArrayList<>();
     }
 
     @NonNull
@@ -95,7 +101,6 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
     }
 
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         TimelineView mTimelineView;
         TextView data;
@@ -106,6 +111,7 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
 
         public ViewHolder(View itemView) {
             super(itemView);
+
             df = new DecimalFormat("#0.00");
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
             mTimelineView = itemView.findViewById(R.id.time_marker);
@@ -120,42 +126,77 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
         private void render(DataSnapshot dataSnapshot, int pos) {
             cardViewlinha.setUseCompatPadding(true);
 
+            String nomefin = (dataSnapshot.child("nomeopFinanceira").getValue(String.class));
+
+            if (nomefinanceiro == ("geral")) {
+
+                // TODO: 21/05/2018  Dois metodos igal refatorar e so azer a chamada
+                Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
+                if (pos == 0) {
+                    mTimelineView.initLine(1);
+                    mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker_inactive));
+                }
+                if (statusop != null) {
+                    switch (statusop) {
+                        case 0:
+                            mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
+                            cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
+                            mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
+                            status.setText("DEBITO");
+                            break;
+                        case 1:
+                            mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
+                            mTimelineView.setMarkerColor(context.getResources().getColor(R.color.listagastos));
+                            cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.listagastos));
+                            status.setText("CREDITO");
+                            break;
+                    }
+                }
 
 
+                if (pos == (sortedList.size() - 1)) {
+                    mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
+                }
+                titulo.setText((dataSnapshot.child("titulo").getValue(String.class)));
+                valor.setText(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
+                data.setText((dataSnapshot.child("data").getValue(String.class)));
 
-            Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
-            if (pos == 0) {
-                mTimelineView.initLine(1);
-                mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker_inactive));
-            }
-            if (statusop != null) {
-                switch (statusop) {
-                    case 0:
-                        mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                        cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
-                        mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
-                        status.setText("DEBITO");
-                        break;
-                    case 1:
-                        mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                        mTimelineView.setMarkerColor(context.getResources().getColor(R.color.listagastos));
-                        cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.listagastos));
-                        status.setText("CREDITO");
-                        break;
+
+            } else {
+                if (nomefinanceiro.equals(nomefin)) {
+                    Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
+                    if (pos == 0) {
+                        mTimelineView.initLine(1);
+                        mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker_inactive));
+                    }
+                    if (statusop != null) {
+                        switch (statusop) {
+                            case 0:
+                                mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
+                                cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
+                                mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
+                                status.setText("DEBITO");
+                                break;
+                            case 1:
+                                mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
+                                mTimelineView.setMarkerColor(context.getResources().getColor(R.color.listagastos));
+                                cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.listagastos));
+                                status.setText("CREDITO");
+                                break;
+                        }
+                    }
+
+
+                    if (pos == (sortedList.size() - 1)) {
+                        mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
+                    }
+                    titulo.setText((dataSnapshot.child("titulo").getValue(String.class)));
+                    valor.setText(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
+                    data.setText((dataSnapshot.child("data").getValue(String.class)));
+
                 }
             }
-
-
-            if (pos == (sortedList.size() - 1)) {
-                mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
-            }
-            titulo.setText((dataSnapshot.child("titulo").getValue(String.class)));
-            valor.setText(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
-            data.setText((dataSnapshot.child("data").getValue(String.class)));
-
-
         }
     }
-
 
 }

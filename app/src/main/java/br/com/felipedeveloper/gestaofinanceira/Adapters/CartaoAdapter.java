@@ -16,7 +16,7 @@ import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.R;
-import br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity;
+import br.com.felipedeveloper.gestaofinanceira.View.TransacoesActivity;
 
 
 public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolderCartao> {
@@ -45,7 +45,7 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
         if (!cartaoArray.isEmpty() && cartaoArray.size() > 0) {
 
             holder.titulocartao.setText(cartaoArray.get(position).getTituloCartao());
-            holder.saldocartao.setText(String.valueOf(df.format(cartaoArray.get(position).getSaldoCartao()) + " Reais"));
+            holder.saldocartao.setText(String.valueOf(df.format(cartaoArray.get(position).getSaldoCartao()) + " R$"));
             render(holder,position);
         }
 
@@ -55,8 +55,8 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,TransacoesGrupoActivity.class);
-                intent.putExtra("tituloCartao",cartaoArray.get(position).getTituloCartao());
+                Intent intent = new Intent(context,TransacoesActivity.class);
+                intent.putExtra("nomeop",cartaoArray.get(position).getTituloCartao());
                 context.startActivity(intent);
             }
         });

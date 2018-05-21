@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.squareup.picasso.Picasso;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -43,7 +44,7 @@ public class UsuarioConfiguracaoActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
         if (!idUser.isEmpty()){
-            Glide.with(UsuarioConfiguracaoActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(circleImageView);
+            Picasso.with(UsuarioConfiguracaoActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(circleImageView);
         }
         btsair.setOnClickListener(new View.OnClickListener() {
             @Override

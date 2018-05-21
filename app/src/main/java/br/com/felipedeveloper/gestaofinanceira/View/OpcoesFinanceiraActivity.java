@@ -70,7 +70,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
         ButterKnife.bind(this);
-        getSupportActionBar().setSubtitle("Acompanhe seu dinheiro");
+        getSupportActionBar().setSubtitle("Acompanhe seu dinheiro.");
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
         IniciaFirebase();
@@ -108,7 +108,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
 
                     }
-                    saldoContabbancaria.setText(String.valueOf(("Saldo: " + df.format(result))));
+                    saldoContabbancaria.setText(String.valueOf(("Saldo: " + df.format(result) +" R$")));
 
 
                 }
@@ -129,7 +129,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
                         }
                     }
-                    saldoCartao.setText(String.valueOf("Saldo: " + df.format(result1)));
+                    saldoCartao.setText(String.valueOf("Saldo: " + df.format(result1)+" R$"));
 
 
                 }

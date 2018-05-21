@@ -15,7 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.text.DecimalFormat;
 
-import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
+import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
 public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhadoTempoGrupo.ViewHolder> {
@@ -87,7 +87,7 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
     }
 
     public void addItem(DataSnapshot data) {
-        Lancamento lancamento = data.getValue(Lancamento.class); // recuperando o lançamento
+        LancamentoGrupo lancamento = data.getValue(LancamentoGrupo.class); // recuperando o lançamento
         if (!lancamento.getNomeGrupo().isEmpty()) {
             if (lancamento.getNomeGrupo().equals(idGrupoSelecionado)) { // comparando a id do grupo selecionado com  o nome do grupo
                 // caso sejam iguais exibir seus gastos

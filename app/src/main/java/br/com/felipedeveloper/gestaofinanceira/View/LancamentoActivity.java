@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -41,6 +40,7 @@ import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
+import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindColor;
@@ -65,16 +65,18 @@ public class LancamentoActivity extends AppCompatActivity {
     @BindView(R.id.floatingconfirmar)
     FloatingActionButton btconfirmar;
     @BindView(R.id.spinneropbancaria)
-    Spinner spinneropcao;
-    Lancamento lancamento;
+     Spinner spinneropcao;
+
     @BindColor(R.color.vermelho)
             int riplecolor;
 
-    List<ContasBancarias> contasBancariasList;
-    List<Cartao> cartaoList;
-    List<String> financeiroSpinnerlist;
-    DataSnapshot globalSnapshot;
-    String nomeopFinanceira;
+
+    private Lancamento lancamento;
+    private List<ContasBancarias> contasBancariasList;
+    private List<Cartao> cartaoList;
+    private List<String> financeiroSpinnerlist;
+    private DataSnapshot globalSnapshot;
+    private String nomeopFinanceira;
     private DatabaseReference myreference;
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
@@ -253,6 +255,16 @@ public class LancamentoActivity extends AppCompatActivity {
                 nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
                 String ret = verificaOpcaoFinanceira(nomeopFinanceira);
                 if (!ret.isEmpty()) {
+                    String statusSaldo = "";
+                    if (ret.equals("cartao")) {
+                        statusSaldo = operacaoDebitoCartao(ret);
+                    } else if (ret.equals("banco")) {
+                        statusSaldo = adicionandoDebitoConta(ret);
+                    }
+
+
+                        lancamento.setNomeopFinanceira(spinneropcao.getSelectedItem().toString());
+
 
 
                     /**
@@ -304,8 +316,10 @@ public class LancamentoActivity extends AppCompatActivity {
         lancamento = new Lancamento();
     }
 
-    private void operacaoDebitoCartao(String ret) {
+    private String operacaoDebitoCartao(String ret) {
+        String retorno = null;
         if (ret.equals("cartao")) {
+
             for (Cartao b : cartaoList) {
                 if (b.getTituloCartao().equals(nomeopFinanceira)) {
                     Cartao aux;
@@ -314,17 +328,21 @@ public class LancamentoActivity extends AppCompatActivity {
                     Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamento.getValor());
                     if (rec != null) {
                         atualizaSaldoCartaoBancoFirebase(ret, cardatualiza.getIdcartao(),rec,false);
-                    } else {
+                        retorno = cardatualiza.getTituloCartao();
+                    } else { // TODO: 21/05/2018 analisar dupla menssage ao adiconar dinheiro 
                         ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
                     }
 
                 }
 
             }
+
         }
+        return retorno;
     }
 
-    private void adicionandoDebitoConta(String ret) {
+    private String adicionandoDebitoConta(String ret) {
+        String retorno = null;
         if (ret.equals("banco")) {
             for (ContasBancarias contas : contasBancariasList) {
                 if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
@@ -334,6 +352,7 @@ public class LancamentoActivity extends AppCompatActivity {
                     Map<String, Object> rec = ban.MapBancoDebita(ban, lancamento.getValor());
                     if (rec != null) {
                         atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec,false);
+                        retorno = ban.getTituloContabanco();
                     } else {
                         ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
                     }
@@ -343,6 +362,7 @@ public class LancamentoActivity extends AppCompatActivity {
 
             }
         }
+        return retorno;
     }
 
 
@@ -438,7 +458,7 @@ public class LancamentoActivity extends AppCompatActivity {
     }
 
     /**
-     * metodo reponsavel por salvar o lançamento no firebase no nó ("lancamento")
+     * metodo reponsavel por salvar o lançamento no firebase no nó ("lancamentoGrupo")
      *
      * @param ll é o lançamento que foi digitado na tela pelo usuario. neste momento o envio ao firebase é feito
      */

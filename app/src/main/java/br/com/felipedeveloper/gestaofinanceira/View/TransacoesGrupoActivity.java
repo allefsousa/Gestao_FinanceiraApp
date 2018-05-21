@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempoGrupo;
-import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
+import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +42,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
     Double totalstatus = 0.0;
     Double totaladcionado = 0.0;
     Double totalgasto = 0.0;
-    List<Lancamento> list;
+    List<LancamentoGrupo> list;
     @BindView(R.id.toolbargrupo)
     Toolbar toolbarGrupo;
     @BindView(R.id.floatlancamentogrupo)
@@ -64,7 +64,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbarGrupo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(nomeGrupo);
+        getSupportActionBar().setTitle("Transações");
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +117,9 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Lancamento lancamento = snapshot.getValue(Lancamento.class);
-                    if (lancamento.getNomeGrupo().equals(nomeGrupo)){
-                        list.add(lancamento);
+                    LancamentoGrupo lancamentoGrupo = snapshot.getValue(LancamentoGrupo.class);
+                    if (lancamentoGrupo.getNomeGrupo().equals(nomeGrupo)){
+                        list.add(lancamentoGrupo);
                     }
 
                 }
@@ -137,9 +137,9 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
 
     }
 
-    private void totalGastoPeriodo(List<Lancamento> a) {
+    private void totalGastoPeriodo(List<LancamentoGrupo> a) {
         if (!a.isEmpty())
-            for (Lancamento lan : a) {
+            for (LancamentoGrupo lan : a) {
 
                 if (lan.getStatusOp() == 1) {
                     totaladcionado = totaladcionado + lan.getValor();

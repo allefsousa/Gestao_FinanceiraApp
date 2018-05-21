@@ -17,7 +17,7 @@ import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
-import br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity;
+import br.com.felipedeveloper.gestaofinanceira.View.TransacoesActivity;
 
 
 public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAgencia> {
@@ -47,7 +47,7 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
         if (!contasBancariasArray.isEmpty() && contasBancariasArray.size() > 0) {
 
             holder.tituloConta.setText(contasBancariasArray.get(position).getTituloContabanco());
-            holder.saldoConta.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria()) + " Reais"));
+            holder.saldoConta.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria()) + " R$"));
             render(holder,position);
         }
     }
@@ -55,8 +55,8 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,TransacoesGrupoActivity.class);
-                intent.putExtra("tituloConta",contasBancariasArray.get(position).getTituloContabanco());
+                Intent intent = new Intent(context,TransacoesActivity.class);
+                intent.putExtra("nomeop",contasBancariasArray.get(position).getTituloContabanco());
                 context.startActivity(intent);
             }
         });
