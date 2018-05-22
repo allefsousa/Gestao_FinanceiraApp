@@ -5,13 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,12 +41,12 @@ public class TransacoesActivity extends AppCompatActivity {
     List<Lancamento> list;
     @BindView(R.id.toolbarcontet)
     Toolbar toolbar;
-    int quem;
+    private List<Lancamento> lancamentoList;
     private AdapterLinhadoTempoPessoal adapterLinhadoTempo;
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
     private DecimalFormat df;
-    private String nomeGrupo;
+    private String nomeOpfinanceira;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,43 +60,37 @@ public class TransacoesActivity extends AppCompatActivity {
         list = new ArrayList<>();
         df = new DecimalFormat("#0.00");
 
-        nomeGrupo = retornoNomeGrupo(savedInstanceState);
+        nomeOpfinanceira = retornoNomeGrupo(savedInstanceState);
 
-        if (nomeGrupo == null) {
-            nomeGrupo = "geral";
+        if (nomeOpfinanceira == null) {
+            nomeOpfinanceira = "Transacoesgeral";
         }
 
 
         configFirebase();
 
 
-        adapterLinhadoTempo = new AdapterLinhadoTempoPessoal(TransacoesActivity.this, nomeGrupo);
+        adapterLinhadoTempo = new AdapterLinhadoTempoPessoal(TransacoesActivity.this, nomeOpfinanceira);
         LinearLayoutManager layoutManager = new LinearLayoutManager(TransacoesActivity.this);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);
 
-
-        myreference.child("lancamentos").addChildEventListener(new ChildEventListener() {
+        myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                adapterLinhadoTempo.addItem(dataSnapshot);
-                // totalGastoPeriodo(dataSnapshot);
-            }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Lancamento lancamento;
+                for (DataSnapshot dd : dataSnapshot.getChildren()){
+                    lancamento = dd.getValue(Lancamento.class);
+                    if (nomeOpfinanceira.equals("Transacoesgeral")){
+                        adapterLinhadoTempo.addItemm(lancamento);
+                    }else {
+                        if (lancamento.getNomeopFinanceira().equals(nomeOpfinanceira)){
+                            adapterLinhadoTempo.addItemm(lancamento);
+                        }
+                    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                adapterLinhadoTempo.addItem(dataSnapshot);
+                }
 
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                adapterLinhadoTempo.removeItem(dataSnapshot);
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
 
@@ -108,6 +99,7 @@ public class TransacoesActivity extends AppCompatActivity {
 
             }
         });
+
 
         myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
             @Override
@@ -133,25 +125,23 @@ public class TransacoesActivity extends AppCompatActivity {
     private void totalGastoPeriodo(List<Lancamento> a) {
         if (!a.isEmpty()) {
             for (Lancamento lan : a) {
-                if (lan.getNomeopFinanceira().equals(nomeGrupo)) {
+                if (lan.getNomeopFinanceira().equals(nomeOpfinanceira)) {
                     if (lan.getStatusOp() == 1) {
                         totaladcionado = totaladcionado + lan.getValor();
                     } else {
                         totalgasto = totalgasto - lan.getValor();
                     }
-                } else if (nomeGrupo.equals("geral")) {
+                } else if (nomeOpfinanceira.equals("Transacoesgeral")) {
                     if (lan.getStatusOp() == 1) {
                         totaladcionado = totaladcionado + lan.getValor();
                     } else { // TODO: 21/05/2018 refactor
                         totalgasto = totalgasto - lan.getValor();
                     }
-                }else {
-
                 }
 
                 totalstatus = totaladcionado + totalgasto;
-                totalGasto.setText("Credito: " + String.valueOf(df.format(totalgasto)));
-                totaladiconado.setText("Debito: " + String.valueOf(df.format(totaladcionado)));
+                totalGasto.setText("Debito: " + String.valueOf(df.format(totalgasto)));
+                totaladiconado.setText("Credito: " + String.valueOf(df.format(totaladcionado)));
                 statusfinal.setText("Liquido: " + String.valueOf(df.format(totalstatus)));
             }
         }

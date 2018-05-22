@@ -1,5 +1,6 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,18 +22,36 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UsuarioConfiguracaoActivity extends AppCompatActivity {
+public class UsuarioConfiguracaoActivity extends BaseActivity {
 
     @BindView(R.id.btnsair)
     Button btsair;
+    @BindView(R.id.btnrestaurar)
+    Button btnrestaurar;
     @BindView(R.id.circleimageusuario)
     CircleImageView circleImageView;
     private String idUser;
+    DatabaseReference reference;
 
 
     private FirebaseUser firebaseUser;
     private FirebaseAuth auth;
 
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void ExibirMensagem(Context context, int successType, String s) {
+        super.ExibirMensagem(context, successType, s);
+    }
+
+    @Override
+    public DatabaseReference configFirebase(DatabaseReference reference) {
+        return super.configFirebase(reference);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +61,7 @@ public class UsuarioConfiguracaoActivity extends AppCompatActivity {
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         auth = FirebaseAuth.getInstance();
+        reference = configFirebase(reference);
         idUser = auth.getCurrentUser().getUid();
         if (!idUser.isEmpty()){
             Picasso.with(UsuarioConfiguracaoActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(circleImageView);
@@ -60,6 +80,14 @@ public class UsuarioConfiguracaoActivity extends AppCompatActivity {
 
             }
         });
+        btnrestaurar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // zerar o app
+            }
+        });
+
+
 
 
 

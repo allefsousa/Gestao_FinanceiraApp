@@ -26,7 +26,7 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
     List<String> lancamentoList;
     private Context context;
     private DecimalFormat df;
-    private SortedList<DataSnapshot> sortedList = new SortedList<>(DataSnapshot.class, new SortedList.Callback<DataSnapshot>() {
+    private SortedList<Lancamento> lancamentoSortedList = new SortedList<Lancamento>(Lancamento.class, new SortedList.Callback<Lancamento>() {
         @Override
         public void onInserted(int position, int count) {
             notifyItemRangeInserted(position, count);
@@ -42,12 +42,11 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
         @Override
         public void onMoved(int fromPosition, int toPosition) {
             notifyItemRangeInserted(fromPosition, toPosition);
-
         }
 
         @Override
-        public int compare(DataSnapshot data1, DataSnapshot data2) {
-            return (int) (data1.child("createdAt").getValue(Long.class) - data2.child("createdAt").getValue(Long.class));
+        public int compare(Lancamento data1, Lancamento data2) {
+            return (int) (data1.getCreatedAt() - data2.getCreatedAt());
         }
 
         @Override
@@ -56,15 +55,16 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
         }
 
         @Override
-        public boolean areContentsTheSame(DataSnapshot oldItem, DataSnapshot newItem) {
+        public boolean areContentsTheSame(Lancamento oldItem, Lancamento newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areItemsTheSame(DataSnapshot item1, DataSnapshot item2) {
-            return item1.getKey().equals(item2.getKey());
+        public boolean areItemsTheSame(Lancamento item1, Lancamento item2) {
+            return item1.getTitulo().equals(item2.getTitulo());
         }
     });
+
 
     public AdapterLinhadoTempoPessoal(Context context, String nomeGrupo) {
         this.context = context;
@@ -82,22 +82,22 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.render(sortedList.get(position), position);
-    }
+        holder.render(lancamentoSortedList, position);
 
-    public void addItem(DataSnapshot data) {
-        sortedList.add(data);
+    }
+    public void addItemm(Lancamento lancamento) {
+        lancamentoSortedList.add(lancamento);
         notifyDataSetChanged();
     }
 
-    public void removeItem(DataSnapshot data) {
-        sortedList.remove(data);
+    public void removeItem(Lancamento data) {
+        lancamentoList.remove(data);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return sortedList.size();
+        return lancamentoSortedList.size();
     }
 
 
@@ -123,15 +123,14 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
         }
 
 
-        private void render(DataSnapshot dataSnapshot, int pos) {
+        private void render(SortedList<Lancamento> sortedList, int pos) {
             cardViewlinha.setUseCompatPadding(true);
 
-            String nomefin = (dataSnapshot.child("nomeopFinanceira").getValue(String.class));
 
-            if (nomefinanceiro == ("geral")) {
 
                 // TODO: 21/05/2018  Dois metodos igal refatorar e so azer a chamada
-                Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
+
+                Integer statusop = (sortedList.get(pos).getStatusOp());
                 if (pos == 0) {
                     mTimelineView.initLine(1);
                     mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker_inactive));
@@ -157,46 +156,14 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
                 if (pos == (sortedList.size() - 1)) {
                     mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
                 }
-                titulo.setText((dataSnapshot.child("titulo").getValue(String.class)));
-                valor.setText(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
-                data.setText((dataSnapshot.child("data").getValue(String.class)));
 
-
-            } else {
-                if (nomefinanceiro.equals(nomefin)) {
-                    Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
-                    if (pos == 0) {
-                        mTimelineView.initLine(1);
-                        mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker_inactive));
-                    }
-                    if (statusop != null) {
-                        switch (statusop) {
-                            case 0:
-                                mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                                cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
-                                mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
-                                status.setText("DEBITO");
-                                break;
-                            case 1:
-                                mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                                mTimelineView.setMarkerColor(context.getResources().getColor(R.color.listagastos));
-                                cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.listagastos));
-                                status.setText("CREDITO");
-                                break;
-                        }
-                    }
-
-
-                    if (pos == (sortedList.size() - 1)) {
-                        mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
-                    }
-                    titulo.setText((dataSnapshot.child("titulo").getValue(String.class)));
-                    valor.setText(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
-                    data.setText((dataSnapshot.child("data").getValue(String.class)));
+                titulo.setText(sortedList.get(pos).getTitulo());
+                valor.setText(String.valueOf(df.format(sortedList.get(pos).getValor())));
+                data.setText(sortedList.get(pos).getData());
 
                 }
             }
         }
-    }
 
-}
+
+
