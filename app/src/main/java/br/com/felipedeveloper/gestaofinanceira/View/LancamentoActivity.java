@@ -476,11 +476,28 @@ public class LancamentoActivity extends AppCompatActivity {
      * até que o mesmo seja enviado ao firebase
      */
     private void RecuperandoDadosdaView() {
-        // TODO: 05/05/2018 validar dados inpedir nulo e vazio
-        lancamento.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
-        lancamento.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
-        lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String
-        //  e o converte para Double conforme a classe espera
+        
+        if (textdata.getText().toString().isEmpty() || textdata.getText() == null){
+            // TODO: 22/05/2018 textinput layout 
+        }else {
+            lancamento.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
+        }
+        if (texttitulo.getText().toString().isEmpty() || texttitulo.getText() == null){
+            
+        }else {
+            lancamento.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
+
+        }
+        
+        if (textvalor.getText().toString().isEmpty() || textvalor.getText() == null){
+            
+        }else {
+            lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String
+            //  e o converte para Double conforme a classe espera 
+        }
+        
+        
+       
 
     }
 
