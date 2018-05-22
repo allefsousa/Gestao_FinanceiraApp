@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -40,7 +42,6 @@ import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
-import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindColor;
@@ -59,7 +60,7 @@ public class LancamentoActivity extends AppCompatActivity {
     @BindView(R.id.texteditdata)
     EditText textdata;
     @BindView(R.id.textInputtitulo)
-    TextInputLayout textInptitulo;
+    TextInputLayout   layouttitulo;
     @BindView(R.id.textedittitulo)
     EditText texttitulo;
     @BindView(R.id.floatingconfirmar)
@@ -94,7 +95,22 @@ public class LancamentoActivity extends AppCompatActivity {
         myCalendar = Calendar.getInstance();
         final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
+        textvalor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                layoutvalor.setError("");
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                layoutvalor.setError("");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
 
         /**
@@ -244,61 +260,65 @@ public class LancamentoActivity extends AppCompatActivity {
         btconfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecuperandoDadosdaView();// recuperando oque esta digitado nos campos
-                final Long a = criaTimeStamp(); // recuperando o timestamp criado
-                lancamento.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
+              boolean ok =   RecuperandoDadosdaView();// recuperando oque esta digitado nos campos
+
+                if (ok) {
 
 
-                /**
-                 * verificando se a opçao de deposito é para conta corrente ou cartao.
-                 */
-                nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
-                String ret = verificaOpcaoFinanceira(nomeopFinanceira);
-                if (!ret.isEmpty()) {
-                    String statusSaldo = "";
-                    if (ret.equals("cartao")) {
-                        statusSaldo = operacaoDebitoCartao(ret);
-                    } else if (ret.equals("banco")) {
-                        statusSaldo = adicionandoDebitoConta(ret);
-                    }
+                    final Long a = criaTimeStamp(); // recuperando o timestamp criado
+                    lancamento.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
+
+
+                    /**
+                     * verificando se a opçao de deposito é para conta corrente ou cartao.
+                     */
+                    nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
+                    String ret = verificaOpcaoFinanceira(nomeopFinanceira);
+                    if (!ret.isEmpty()) {
+                        String statusSaldo = "";
+                        if (ret.equals("cartao")) {
+                            statusSaldo = operacaoDebitoCartao(ret);
+                        } else if (ret.equals("banco")) {
+                            statusSaldo = adicionandoDebitoConta(ret);
+                        }
 
 
                         lancamento.setNomeopFinanceira(spinneropcao.getSelectedItem().toString());
 
 
-
-                    /**
-                     * verificando se o switch esta selecionado ou nao.
-                     * neste caso se é CREDITO ou DEBITO a operação a ser feita
-                     */
-                    if (aSwitch.isChecked()) {
-                        lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
-
                         /**
-                         * codigo responsavel por enviar o objeto lançamento para o firebase
+                         * verificando se o switch esta selecionado ou nao.
+                         * neste caso se é CREDITO ou DEBITO a operação a ser feita
                          */
-                        salvarLancamentoFirebase(lancamento);
+                        if (aSwitch.isChecked()) {
+                            lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
 
-                        // Metodos para adicionar credito ao cartao ou banco
-                        adicionandoCreditoCartao(ret);
-                        adicionandoCreditoBanco(ret);
+                            /**
+                             * codigo responsavel por enviar o objeto lançamento para o firebase
+                             */
+                            salvarLancamentoFirebase(lancamento);
+
+                            // Metodos para adicionar credito ao cartao ou banco
+                            adicionandoCreditoCartao(ret);
+                            adicionandoCreditoBanco(ret);
 
 
+                        } else {
+                            lancamento.setStatusOp(0);
+                            salvarLancamentoFirebase(lancamento);
+                            // Metodos para adicionar Debito ao cartao ou banco
+                            operacaoDebitoCartao(ret);
+                            adicionandoDebitoConta(ret);
+
+
+                        }
                     } else {
-                        lancamento.setStatusOp(0);
-                        salvarLancamentoFirebase(lancamento);
-                        // Metodos para adicionar Debito ao cartao ou banco
-                        operacaoDebitoCartao(ret);
-                        adicionandoDebitoConta(ret);
-
-
+                        ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Erro !! Tente novamente");
                     }
-                }else {
-                    ExibirMensagem(LancamentoActivity.this,SweetAlertDialog.ERROR_TYPE,"Erro !! Tente novamente");
                 }
-
             }
         });
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -475,30 +495,32 @@ public class LancamentoActivity extends AppCompatActivity {
      * atribuindo os dados informados na view  a um objeto lançamento que fara a movimentação dos dados
      * até que o mesmo seja enviado ao firebase
      */
-    private void RecuperandoDadosdaView() {
+    private boolean RecuperandoDadosdaView() {
+        boolean todosPreenchidos = false;
         
-        if (textdata.getText().toString().isEmpty() || textdata.getText() == null){
-            // TODO: 22/05/2018 textinput layout 
-        }else {
-            lancamento.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
+        if ( textdata.getText() == null || textdata.getText().toString().isEmpty()) {
+            layoutdata.setErrorEnabled(true);
+            layoutdata.setError("Escolha uma data !");
         }
-        if (texttitulo.getText().toString().isEmpty() || texttitulo.getText() == null){
-            
-        }else {
-            lancamento.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
-
-        }
-        
         if (textvalor.getText().toString().isEmpty() || textvalor.getText() == null){
-            
-        }else {
-            lancamento.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String
-            //  e o converte para Double conforme a classe espera 
+            layoutvalor.setErrorEnabled(true);
+            layoutvalor.setError("Informe um valor !");
         }
-        
-        
-       
 
+        if(texttitulo.getText().toString().isEmpty() || texttitulo.getText() == null){
+            layouttitulo.setErrorEnabled(true);
+            layouttitulo.setError("Informe o titulo !");
+        }
+
+        if (spinneropcao.getSelectedItemPosition()==0){
+            // exibir mensagem
+
+        }
+
+
+
+
+        return todosPreenchidos;
     }
 
     /**
