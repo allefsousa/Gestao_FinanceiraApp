@@ -2,7 +2,6 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.Menu;
@@ -37,7 +36,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     //region Variaveis Globais
     Animation scaledown;
     Animation scaleup;
-    @BindView(R.id.cardViewcarteira)
+    @BindView(R.id.cardViewlancamentos)
     CardView cardCarteira;
     @BindView(R.id.cardViewcartao)
     CardView cardCartao;

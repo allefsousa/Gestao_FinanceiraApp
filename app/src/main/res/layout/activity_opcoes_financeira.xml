@@ -31,6 +31,7 @@
             android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp"
             app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardViewcarteira">
@@ -41,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:paddingLeft="22dp"
-                android:text="CONTAS BANCARIAS"
+                android:text="Contas Bancarias"
                 android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
@@ -58,7 +59,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp"
+                android:layout_height="4dp"
                 android:layout_gravity="bottom"
                 android:background="@color/cpb_blue"/>
 
@@ -73,13 +74,14 @@
             android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp"
             app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardViewcontasbancaria">
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp"
+                android:layout_height="4dp"
                 android:layout_gravity="bottom"
                 android:background="@color/cpb_blue"/>
 
@@ -89,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:paddingLeft="22dp"
-                android:text="CARTÕES"
+                android:text="Cartões"
                 android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
@@ -105,7 +107,6 @@
                 android:textSize="16dp" />
 
         </android.support.v7.widget.CardView>
-
         <android.support.v7.widget.CardView
             android:id="@+id/cardViewcarteira"
             android:layout_width="350dp"
@@ -115,13 +116,58 @@
             android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp"
             app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewlancamentos">
+
+            <TextView
+                android:id="@+id/titulocarte"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="22dp"
+                android:text="Carteira"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/cardsaldocartei"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="05dp"
+                android:paddingRight="30dp"
+                android:text="R$:"
+                android:textColor="@color/cpb_blue"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:background="@color/cpb_blue"/>
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewlancamentos"
+            android:layout_width="350dp"
+            android:layout_height="75dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp"
+                android:layout_height="4dp"
                 android:layout_gravity="bottom"
                 android:background="@color/cpb_blue"/>
 
@@ -131,7 +177,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:paddingLeft="22dp"
-                android:text="LANÇAMENTOS"
+                android:text="Lançamentos"
                 android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
@@ -157,13 +203,14 @@
             android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp"
             app:cardElevation="5dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardViewcartao">
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp"
+                android:layout_height="4dp"
                 android:layout_gravity="bottom"
                 android:background="@color/cpb_blue"/>
 
@@ -187,6 +234,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp"
+            app:cardUseCompatPadding="true"
             app:cardElevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -206,7 +254,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="2dp"
+                android:layout_height="4dp"
                 android:layout_gravity="bottom"
                 android:background="@color/cpb_blue"/>
         </android.support.v7.widget.CardView>

@@ -14,12 +14,14 @@ import android.widget.Button;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsuarioConfiguracaoActivity extends BaseActivity {
@@ -43,15 +45,6 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
         super.onBackPressed();
     }
 
-    @Override
-    public void ExibirMensagem(Context context, int successType, String s) {
-        super.ExibirMensagem(context, successType, s);
-    }
-
-    @Override
-    public DatabaseReference configFirebase(DatabaseReference reference) {
-        return super.configFirebase(reference);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +76,39 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
         btnrestaurar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // zerar o app
+                new SweetAlertDialog(UsuarioConfiguracaoActivity.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Team Money")
+                        .setContentText("Todos os seus dados seram excluidos, Gostaria de continuar?")
+                        .setCancelText("Cancelar")
+                        .setConfirmText("Continuar")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.showCancelButton(false);
+                                RestaurarDadosApp();
+                                sweetAlertDialog.setTitle("Team Money");
+                                sweetAlertDialog.setConfirmText("OK");
+                                sweetAlertDialog.setContentText("Conta Restaurada !");
+                                sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.cancel();
+                                    }
+                                });
+                                sweetAlertDialog.show();
+                            }
+                        })
+                        .showCancelButton(true)
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.cancel();
+
+                            }
+                        })
+                        .show();
+
             }
         });
 
@@ -91,5 +116,18 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
 
 
 
+
+    }
+
+    private void RestaurarDadosApp() {
+        reference.removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+            }
+        });
+    }
+
+    public void ExibirMensagem(Context context, int successType, String s) {
     }
 }
