@@ -48,6 +48,8 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     TextView saldoContabbancaria;
     @BindView(R.id.cardViewtransa)
     CardView cardTransacao;
+    @BindView(R.id.cardViewcarteira)
+    CardView cardCarteira;
     @BindView(R.id.cardviewsaldocartao)
     TextView saldoCartao;
 
@@ -147,6 +149,12 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
                 Intent intent = new Intent(OpcoesFinanceiraActivity.this, CartaoActivity.class);
 //                new Intent(OpcoesFinanceiraActivity.this,CartaoActivity.class);
                 startActivity(intent);
+            }
+        });
+        cardCarteira.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OpcoesFinanceiraActivity.this, CarteiraActivity.class));
             }
         });
         cardCarteira.setOnClickListener(new View.OnClickListener() {

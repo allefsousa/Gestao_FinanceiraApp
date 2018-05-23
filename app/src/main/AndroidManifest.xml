@@ -144,6 +144,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity" />
         </activity>
+        <activity android:name=".View.CarteiraActivity"></activity>
     </application>
 
 </manifest>
