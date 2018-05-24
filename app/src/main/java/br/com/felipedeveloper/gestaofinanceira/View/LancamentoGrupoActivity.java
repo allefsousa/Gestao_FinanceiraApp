@@ -281,7 +281,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
                 lancamentoGrupo.setNomeColaborador(firebaseUser.getDisplayName());// TODO: 16/05/2018 validar vazio
                 lancamentoGrupo.setNomeopFinanceira(nomeopFinanceira);
-                Grupo g = globalSnapshot.child("grupo").child(Idgrupo).getValue(Grupo.class);
+                Grupo g = globalSnapshot.child("grupos").child(Idgrupo).getValue(Grupo.class);
 
                 /**
                  * verificando se o switch esta selecionado ou nao.
@@ -427,8 +427,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                                 sweetAlertDialog.showCancelButton(false);
                                                 salvarLancamentoFirebase(lancamentoGrupo);
-                                                myreference.child("grupo").child(Idgrupo).updateChildren(retorno);
-
+                                                myreference.child("grupos").child(Idgrupo).updateChildren(retorno);
+// TODO: 24/05/2018  PAREI AQUI FONTES DESCONHECIDAS OK PARA DEBITO E CREDITO ANALISAR PARA DEBITO E CREDITO CARTAO
                                                 sweetAlertDialog.setTitle("Team Money");
                                                 sweetAlertDialog.setConfirmText("OK");
                                                 sweetAlertDialog.setContentText("Valores Retirados do Grupo");
@@ -473,7 +473,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
     private void UpdateSaldoGrupo(Map<String, Object> retorno) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("financeiro").child(firebaseUser.getUid()).child("grupo").child(Idgrupo).updateChildren(retorno);
+        reference.child("financeiro").child("grupos").child(Idgrupo).updateChildren(retorno);
     }
 
     private void InitObjetos() {
@@ -624,7 +624,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
      * @param ll é o lançamento que foi digitado na tela pelo usuario. neste momento o envio ao firebase é feito
      */
     private void salvarLancamentoFirebase(LancamentoGrupo ll) {
-        myreference.child("lancamentosgrupo").child(UUID.randomUUID().toString()).setValue(ll);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("financeiro").child("grupos").child(Idgrupo).child("lancamentos").child(UUID.randomUUID().toString()).setValue(ll);
         limpar();// limpando a view apos inserir os dados
 
     }
@@ -703,7 +704,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
     public DatabaseReference configFirebase() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
-        myreference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());// definindo qual o pont oque  a referencia do firebase ficara
+        myreference = firebaseDatabase.getReference().child("financeiro");// definindo qual o pont oque  a referencia do firebase ficara
         return myreference;
     }
 

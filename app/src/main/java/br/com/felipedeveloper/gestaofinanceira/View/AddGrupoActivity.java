@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterAdcionarUsuario;
+import br.com.felipedeveloper.gestaofinanceira.FormadePagamentoEnum;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
@@ -75,6 +76,9 @@ public class AddGrupoActivity extends BaseActivity {
         exibirList = new ArrayList<>();
         grupo = new Grupo();
         usuarioLogado = new Usuario();
+
+        FormadePagamentoEnum ff = FormadePagamentoEnum.Carteira;
+
 
          layoutManager = new LinearLayoutManager(this);
        layoutManager.canScrollVertically();
@@ -155,7 +159,7 @@ public class AddGrupoActivity extends BaseActivity {
                 grupo.setSaldoGrupo(Double.parseDouble(inputSaldoGrupo.getText().toString()));
                 grupo.setUsuarioList(exibirList);
                 for (int i =0; i < exibirList.size();i++){
-                    Financeiroreference.child(exibirList.get(i).getIdUsuario()).child("grupo").child(uid).setValue(grupo);
+                    Financeiroreference.child(uid).setValue(grupo);
                 }
                 limparCampos();
 
@@ -196,7 +200,7 @@ public class AddGrupoActivity extends BaseActivity {
     public DatabaseReference configFirebase(DatabaseReference reference) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
-        reference = firebaseDatabase.getReference().child("financeiro");// definindo qual o pont oque  a referencia do firebase ficara
+        reference = firebaseDatabase.getReference().child("financeiro").child("grupos");// definindo qual o pont oque  a referencia do firebase ficara
         return reference;
     }
 }

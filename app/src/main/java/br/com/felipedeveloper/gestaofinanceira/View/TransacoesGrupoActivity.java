@@ -83,7 +83,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);
 
-        myreference.child("lancamentosgrupo").addChildEventListener(new ChildEventListener() {
+        myreference.child("lancamentos").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 adapterLinhadoTempo.addItem(dataSnapshot);
@@ -113,7 +113,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
             }
         });
 
-        myreference.child("lancamentosgrupo").addValueEventListener(new ValueEventListener() {
+        myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -157,7 +157,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
     private void configFirebase() {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());
+        myreference = firebaseDatabase.getReference().child("financeiro").child("grupos").child(nomeGrupo);
 
     }
 

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,21 +36,17 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     Animation scaledown;
     Animation scaleup;
     @BindView(R.id.cardViewlancamentos)
-    CardView cardCarteira;
+    CardView cardLancamento;
     @BindView(R.id.cardViewcartao)
     CardView cardCartao;
     @BindView(R.id.cardViewcontasbancaria)
     CardView cardContaBancaria;
     @BindView(R.id.cardViewgrupo)
     CardView cardGrupo;
-    @BindView(R.id.cardsaldocontabancaria)
-    TextView saldoContabbancaria;
     @BindView(R.id.cardViewtransa)
     CardView cardTransacao;
     @BindView(R.id.cardViewcarteira)
     CardView cardCarteira;
-    @BindView(R.id.cardviewsaldocartao)
-    TextView saldoCartao;
 
     private DatabaseReference reference;
     private FirebaseUser firebaseUser;
@@ -109,7 +104,6 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
 
                     }
-                    saldoContabbancaria.setText(String.valueOf(("Saldo: " + df.format(result) +" R$")));
 
 
                 }
@@ -130,8 +124,6 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
                         }
                     }
-                    saldoCartao.setText(String.valueOf("Saldo: " + df.format(result1)+" R$"));
-
 
                 }
             }
@@ -157,7 +149,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
                 startActivity(new Intent(OpcoesFinanceiraActivity.this, CarteiraActivity.class));
             }
         });
-        cardCarteira.setOnClickListener(new View.OnClickListener() {
+        cardLancamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(OpcoesFinanceiraActivity.this, LancamentoActivity.class));

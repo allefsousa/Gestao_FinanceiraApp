@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -51,7 +52,8 @@ public class GrupoActivity extends BaseActivity {
         ButterKnife.bind(this);
         context = GrupoActivity.this;
         editText = new EditText(context);
-        mm=  configFirebase(reference);
+        mm= FirebaseDatabase.getInstance().getReference().child("financeiro");
+
         grupoList = new ArrayList<>();
         grupo = new Grupo();
 
@@ -72,7 +74,7 @@ public class GrupoActivity extends BaseActivity {
         });
 
 
-        mm.child("grupo").addValueEventListener(new ValueEventListener() {
+        mm.child("grupos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Grupo grupo;
