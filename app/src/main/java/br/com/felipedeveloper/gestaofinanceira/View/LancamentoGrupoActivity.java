@@ -131,7 +131,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                  * Iterando o snapshot do firebase no nó ("banco") e passando a UUID do usuario logado para trazer somente os seus bancos.
                  *
                  */
-                for (DataSnapshot d : dataSnapshot.child("banco").getChildren()) {
+                for (DataSnapshot d : dataSnapshot.child(firebaseUser.getUid()).child("banco").getChildren()) {
                     bancarias = d.getValue(ContasBancarias.class);
                     if (bancarias != null) { // se a variavel bancarias nao for vazia adiciono no arrayLIst de bancos para serem exibidos no spinner.
                         titulosCardConta = bancarias.getTituloContabanco();// capturando o nome dos bancos do usuario logado
@@ -144,7 +144,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                  * Iterando o snapshot do firebase no nó ("cartao") e passando a UUID do usuario logado para trazer somente os seus cartões.
                  *
                  */
-                for (DataSnapshot d : dataSnapshot.child("cartao").getChildren()) {
+                for (DataSnapshot d : dataSnapshot.child(firebaseUser.getUid()).child("cartao").getChildren()) {
                     card = d.getValue(Cartao.class);// objeto de cartao que recebe o cartao do firebase
                     if (card != null) {
                         titulosCardConta = card.getTituloCartao(); // recuperando somente o nome dos cartoes  do usuario
@@ -494,7 +494,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 if (b.getTituloCartao().equals(nomeopFinanceira)) {
                     Cartao aux;
                     aux = b;
-                    Cartao cardatualiza = globalSnapshot.child(ret).child(aux.getIdcartao()).getValue(Cartao.class);
+                    Cartao cardatualiza = globalSnapshot.child(firebaseUser.getUid()).child(ret).child(aux.getIdcartao()).getValue(Cartao.class);
                     Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamentoGrupo.getValor());
                     if (rec != null) {
                         atualizaSaldoCartaoBancoFirebase(ret, cardatualiza.getIdcartao(), rec);
@@ -518,7 +518,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
                     ContasBancarias bancarias;
                     bancarias = contas;
-                    ContasBancarias ban = globalSnapshot.child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
+                    ContasBancarias ban = globalSnapshot.child(firebaseUser.getUid()).child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
                     Map<String, Object> rec = ban.MapBancoDebita(ban, lancamentoGrupo.getValor());
                     if (rec != null) {
                         atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec);
@@ -542,7 +542,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 if (contas.getTituloContabanco().equals(nomeopFinanceira)) {
                     ContasBancarias bancarias;
                     bancarias = contas;
-                    ContasBancarias contBancos = globalSnapshot.child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
+                    ContasBancarias contBancos = globalSnapshot.child(firebaseUser.getUid()).child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
                     Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, lancamentoGrupo.getValor());
                     if (rec != null) {
 
@@ -574,7 +574,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                      * a id do cartao que foi selecionado no spinner. com isso o objeto é recuperado e esta pronto para ser atualizado.
                      *  ex: cartao a ser atualizado= "cartao" -> "idUsuariologado"-> "idcartaoselecionado";
                      */
-                    Cartao cardatualiza = globalSnapshot.child(opFinanceira).child(aux.getIdcartao()).getValue(Cartao.class);
+                    Cartao cardatualiza = globalSnapshot.child(firebaseUser.getUid()).child(opFinanceira).child(aux.getIdcartao()).getValue(Cartao.class);
 
 
                     /**
