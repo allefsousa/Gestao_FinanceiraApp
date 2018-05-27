@@ -77,7 +77,7 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.item_movimentacoes_pessoal, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view,viewType);
     }
 
     @Override
@@ -99,6 +99,10 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
     public int getItemCount() {
         return lancamentoSortedList.size();
     }
+    @Override
+    public int getItemViewType(int position) {
+        return TimelineView.getTimeLineViewType(position,getItemCount());
+    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -109,9 +113,8 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
         TextView status;
         CardView cardViewlinha;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, int viewType) {
             super(itemView);
-
             df = new DecimalFormat("#0.00");
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
             mTimelineView = itemView.findViewById(R.id.time_marker);
@@ -120,6 +123,8 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
             data = itemView.findViewById(R.id.text_timeline_date);
             status = itemView.findViewById(R.id.editstatusop);
             cardViewlinha.setUseCompatPadding(true);
+            mTimelineView.initLine(viewType);
+
         }
 
 
@@ -133,7 +138,6 @@ public class AdapterLinhadoTempoPessoal extends RecyclerView.Adapter<AdapterLinh
                 Integer statusop = (sortedList.get(pos).getStatusOp());
                 if (pos == 0) {
                     mTimelineView.initLine(1);
-                    mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker_inactive));
                 }
                 if (statusop != null) {
                     switch (statusop) {

@@ -65,7 +65,7 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
                 if (!idUser.isEmpty()){
                     auth.signOut();
                     Intent intent = new Intent(UsuarioConfiguracaoActivity.this,LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
 //                    if (auth.getCurrentUser().getProviderData().) todo verificar providar e deslogar api facebook

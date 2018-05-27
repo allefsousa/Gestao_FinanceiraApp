@@ -58,7 +58,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalhes_grupo);
+        setContentView(R.layout.activity_transacoes_grupo);
         ButterKnife.bind(this);
          nomeGrupo = retornoNomeGrupo(savedInstanceState);
 

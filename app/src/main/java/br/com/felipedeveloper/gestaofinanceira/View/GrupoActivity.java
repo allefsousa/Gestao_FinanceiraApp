@@ -23,7 +23,6 @@ import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.GrupoAdapter;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
-import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +47,7 @@ public class GrupoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_grupo2);
+        setContentView(R.layout.activity_grupos);
         ButterKnife.bind(this);
         context = GrupoActivity.this;
         editText = new EditText(context);
@@ -78,6 +77,7 @@ public class GrupoActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Grupo grupo;
+                grupoList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     grupo = snapshot.getValue(Grupo.class);
                     grupoList.add(grupo);

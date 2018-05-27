@@ -29,7 +29,7 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OpcoesFinanceiraActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity {
 
 
     //region Variaveis Globais
@@ -62,7 +62,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_opcoes_financeira);
+        setContentView(R.layout.activity_menu);
         scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
         scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
         ButterKnife.bind(this);
@@ -138,41 +138,41 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
         cardCartao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(OpcoesFinanceiraActivity.this, CartaoActivity.class);
-//                new Intent(OpcoesFinanceiraActivity.this,CartaoActivity.class);
+                Intent intent = new Intent(MenuActivity.this, CartaoActivity.class);
+//                new Intent(MenuActivity.this,CartaoActivity.class);
                 startActivity(intent);
             }
         });
         cardCarteira.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, CarteiraActivity.class));
+                startActivity(new Intent(MenuActivity.this, CarteiraActivity.class));
             }
         });
         cardLancamento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, LancamentoActivity.class));
+                startActivity(new Intent(MenuActivity.this, LancamentoActivity.class));
 
             }
         });
         cardContaBancaria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, ContasBancariasActivity.class));
+                startActivity(new Intent(MenuActivity.this, ContasBancariasActivity.class));
             }
         });
         cardGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, GrupoActivity.class));
+                startActivity(new Intent(MenuActivity.this, GrupoActivity.class));
 
             }
         });
         cardTransacao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OpcoesFinanceiraActivity.this, TransacoesActivity.class));
+                startActivity(new Intent(MenuActivity.this, TransacoesActivity.class));
             }
         });
         //endregion
@@ -206,7 +206,7 @@ public class OpcoesFinanceiraActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_call) {
-            Intent intent = new Intent(OpcoesFinanceiraActivity.this, UsuarioConfiguracaoActivity.class);
+            Intent intent = new Intent(MenuActivity.this, UsuarioConfiguracaoActivity.class);
             startActivity(intent);
             return true;
         }

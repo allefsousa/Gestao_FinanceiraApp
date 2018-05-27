@@ -47,7 +47,7 @@
             android:name=".View.LoginActivity"
             android:theme="@style/MyTheme" />
         <activity
-            android:name=".View.OpcoesFinanceiraActivity"
+            android:name=".View.MenuActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".View.LoginEmailActivity"
@@ -63,24 +63,24 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
         </activity>
         <activity
             android:name=".View.CartaoActivity"
             android:label="@string/title_activity_cartao"
-            android:parentActivityName=".View.OpcoesFinanceiraActivity"
+            android:parentActivityName=".View.MenuActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
         </activity>
         <activity
             android:name=".View.LancamentoActivity"
-            android:parentActivityName=".View.OpcoesFinanceiraActivity"
-            android:theme="@style/Theme">
+            android:parentActivityName=".View.MenuActivity"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
         </activity>
         <activity
             android:name=".View.ContasBancariasActivity"
@@ -88,7 +88,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
         </activity>
         <activity
             android:name=".View.AddBancoActivity"
@@ -109,7 +109,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
         </activity>
         <activity
             android:name=".View.GrupoActivity"
@@ -117,7 +117,7 @@
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
         </activity>
         <activity
             android:name=".View.AddGrupoActivity"
@@ -144,7 +144,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity" />
         </activity>
-        <activity android:name=".View.CarteiraActivity"></activity>
+        <activity android:name=".View.CarteiraActivity"
+            android:theme="@style/AppTheme"
+            android:label="Carteira">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -103,7 +103,7 @@ public class EmailLoginFragment extends Fragment {
     }
 
     private void logadoComSucesso() {
-        Intent intent = new Intent(rootView.getContext(), OpcoesFinanceiraActivity.class);
+        Intent intent = new Intent(rootView.getContext(), MenuActivity.class);
         startActivity(intent);
     }
 

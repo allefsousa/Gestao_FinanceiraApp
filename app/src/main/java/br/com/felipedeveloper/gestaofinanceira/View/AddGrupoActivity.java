@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterAdcionarUsuario;
-import br.com.felipedeveloper.gestaofinanceira.FormadePagamentoEnum;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
@@ -77,7 +75,7 @@ public class AddGrupoActivity extends BaseActivity {
         grupo = new Grupo();
         usuarioLogado = new Usuario();
 
-        FormadePagamentoEnum ff = FormadePagamentoEnum.Carteira;
+
 
 
          layoutManager = new LinearLayoutManager(this);

@@ -8,10 +8,13 @@ import java.util.Map;
 public class ContasBancarias {
     private String idContaBanco;
     private String tituloContabanco;
-    private Double SaldoContabancaria;
+    private Double saldoContabancaria;
     // TODO: 20/04/2018  atualizar saldo para double corrigir possiveis falhas 
 
 
+    public Double getSaldoContabancaria() {
+        return saldoContabancaria;
+    }
 
     public ContasBancarias() {
     }
@@ -32,12 +35,9 @@ public class ContasBancarias {
         this.tituloContabanco = tituloContabanco;
     }
 
-    public Double getSaldoContabancaria() {
-        return SaldoContabancaria;
-    }
 
     public void setSaldoContabancaria(Double saldoContabancaria) {
-        SaldoContabancaria = saldoContabancaria;
+        this.saldoContabancaria = saldoContabancaria;
     }
 
     public Map<String,Object> MapBancoDebita(ContasBancarias ban, Double valor) {
@@ -50,7 +50,7 @@ public class ContasBancarias {
         }else {
             Double saldoAtualizado = ban.getSaldoContabancaria()-valor;
             result.put("idContaBanco", ban.getIdContaBanco());
-            result.put("SaldoContabancaria", saldoAtualizado);
+            result.put("saldoContabancaria", saldoAtualizado);
             result.put("tituloContabanco", ban.getTituloContabanco());
         }
 
@@ -61,7 +61,7 @@ public class ContasBancarias {
         Double saldoAtualizado = ban.getSaldoContabancaria()+valor;
         HashMap<String, Object> result = new HashMap<>();
         result.put("idContaBanco", ban.getIdContaBanco());
-        result.put("SaldoContabancaria", saldoAtualizado);
+        result.put("saldoContabancaria", saldoAtualizado);
         result.put("tituloContabanco", ban.getTituloContabanco());
         return result;
 

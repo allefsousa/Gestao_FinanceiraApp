@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -31,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,6 +41,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import br.com.felipedeveloper.gestaofinanceira.Helper.CreditoDebitoEnum;
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
@@ -50,6 +52,7 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class LancamentoActivity extends AppCompatActivity {
+    //region ELEMENTOS DA VIEW
     DatePickerDialog.OnDateSetListener date;
     @BindView(R.id.textInpvalor)
     TextInputLayout layoutvalor;
@@ -67,11 +70,12 @@ public class LancamentoActivity extends AppCompatActivity {
     FloatingActionButton btconfirmar;
     @BindView(R.id.spinneropbancaria)
      Spinner spinneropcao;
-
     @BindColor(R.color.vermelho)
             int riplecolor;
+    //endregion
 
 
+    //region VariaveisGlobais
     private Lancamento lancamento;
     private List<ContasBancarias> contasBancariasList;
     private List<Cartao> cartaoList;
@@ -81,13 +85,13 @@ public class LancamentoActivity extends AppCompatActivity {
     private DatabaseReference myreference;
     private Calendar myCalendar;
     private FirebaseUser firebaseUser;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lancamento);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Lançamentos");
         ButterKnife.bind(this);
@@ -95,6 +99,7 @@ public class LancamentoActivity extends AppCompatActivity {
         myCalendar = Calendar.getInstance();
         final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
+        //region Tratamento de erros
         textvalor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -143,6 +148,10 @@ public class LancamentoActivity extends AppCompatActivity {
 
             }
         });
+        //endregion
+        textvalor.addTextChangedListener(onTextChangedListener());
+
+
 
 
 
@@ -171,6 +180,7 @@ public class LancamentoActivity extends AppCompatActivity {
                 cartaoList.clear();
                 financeiroSpinnerlist.clear();
                 financeiroSpinnerlist.add("Forma de Pagamento"); // adicionando primeiro elemento do spinner
+
 
                 /**
                  * Iterando o snapshot do firebase no nó ("banco") e passando a UUID do usuario logado para trazer somente os seus bancos.
@@ -294,7 +304,8 @@ public class LancamentoActivity extends AppCompatActivity {
         btconfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              boolean ok =   RecuperandoDadosdaView();// recuperando oque esta digitado nos campos
+              boolean ok =   RecuperandoDadosdaView();// recuperando oque esta digitado nos campos colocar 
+
 
                 if (ok) {
 
@@ -325,7 +336,7 @@ public class LancamentoActivity extends AppCompatActivity {
                          * neste caso se é CREDITO ou DEBITO a operação a ser feita
                          */
                         if (aSwitch.isChecked()) {
-                            lancamento.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+                            lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
 
                             /**
                              * codigo responsavel por enviar o objeto lançamento para o firebase
@@ -338,11 +349,13 @@ public class LancamentoActivity extends AppCompatActivity {
 
 
                         } else {
-                            lancamento.setStatusOp(0);
+                            lancamento.setStatusOp(CreditoDebitoEnum.Debito.getValor());
                             salvarLancamentoFirebase(lancamento);
                             // Metodos para adicionar Debito ao cartao ou banco
                             operacaoDebitoCartao(ret);
                             adicionandoDebitoConta(ret);
+                            ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Debito Realizado.");
+
 
 
                         }
@@ -353,15 +366,9 @@ public class LancamentoActivity extends AppCompatActivity {
             }
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-
     }
+
+
 
     private void InitObjetos() {
         contasBancariasList = new ArrayList<>();
@@ -503,9 +510,6 @@ public class LancamentoActivity extends AppCompatActivity {
                 if (debitoCredito){
                     ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Credito Adicionado !"); // mensagme de sucesso.
 
-                }else {
-                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Debito Realizado !"); // mensagme de sucesso.
-
                 }
             }
         });
@@ -547,9 +551,20 @@ public class LancamentoActivity extends AppCompatActivity {
         }
 
         if (spinneropcao.getSelectedItemPosition()==0){
-            // exibir mensagem
 
+            ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Lançamento não realizado. \nEscolha uma Forma de Pagamento !");
         }
+        if (!textdata.getText().toString().isEmpty() && !textvalor.getText().toString().isEmpty() && !texttitulo.getText().toString().isEmpty() && spinneropcao.getSelectedItemPosition()!=0 ){
+            todosPreenchidos = true;
+            String virgulaponto;
+            lancamento.setData(textdata.getText().toString());
+            lancamento.setTitulo(texttitulo.getText().toString());
+            virgulaponto = textvalor.getText().toString().replaceAll(",", ".");
+            lancamento.setValor(Double.parseDouble(virgulaponto));
+            lancamento.setStatusOp(spinneropcao.getSelectedItemPosition());
+        }
+
+
 
 
 
@@ -624,15 +639,12 @@ public class LancamentoActivity extends AppCompatActivity {
      */
     private void limpar() {
         textdata.setText("");
-        textvalor.setText("");
+        textvalor.getText().clear();
         texttitulo.setText("");
         spinneropcao.setSelection(0);
+
     }
-    protected int mensagemteste(){
-        int a =10 ;
-        int b = 30;
-        return b+a;
-    }
+
 
 
     /**
@@ -657,5 +669,61 @@ public class LancamentoActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
 
+    }
+
+    /**
+     * metodo responsavel por tratar o botão de voltar a tela anterior
+     * neste caso fecha a view atual quando o botão é precionado
+     * @return
+     */
+    @Override
+    public boolean onNavigateUp(){
+        finish();
+        return true;
+    }
+
+    /**
+     * metodo responsavel por  formatar o campo de valor e ja ir adiconando as virgulas
+     * @return
+     */
+    private TextWatcher onTextChangedListener() {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                textvalor.removeTextChangedListener(this);
+
+                try {
+                    String originalString = s.toString();
+
+                    Long longval;
+                    if (originalString.contains(",")) {
+                        originalString = originalString.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(originalString);
+
+                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+                    formatter.applyPattern("#,###,###,##");
+                    String formattedString = formatter.format(longval);
+
+                    //setting text after format to EditText
+                    textvalor.setText(formattedString);
+                    textvalor.setSelection(textvalor.getText().length());
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+
+                textvalor.addTextChangedListener(this);
+            }
+        };
     }
 }

@@ -14,7 +14,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/Branco"
-        tools:context="br.com.felipedeveloper.gestaofinanceira.View.OpcoesFinanceiraActivity"
+        tools:context="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity"
         tools:layout_editor_absoluteY="81dp">
 
 

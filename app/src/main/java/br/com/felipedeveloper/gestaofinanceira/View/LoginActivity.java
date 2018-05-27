@@ -1,8 +1,6 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -54,10 +52,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private DatabaseReference reference;
     BannerSlider sliderLayout;
     Usuario user;
-    @BindView(R.id.btnfacebook)
-    Button btnfacebookLogin;
-//    @BindView(R.id.btngoogle)
-//    Button btngooglelogin;
 
 
     public static final int SING_IN_CODE = 777;
@@ -77,7 +71,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         ButterKnife.bind(this);
         Button btnemaillogin = findViewById(R.id.btnemail);
         Button btngooglelogin = findViewById(R.id.btngoogle);
-//        Button btnfacebookLogin = findViewById(R.id.btnfacebook);
+        Button btnfacebookLogin = findViewById(R.id.btnfacebook);
         inicializaFirebase(); // chamada de metodo que inicia firebase
         user = new Usuario();
         services_googleLogin();
@@ -94,16 +88,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View view) {
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
-                startActivity(new Intent(LoginActivity.this,OpcoesFinanceiraActivity.class));
+                startActivity(new Intent(LoginActivity.this,MenuActivity.class));
 
             }
         });
-//        btnemaillogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(LoginActivity.this,LoginEmailActivity.class));
-//            }
-//        });
+        btnemaillogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,LoginEmailActivity.class));
+            }
+        });
         btngooglelogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +105,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleapi);
                 startActivityForResult(intent, SING_IN_CODE);
 
-               // loginRealizadocomSucesso();
 
 
             }
@@ -194,7 +187,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void loginRealizadocomSucesso() {
         ExibirLoading(false);
-        Intent i = new Intent(LoginActivity.this, OpcoesFinanceiraActivity.class);
+        Intent i = new Intent(LoginActivity.this, MenuActivity.class);
         startActivity(i);
         finish();
     }
@@ -273,6 +266,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     }
+
+
+    /**
+     * meotdo responsavel por tratar o botão fisico de voltar do celular
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+
+    }
+    //region Ciclo de vida Da Activity (View)
     @Override
     protected void onStart() {
         super.onStart();
@@ -305,5 +310,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onDestroy();
         firebaseAuth.removeAuthStateListener(authStateListener);
     }
+    //endregion
 
 }

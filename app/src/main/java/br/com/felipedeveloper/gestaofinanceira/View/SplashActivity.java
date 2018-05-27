@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,9 +14,6 @@ public class SplashActivity extends AppCompatActivity {
     Thread splashTread;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-    Animation scaledown;
-    Animation scaleup;
-    ImageView imageView;
 
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -31,8 +25,7 @@ public class SplashActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
 
-        scaledown = AnimationUtils.loadAnimation(this, R.anim.down);
-        scaleup = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -68,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
                      */
                     if (firebaseUser != null) {
 
-                        Intent i = new Intent(SplashActivity.this, OpcoesFinanceiraActivity.class);
+                        Intent i = new Intent(SplashActivity.this, MenuActivity.class);
                         startActivity(i);
 
                     } else {
@@ -85,5 +78,27 @@ public class SplashActivity extends AppCompatActivity {
             }
         };
         splashTread.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseAuth.addAuthStateListener(authStateListener);
+        startAnimation();
+
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        firebaseAuth.addAuthStateListener(authStateListener);
+        startAnimation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        firebaseAuth.removeAuthStateListener(authStateListener);
     }
 }
