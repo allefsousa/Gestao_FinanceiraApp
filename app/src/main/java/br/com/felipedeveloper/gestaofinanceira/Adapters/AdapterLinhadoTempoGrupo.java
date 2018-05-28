@@ -101,6 +101,11 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
         sortedList.remove(data);
         notifyDataSetChanged();
     }
+    @Override
+    public int getItemViewType(int position) {
+        return TimelineView.getTimeLineViewType(position,getItemCount());
+    }
+
 
     @Override
     public int getItemCount() {

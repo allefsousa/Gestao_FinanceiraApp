@@ -8,7 +8,7 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btnnovobanco"
+        android:id="@+id/btnnovacarteira"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginBottom="8dp"

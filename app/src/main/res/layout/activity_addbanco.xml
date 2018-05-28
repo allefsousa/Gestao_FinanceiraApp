@@ -36,7 +36,6 @@
             android:id="@+id/titulobanco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Titulo do Banco"
             android:inputType="textCapWords"
             android:maxLength="30"
             android:maxLines="1"
@@ -61,7 +60,6 @@
             android:inputType="numberDecimal"
             android:maxLines="1"
             android:maxLength="15"
-            android:hint="SALDO"
             android:textSize="13dp" />
     </android.support.design.widget.TextInputLayout>
 
