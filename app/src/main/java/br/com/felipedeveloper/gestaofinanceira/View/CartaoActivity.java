@@ -86,7 +86,10 @@ public class CartaoActivity extends AppCompatActivity {
         flo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CartaoActivity.this,AddCartaoActivity.class));
+                Intent intent = new Intent(CartaoActivity.this,AddCartaoActivity.class);
+                intent.putExtra("opcao","cartao");
+                startActivity(intent);
+
             }
         });
     }

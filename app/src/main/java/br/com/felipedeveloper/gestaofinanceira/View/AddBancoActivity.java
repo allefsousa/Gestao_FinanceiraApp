@@ -2,6 +2,7 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -15,11 +16,18 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 
+import br.com.felipedeveloper.gestaofinanceira.Helper.CreditoDebitoEnum;
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
+import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +54,9 @@ public class AddBancoActivity extends BaseActivity {
     private Cartao cartao;
     private Carteira carteira;
     private String opcaofinanceira;
+    private Lancamento lancamento;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +67,7 @@ public class AddBancoActivity extends BaseActivity {
         ButterKnife.bind(this);
         Bundle extras = getIntent().getExtras();
         opcaofinanceira = extras.getString("opcao");
+
         switch (opcaofinanceira){
             case "banco":
                 getSupportActionBar().setTitle("Adicionar Banco");
@@ -83,14 +95,48 @@ public class AddBancoActivity extends BaseActivity {
         contasBancarias = new ContasBancarias();
         cartao = new Cartao();
         carteira  = new Carteira();
+        lancamento = new Lancamento();
+
 
                 btnAdicionarBanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (opcaofinanceira.equals("cartao")){
 
+                SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = new Date();
+                String dataformatada = formataData.format(date);
+                Long timestamp = criaTimeStamp();
+                lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
+                lancamento.setData(dataformatada);
+                lancamento.setValor(Double.parseDouble(edtSaldoBanco.getText().toString()));
+                lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
+                lancamento.setIdLancamento(UUID.randomUUID().toString());
+                lancamento.setCreatedAt(timestamp);
+
+
+                if (opcaofinanceira.equals("cartao")){
+                    cartao.setIdcartao(UUID.randomUUID().toString());
+                    lancamento.setTitulo("Adicionando " + cartao.getClass().getName());
+                    cartao.setTituloCartao(edtTituloBanco.getText().toString());
+                    if (!edtSaldoBanco.getText().toString().isEmpty()){
+                        carteira.setSaldoCarteira(Double.parseDouble(edtSaldoBanco.getText().toString()));
+                        myreference.child("cartao").child(cartao.getIdcartao()).setValue(cartao);
+                        myreference.child("lancamentos").child(lancamento.getIdLancamento()).setValue(lancamento);
+                        ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Cartão Adicionado !");
+                        clear();
+                    }
                 }
                 if (opcaofinanceira.equals("carteira")){
+                    carteira.setIdCarteira(UUID.randomUUID().toString());
+                    carteira.setTituloCarteira(edtTituloBanco.getText().toString());
+                    lancamento.setTitulo("Adicionando " + carteira.getClass().getName());
+                    if (!edtSaldoBanco.getText().toString().isEmpty()){
+                        carteira.setSaldoCarteira(Double.parseDouble(edtSaldoBanco.getText().toString()));
+                        myreference.child("carteira").child(carteira.getIdCarteira()).setValue(carteira);
+                        myreference.child("lancamentos").child(lancamento.getIdLancamento()).setValue(lancamento);
+                        ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Carteira Adicionada !");
+                        clear();
+                    }
 
                 }
                 if (opcaofinanceira.equals("banco")){
@@ -98,41 +144,14 @@ public class AddBancoActivity extends BaseActivity {
                     contasBancarias.setTituloContabanco(edtTituloBanco.getText().toString());
                     if (!edtSaldoBanco.getText().toString().isEmpty()) {
                         contasBancarias.setSaldoContabancaria(Double.parseDouble(edtSaldoBanco.getText().toString()));
-                    }
-                }
-
-
-
-
-                if (contasBancarias.getSaldoContabancaria()!= null) {
-                    if (!contasBancarias.getTituloContabanco().isEmpty()) {
-                        if (opcaofinanceira.equals("banco")){
-                            myreference.child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);
-                            ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Conta Adicionada com sucesso !");
-                            clear();
-                        }
-                        if (opcaofinanceira.equals("carteira")){
-                            myreference.child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);
-                            ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Conta Adicionada com sucesso !");
-                            clear();
-                        }
-                        if (opcaofinanceira.equals("cartao")){
-                            myreference.child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);
-                            ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Conta Adicionada com sucesso !");
-                            clear();
-                        }
-                        myreference.child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);
-                        ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Conta Adicionada com sucesso !");
+                        myreference.child("banco").child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);
+                        myreference.child("lancamentos").child(lancamento.getIdLancamento()).setValue(lancamento);
+                        ExibirMensagem(AddBancoActivity.this, SweetAlertDialog.NORMAL_TYPE, "Conta Adicionada !");
                         clear();
-                    } else {
-                        // TODO: 20/05/2018 validar 
                     }
-                } else {
+
 
                 }
-
-
-
             }
         });
 
@@ -145,7 +164,19 @@ public class AddBancoActivity extends BaseActivity {
             idUser = firebaseUser.getUid();
         }
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro").child(idUser).child("banco");
+        myreference = firebaseDatabase.getReference().child("financeiro").child(idUser);
+    }
+    /**
+     * Metodo responsavel por criar o timestamp do lançamento para futuramente ter a precisao de cada lançamento
+     *
+     * @return timesTamp
+     */
+    @NonNull
+    private Long criaTimeStamp() {
+        Calendar cal = Calendar.getInstance();
+        Date data_atual = cal.getTime();
+        final Timestamp ts = new Timestamp(data_atual.getTime());
+        return ts.getTime();
     }
     private void clear(){
         edtSaldoBanco.clearFocus();

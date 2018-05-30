@@ -88,7 +88,10 @@ public class ContasBancariasActivity extends AppCompatActivity {
         btnaddbanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ContasBancariasActivity.this, AddBancoActivity.class));
+                Intent intent = new Intent(ContasBancariasActivity.this,AddBancoActivity.class);
+                intent.putExtra("opcao","banco");
+                startActivity(intent);
+
             }
         });
 

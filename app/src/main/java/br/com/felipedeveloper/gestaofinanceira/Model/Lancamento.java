@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
 public class Lancamento {
+    private String idLancamento;
     private String titulo;
     private Double valor;
     private String data;
@@ -18,6 +19,14 @@ public class Lancamento {
     }
 
     public Lancamento() {
+    }
+
+    public String getIdLancamento() {
+        return idLancamento;
+    }
+
+    public void setIdLancamento(String idLancamento) {
+        this.idLancamento = idLancamento;
     }
 
     public String getTitulo() {
