@@ -41,7 +41,7 @@ public class Carteira {
         HashMap<String, Object> result = new HashMap<>();
         Double saldoAtualizado = c.getSaldoCarteira() + v2;
         result.put("idCarteira", c.getIdCarteira());
-        result.put("SaldoCarteira", saldoAtualizado);
+        result.put("saldoCarteira", saldoAtualizado);
         result.put("tituloCarteira", c.getTituloCarteira());
         return result;
     }
@@ -58,7 +58,7 @@ public class Carteira {
         } else {
             Double saldoAtualizado = c.getSaldoCarteira() - valor;
             result.put("idCarteira", c.getIdCarteira());
-            result.put("SaldoCarteira", saldoAtualizado);
+            result.put("saldoCarteira", saldoAtualizado);
             result.put("tituloCarteira", c.getTituloCarteira());
 
         }
