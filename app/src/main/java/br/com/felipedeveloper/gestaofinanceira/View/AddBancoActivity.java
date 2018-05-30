@@ -112,6 +112,7 @@ public class AddBancoActivity extends BaseActivity {
                 lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
                 lancamento.setIdLancamento(UUID.randomUUID().toString());
                 lancamento.setCreatedAt(timestamp);
+//                git add *
 
 
                 if (opcaofinanceira.equals("cartao")){
