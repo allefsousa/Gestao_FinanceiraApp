@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -28,7 +29,7 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CartaoActivity extends AppCompatActivity {
+public class CartaoActivity extends BaseActivity {
 
     @BindView(R.id.floatnovo)
     FloatingActionButton flo;
@@ -39,7 +40,6 @@ public class CartaoActivity extends AppCompatActivity {
     String idUser;
     List<Cartao> cartaoList;
     private DatabaseReference myreference;
-    ValueEventListener valueEventListener;
     Cartao cartao;
     CartaoAdapter cartaoAdapter;
     private NumberFormat df;
@@ -55,15 +55,20 @@ public class CartaoActivity extends AppCompatActivity {
         cartao = new Cartao();
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
-        IniciaFirebase();
+
         cartao = new Cartao();
         cartaoList = new ArrayList<>();
         df = new DecimalFormat("#0.00");
+
+        myreference = configFirebase(myreference);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.canScrollVertically();
         layoutManager.setOrientation(LinearLayout.VERTICAL);
         recyclerViewCartoes.setLayoutManager(layoutManager);
-        myreference.addValueEventListener(new ValueEventListener() {
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewCartoes.getContext(),
+                layoutManager.getOrientation());
+        recyclerViewCartoes.addItemDecoration(dividerItemDecoration);
+        myreference.child("cartao").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot d : dataSnapshot.getChildren()){
@@ -86,21 +91,13 @@ public class CartaoActivity extends AppCompatActivity {
         flo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CartaoActivity.this,AddCartaoActivity.class);
+                Intent intent = new Intent(CartaoActivity.this,MeiodePagamentoActivity.class);
                 intent.putExtra("opcao","cartao");
                 startActivity(intent);
 
             }
         });
     }
-    private void IniciaFirebase() {
-        auth = FirebaseAuth.getInstance();
-        firebaseUser = auth.getCurrentUser();
-        if (firebaseUser != null) {
-            idUser = firebaseUser.getUid();
-        }
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro").child(idUser).child("cartao");
-    }
+
 
 }

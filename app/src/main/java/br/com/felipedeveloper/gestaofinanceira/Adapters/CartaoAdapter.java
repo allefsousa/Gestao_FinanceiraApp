@@ -34,7 +34,7 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
     @Override
     public ViewHolderCartao onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_cartao, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_adapter_cardview, parent, false);
 
 
         return new ViewHolderCartao(view);
@@ -68,16 +68,16 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
     }
 
     public class ViewHolderCartao extends RecyclerView.ViewHolder {
-        TextView titulocartao;
-        TextView saldocartao;
-        CardView cardView;
+       private TextView titulocartao;
+        private TextView saldocartao;
+        private CardView cardView;
 
         public ViewHolderCartao(View itemView) {
             super(itemView);
-            titulocartao = itemView.findViewById(R.id.itemcartaoTitulo);
-            saldocartao = itemView.findViewById(R.id.itemcartaosaldo);
+            titulocartao = itemView.findViewById(R.id.tituloitem);
+            saldocartao = itemView.findViewById(R.id.saldoitem);
             df = new DecimalFormat("#0.00");
-            cardView = itemView.findViewById(R.id.cardCartao);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }

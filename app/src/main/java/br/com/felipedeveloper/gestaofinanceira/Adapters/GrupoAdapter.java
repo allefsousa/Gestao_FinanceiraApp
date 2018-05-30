@@ -34,7 +34,7 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
     @Override
     public GrupoAdapter.ViewHolderGrupo onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_grupos, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_adapter_cardview, parent, false);
         return new GrupoAdapter.ViewHolderGrupo(view);
     }
 
@@ -74,9 +74,9 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
         public ViewHolderGrupo(View itemView) {
             super(itemView);
             df = new DecimalFormat("#0.00");
-            textTituloGrupo = itemView.findViewById(R.id.titulogrupo);
-            textSaldoGrupo = itemView.findViewById(R.id.textsaldogrupo);
-            cardView = itemView.findViewById(R.id.cardViewcontasbancaria);
+            textTituloGrupo = itemView.findViewById(R.id.tituloitem);
+            textSaldoGrupo = itemView.findViewById(R.id.saldoitem);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }

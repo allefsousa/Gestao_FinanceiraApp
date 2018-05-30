@@ -16,7 +16,6 @@ import java.text.NumberFormat;
 import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
-import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import br.com.felipedeveloper.gestaofinanceira.View.TransacoesActivity;
 
@@ -37,7 +36,7 @@ public class CarteiraAdapter extends RecyclerView.Adapter<CarteiraAdapter.ViewHo
     @Override
     public ViewHolderAgencia onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_grupos, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_adapter_cardview, parent, false);
 
 
         return new ViewHolderAgencia(view);
@@ -76,9 +75,9 @@ public class CarteiraAdapter extends RecyclerView.Adapter<CarteiraAdapter.ViewHo
         public ViewHolderAgencia(View itemView) {
             super(itemView);
             df = new DecimalFormat("#0.00");
-            textTituloCarteira = itemView.findViewById(R.id.titulogrupo);
-            textSaldoCarteira = itemView.findViewById(R.id.textsaldogrupo);
-            cardView = itemView.findViewById(R.id.cardViewcontasbancaria);
+            textTituloCarteira = itemView.findViewById(R.id.tituloitem);
+            textSaldoCarteira = itemView.findViewById(R.id.saldoitem);
+            cardView = itemView.findViewById(R.id.cardView);
         }
 
 

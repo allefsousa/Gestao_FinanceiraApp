@@ -1,8 +1,8 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,14 +51,13 @@ public class AddGrupoActivity extends BaseActivity {
     ImageView imaAddGrupo;
     AdicionarUsuarioAdapter adicionarUsuarioAdapter;
     LinearLayoutManager layoutManager;
-
+    List<Usuario> exibirList;
+    Usuario usuarioLogado;
     private DatabaseReference Usuariosreference;
     private DatabaseReference Financeiroreference;
     private Context context = AddGrupoActivity.this;
     private Grupo grupo;
     private List<Usuario> usuarioList;
-    List<Usuario>exibirList;
-    Usuario usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,17 +68,17 @@ public class AddGrupoActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         Financeiroreference = configFirebase(Financeiroreference);
-        Usuariosreference =  configFirebaseUsuario(Usuariosreference);
+        Usuariosreference = configFirebaseUsuario(Usuariosreference);
+
+
         usuarioList = new ArrayList<>();
         exibirList = new ArrayList<>();
         grupo = new Grupo();
         usuarioLogado = new Usuario();
 
 
-
-
-         layoutManager = new LinearLayoutManager(this);
-       layoutManager.canScrollVertically();
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.canScrollVertically();
         layoutManager.setOrientation(LinearLayout.VERTICAL);
         recyclerViewuser.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewuser.getContext(),
@@ -88,13 +87,11 @@ public class AddGrupoActivity extends BaseActivity {
         recyclerViewuser.setNestedScrollingEnabled(false);
 
 
-
-
         Usuariosreference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario usuario;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     usuario = snapshot.getValue(Usuario.class);
                     usuarioList.add(usuario);
                 }
@@ -114,15 +111,15 @@ public class AddGrupoActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 fechaTeclado(view);
-                if (!inputEmailGrupo.getText().toString().isEmpty()){
+                if (!inputEmailGrupo.getText().toString().isEmpty()) {
                     String emailDigitado;
                     emailDigitado = inputEmailGrupo.getText().toString();
-                    for (int i =0;i<usuarioList.size();i++){
-                        if (!usuarioList.get(i).getUsuarioEmail().isEmpty()){
-                            if (usuarioList.get(i).getUsuarioEmail().equals(emailDigitado)){
+                    for (int i = 0; i < usuarioList.size(); i++) {
+                        if (!usuarioList.get(i).getUsuarioEmail().isEmpty()) {
+                            if (usuarioList.get(i).getUsuarioEmail().equals(emailDigitado)) {
                                 exibirList.add(usuarioList.get(i));
                                 exibirList.add(usuarioLogado);
-                                adicionarUsuarioAdapter = new AdicionarUsuarioAdapter(exibirList,context);
+                                adicionarUsuarioAdapter = new AdicionarUsuarioAdapter(exibirList, context);
                                 adicionarUsuarioAdapter.notifyDataSetChanged();
                                 recyclerViewuser.setAdapter(adicionarUsuarioAdapter);
                                 inputEmailGrupo.getText().clear();
@@ -156,7 +153,7 @@ public class AddGrupoActivity extends BaseActivity {
                 grupo.setNomeGrupo(inputNomeGrupo.getText().toString());
                 grupo.setSaldoGrupo(Double.parseDouble(inputSaldoGrupo.getText().toString()));
                 grupo.setUsuarioList(exibirList);
-                for (int i =0; i < exibirList.size();i++){
+                for (int i = 0; i < exibirList.size(); i++) {
                     Financeiroreference.child(uid).setValue(grupo);
                 }
                 limparCampos();
@@ -167,7 +164,7 @@ public class AddGrupoActivity extends BaseActivity {
     }
 
     private void fechaTeclado(View v) {
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
@@ -175,12 +172,12 @@ public class AddGrupoActivity extends BaseActivity {
         Usuario usuario = new Usuario();
         String minhaId = UserRetornoId();
 
-        for (Usuario ll : usuarioList){
-            if (ll.getIdUsuario().equals(minhaId)){
-              usuario.setUsuarioNome("Você");
-              usuario.setUsuarioEmail(ll.getUsuarioEmail());
-              usuario.setIdUsuario(ll.getIdUsuario());
-              usuario.setFotoUrl(ll.getFotoUrl());
+        for (Usuario ll : usuarioList) {
+            if (ll.getIdUsuario().equals(minhaId)) {
+                usuario.setUsuarioNome("Você");
+                usuario.setUsuarioEmail(ll.getUsuarioEmail());
+                usuario.setIdUsuario(ll.getIdUsuario());
+                usuario.setFotoUrl(ll.getFotoUrl());
 
             }
         }
@@ -188,12 +185,13 @@ public class AddGrupoActivity extends BaseActivity {
         return usuario;
     }
 
-    private void limparCampos(){
+    private void limparCampos() {
         inputEmailGrupo.getText().clear();
         inputNomeGrupo.getText().clear();
         inputSaldoGrupo.getText().clear();
         adicionarUsuarioAdapter.clear();
     }
+
     @Override
     public DatabaseReference configFirebase(DatabaseReference reference) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

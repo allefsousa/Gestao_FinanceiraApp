@@ -2,30 +2,26 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import br.com.felipedeveloper.gestaofinanceira.R;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-/**
- * Created by allef on 10/05/2018.
- */
 
 public class BaseActivity extends AppCompatActivity {
     private NumberFormat df;
 //    df = new DecimalFormat("#00.00");
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-
-    }
     public void ExibirMensagem(Context context, int successType, String s) {
         new SweetAlertDialog(context, successType)
                 .setTitleText(getResources().getString(R.string.app_name))
@@ -53,5 +49,50 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         return retorno;
+    }
+
+    /**
+     * metodo responsavel por  formatar o campo de valor e ja ir adiconando as virgulas
+     * @return
+     */
+    TextWatcher onTextChangedListener(final EditText textvalor) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                textvalor.removeTextChangedListener(this);
+
+                try {
+                    String originalString = s.toString();
+
+                    Long longval;
+                    if (originalString.contains(",")) {
+                        originalString = originalString.replaceAll(",", "");
+                    }
+                    longval = Long.parseLong(originalString);
+
+                    DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+                    formatter.applyPattern("#,###,###,##");
+                    String formattedString = formatter.format(longval);
+
+                    //setting text after format to EditText
+                    textvalor.setText(formattedString);
+                    textvalor.setSelection(textvalor.getText().length());
+                } catch (NumberFormatException nfe) {
+                    nfe.printStackTrace();
+                }
+
+                textvalor.addTextChangedListener(this);
+            }
+        };
     }
 }

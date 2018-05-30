@@ -88,7 +88,7 @@ public class ContasBancariasActivity extends AppCompatActivity {
         btnaddbanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContasBancariasActivity.this,AddBancoActivity.class);
+                Intent intent = new Intent(ContasBancariasActivity.this,MeiodePagamentoActivity.class);
                 intent.putExtra("opcao","banco");
                 startActivity(intent);
 
@@ -103,7 +103,7 @@ public class ContasBancariasActivity extends AppCompatActivity {
      */
     private void AdicionarBancoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ContasBancariasActivity.this);
-        View alview = getLayoutInflater().inflate(R.layout.activity_addbanco, null);
+        View alview = getLayoutInflater().inflate(R.layout.activity_meio_pagamento, null);
         final ContasBancarias contasBancarias = new ContasBancarias();
 
 //        edtTituloBanco = alview.findViewById(R.id.edtTituloBanco);

@@ -91,18 +91,11 @@
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
         </activity>
         <activity
-            android:name=".View.AddBancoActivity"
+            android:name=".View.MeiodePagamentoActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.com.felipedeveloper.gestaofinanceira.View.ContasBancariasActivity" />
-        </activity>
-        <activity
-            android:name=".View.AddCartaoActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.CartaoActivity" />
         </activity>
         <activity
             android:name=".View.TransacoesActivity"

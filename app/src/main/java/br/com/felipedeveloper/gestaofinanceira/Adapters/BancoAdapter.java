@@ -36,7 +36,7 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
     @Override
     public ViewHolderAgencia onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_conta_bancaria, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_adapter_cardview, parent, false);
 
 
         return new ViewHolderAgencia(view);
@@ -46,8 +46,8 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
     public void onBindViewHolder(@NonNull ViewHolderAgencia holder, int position) {
         if (!contasBancariasArray.isEmpty() && contasBancariasArray.size() > 0) {
 
-            holder.tituloConta.setText(contasBancariasArray.get(position).getTituloContabanco());
-            holder.saldoConta.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria()) + " R$"));
+            holder.textTituloBanco.setText(contasBancariasArray.get(position).getTituloContabanco());
+            holder.textSaldoBanco.setText(String.valueOf(df.format(contasBancariasArray.get(position).getSaldoContabancaria()) + " R$"));
             render(holder,position);
         }
     }
@@ -68,16 +68,15 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
     }
 
     public class ViewHolderAgencia extends RecyclerView.ViewHolder {
-        TextView tituloConta;
-        TextView saldoConta;
-        CardView cardView;
-
+        private TextView textTituloBanco;
+        private TextView textSaldoBanco;
+        private CardView cardView;
         public ViewHolderAgencia(View itemView) {
             super(itemView);
-            tituloConta = itemView.findViewById(R.id.titulocontabancarias);
-            saldoConta = itemView.findViewById(R.id.cardsaldocontabancaria);
+            textTituloBanco = itemView.findViewById(R.id.tituloitem);
+            textSaldoBanco = itemView.findViewById(R.id.saldoitem);
+            cardView = itemView.findViewById(R.id.cardView);
             df = new DecimalFormat("#0.00");
-            cardView = itemView.findViewById(R.id.cardViewcontasbancaria);
             click(itemView);
             remove(itemView);
         }

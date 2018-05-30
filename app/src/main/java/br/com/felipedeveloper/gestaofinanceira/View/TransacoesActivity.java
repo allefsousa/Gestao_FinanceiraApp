@@ -35,12 +35,12 @@ public class TransacoesActivity extends AppCompatActivity {
     TextView totalGasto;
     @BindView(R.id.editstatusfinal)
     TextView statusfinal;
-    Double totalstatus = 0.0;
-    Double totaladcionado = 0.0;
-    Double totalgasto = 0.0;
-    List<Lancamento> list;
     @BindView(R.id.toolbarcontet)
     Toolbar toolbar;
+    private Double totalstatus = 0.0;
+    private Double totaladcionado = 0.0;
+    private Double totalgasto = 0.0;
+    private List<Lancamento> list;
     private List<Lancamento> lancamentoList;
     private LinhadoTempoPessoalAdapter adapterLinhadoTempo;
     private DatabaseReference myreference;
@@ -79,12 +79,12 @@ public class TransacoesActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Lancamento lancamento;
-                for (DataSnapshot dd : dataSnapshot.getChildren()){
+                for (DataSnapshot dd : dataSnapshot.getChildren()) {
                     lancamento = dd.getValue(Lancamento.class);
-                    if (nomeOpfinanceira.equals("Transacoesgeral")){
+                    if (nomeOpfinanceira.equals("Transacoesgeral")) {
                         adapterLinhadoTempo.addItemm(lancamento);
-                    }else {
-                        if (lancamento.getNomeopFinanceira().equals(nomeOpfinanceira)){
+                    } else {
+                        if (lancamento.getNomeopFinanceira().equals(nomeOpfinanceira)) {
                             adapterLinhadoTempo.addItemm(lancamento);
                         }
                     }
