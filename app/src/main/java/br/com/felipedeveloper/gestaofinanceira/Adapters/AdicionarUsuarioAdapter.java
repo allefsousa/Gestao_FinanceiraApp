@@ -17,12 +17,12 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class AdapterAdcionarUsuario extends RecyclerView.Adapter<AdapterAdcionarUsuario.ViewHoderUsuario> {
+public class AdicionarUsuarioAdapter extends RecyclerView.Adapter<AdicionarUsuarioAdapter.ViewHoderUsuario> {
     @NonNull
     private List<Usuario> usuarioList;
     private Context context;
 
-    public AdapterAdcionarUsuario(List<Usuario> usuarioList, Context context) {
+    public AdicionarUsuarioAdapter(List<Usuario> usuarioList, Context context) {
         this.usuarioList = usuarioList;
         this.context = context;
     }
@@ -33,7 +33,7 @@ public class AdapterAdcionarUsuario extends RecyclerView.Adapter<AdapterAdcionar
         View view = layoutInflater.inflate(R.layout.item_grupo_add_user, parent, false);
 
 
-        return new AdapterAdcionarUsuario.ViewHoderUsuario(view);
+        return new AdicionarUsuarioAdapter.ViewHoderUsuario(view);
     }
 
     @Override

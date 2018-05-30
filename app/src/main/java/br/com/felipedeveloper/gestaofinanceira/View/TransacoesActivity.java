@@ -19,7 +19,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempoPessoal;
+import br.com.felipedeveloper.gestaofinanceira.Adapters.LinhadoTempoPessoalAdapter;
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -42,7 +42,7 @@ public class TransacoesActivity extends AppCompatActivity {
     @BindView(R.id.toolbarcontet)
     Toolbar toolbar;
     private List<Lancamento> lancamentoList;
-    private AdapterLinhadoTempoPessoal adapterLinhadoTempo;
+    private LinhadoTempoPessoalAdapter adapterLinhadoTempo;
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
     private DecimalFormat df;
@@ -70,7 +70,7 @@ public class TransacoesActivity extends AppCompatActivity {
         configFirebase();
 
 
-        adapterLinhadoTempo = new AdapterLinhadoTempoPessoal(TransacoesActivity.this, nomeOpfinanceira);
+        adapterLinhadoTempo = new LinhadoTempoPessoalAdapter(TransacoesActivity.this, nomeOpfinanceira);
         LinearLayoutManager layoutManager = new LinearLayoutManager(TransacoesActivity.this);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);

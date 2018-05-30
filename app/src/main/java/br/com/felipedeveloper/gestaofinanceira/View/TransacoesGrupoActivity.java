@@ -24,7 +24,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterLinhadoTempoGrupo;
+import br.com.felipedeveloper.gestaofinanceira.Adapters.LinhadoTempoGrupoAdapter;
 import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -48,7 +48,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
     @BindView(R.id.floatlancamentogrupo)
     FloatingActionButton floatingActionButton;
     Context context = TransacoesGrupoActivity.this;
-    private AdapterLinhadoTempoGrupo adapterLinhadoTempo;
+    private LinhadoTempoGrupoAdapter adapterLinhadoTempo;
     private DatabaseReference myreference;
     private FirebaseUser firebaseUser;
     String nomeGrupo;
@@ -78,7 +78,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
         configFirebase();
         list = new ArrayList<>();
         df = new DecimalFormat("#0.00");
-        adapterLinhadoTempo = new AdapterLinhadoTempoGrupo(context,nomeGrupo);
+        adapterLinhadoTempo = new LinhadoTempoGrupoAdapter(context,nomeGrupo);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);

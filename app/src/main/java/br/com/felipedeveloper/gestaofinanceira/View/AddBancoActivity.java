@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Helper.CreditoDebitoEnum;
+import br.com.felipedeveloper.gestaofinanceira.Helper.OpcoesFinanceirasEnum;
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
@@ -112,12 +113,13 @@ public class AddBancoActivity extends BaseActivity {
                 lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
                 lancamento.setIdLancamento(UUID.randomUUID().toString());
                 lancamento.setCreatedAt(timestamp);
-//                git add *
 
 
-                if (opcaofinanceira.equals("cartao")){
+
+                if (opcaofinanceira.equals(OpcoesFinanceirasEnum.cartao.getValor())){
                     cartao.setIdcartao(UUID.randomUUID().toString());
-                    lancamento.setTitulo("Adicionando " + cartao.getClass().getName());
+                    lancamento.setTitulo("Adicionando " +OpcoesFinanceirasEnum.cartao.getValor() );
+                    lancamento.setNomeopFinanceira(edtTituloBanco.getText().toString());
                     cartao.setTituloCartao(edtTituloBanco.getText().toString());
                     if (!edtSaldoBanco.getText().toString().isEmpty()){
                         carteira.setSaldoCarteira(Double.parseDouble(edtSaldoBanco.getText().toString()));
@@ -127,10 +129,11 @@ public class AddBancoActivity extends BaseActivity {
                         clear();
                     }
                 }
-                if (opcaofinanceira.equals("carteira")){
+                if (opcaofinanceira.equals(OpcoesFinanceirasEnum.carteira.getValor())){
                     carteira.setIdCarteira(UUID.randomUUID().toString());
                     carteira.setTituloCarteira(edtTituloBanco.getText().toString());
-                    lancamento.setTitulo("Adicionando " + carteira.getClass().getName());
+                    lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.carteira.getValor());
+                    lancamento.setNomeopFinanceira(edtTituloBanco.getText().toString());
                     if (!edtSaldoBanco.getText().toString().isEmpty()){
                         carteira.setSaldoCarteira(Double.parseDouble(edtSaldoBanco.getText().toString()));
                         myreference.child("carteira").child(carteira.getIdCarteira()).setValue(carteira);
@@ -140,9 +143,11 @@ public class AddBancoActivity extends BaseActivity {
                     }
 
                 }
-                if (opcaofinanceira.equals("banco")){
+                if (opcaofinanceira.equals(OpcoesFinanceirasEnum.banco.getValor())){
                     contasBancarias.setIdContaBanco(UUID.randomUUID().toString());
                     contasBancarias.setTituloContabanco(edtTituloBanco.getText().toString());
+                    lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.banco.getValor());
+                    lancamento.setNomeopFinanceira(edtTituloBanco.getText().toString());
                     if (!edtSaldoBanco.getText().toString().isEmpty()) {
                         contasBancarias.setSaldoContabancaria(Double.parseDouble(edtSaldoBanco.getText().toString()));
                         myreference.child("banco").child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);

@@ -11,20 +11,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.vipulasri.timelineview.TimelineView;
-import com.google.firebase.database.DataSnapshot;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
-import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
+import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
-public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhadoTempoGrupo.ViewHolder> {
+public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTempoPessoalAdapter.ViewHolder> {
 
+    String nomefinanceiro;
+    List<String> lancamentoList;
     private Context context;
-    private String idGrupoSelecionado;
     private DecimalFormat df;
-
-    private SortedList<DataSnapshot> sortedList = new SortedList<>(DataSnapshot.class, new SortedList.Callback<DataSnapshot>() {
+    private SortedList<Lancamento> lancamentoSortedList = new SortedList<Lancamento>(Lancamento.class, new SortedList.Callback<Lancamento>() {
         @Override
         public void onInserted(int position, int count) {
             notifyItemRangeInserted(position, count);
@@ -40,12 +41,11 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
         @Override
         public void onMoved(int fromPosition, int toPosition) {
             notifyItemRangeInserted(fromPosition, toPosition);
-
         }
 
         @Override
-        public int compare(DataSnapshot data1, DataSnapshot data2) {
-            return (int) (data1.child("createdAt").getValue(Long.class) - data2.child("createdAt").getValue(Long.class));
+        public int compare(Lancamento data1, Lancamento data2) {
+            return (int) (data1.getCreatedAt() - data2.getCreatedAt());
         }
 
         @Override
@@ -54,64 +54,54 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
         }
 
         @Override
-        public boolean areContentsTheSame(DataSnapshot oldItem, DataSnapshot newItem) {
+        public boolean areContentsTheSame(Lancamento oldItem, Lancamento newItem) {
             return oldItem.equals(newItem);
         }
 
         @Override
-        public boolean areItemsTheSame(DataSnapshot item1, DataSnapshot item2) {
-            return item1.getKey().equals(item2.getKey());
+        public boolean areItemsTheSame(Lancamento item1, Lancamento item2) {
+            return item1.getTitulo().equals(item2.getTitulo());
         }
     });
 
-    public AdapterLinhadoTempoGrupo(Context context) {
-        this.context = context;
-    }
 
-    public AdapterLinhadoTempoGrupo(Context context, String nomeGrupo) {
+    public LinhadoTempoPessoalAdapter(Context context, String nomeGrupo) {
         this.context = context;
-        idGrupoSelecionado = nomeGrupo;
+        this.nomefinanceiro = nomeGrupo;
+        lancamentoList = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_movimentacoes_grupo, parent, false);
-        return new ViewHolder(view);
+        View view = layoutInflater.inflate(R.layout.item_movimentacoes_pessoal, parent, false);
+        return new ViewHolder(view,viewType);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.render(sortedList.get(position), position);
-    }
+        holder.render(lancamentoSortedList, position);
 
-    public void addItem(DataSnapshot data) {
-        LancamentoGrupo lancamento = data.getValue(LancamentoGrupo.class); // recuperando o lançamento
-        if (!lancamento.getNomeGrupo().isEmpty()) {
-            if (lancamento.getNomeGrupo().equals(idGrupoSelecionado)) { // comparando a id do grupo selecionado com  o nome do grupo
-                // caso sejam iguais exibir seus gastos
-                sortedList.add(data);
-                notifyDataSetChanged();
-            }
-        }
     }
-
-    public void removeItem(DataSnapshot data) {
-        sortedList.remove(data);
+    public void addItemm(Lancamento lancamento) {
+        lancamentoSortedList.add(lancamento);
         notifyDataSetChanged();
+    }
+
+    public void removeItem(Lancamento data) {
+        lancamentoList.remove(data);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemCount() {
+        return lancamentoSortedList.size();
     }
     @Override
     public int getItemViewType(int position) {
         return TimelineView.getTimeLineViewType(position,getItemCount());
     }
-
-
-    @Override
-    public int getItemCount() {
-        return sortedList.size();
-    }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -120,10 +110,9 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
         TextView titulo;
         TextView valor;
         TextView status;
-        TextView nomeUsuario;
         CardView cardViewlinha;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, int viewType) {
             super(itemView);
             df = new DecimalFormat("#0.00");
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
@@ -132,29 +121,29 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
             valor = itemView.findViewById(R.id.text_timeline_valor);
             data = itemView.findViewById(R.id.text_timeline_date);
             status = itemView.findViewById(R.id.editstatusop);
-            nomeUsuario = itemView.findViewById(R.id.text_timeline_nomeusuario);
             cardViewlinha.setUseCompatPadding(true);
+            mTimelineView.initLine(viewType);
+
         }
 
 
-        private void render(DataSnapshot dataSnapshot, int pos) {
+        private void render(SortedList<Lancamento> sortedList, int pos) {
             cardViewlinha.setUseCompatPadding(true);
 
 
 
+                // TODO: 21/05/2018  Dois metodos igal refatorar e so azer a chamada
 
-            Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
-            if (pos == 0) {
-                mTimelineView.initLine(1);
-
-            }
+                Integer statusop = (sortedList.get(pos).getStatusOp());
+                if (pos == 0) {
+                    mTimelineView.initLine(1);
+                }
                 if (statusop != null) {
                     switch (statusop) {
                         case 0:
                             mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
                             cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
                             mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
-
                             status.setText("DEBITO");
                             break;
                         case 1:
@@ -167,21 +156,17 @@ public class AdapterLinhadoTempoGrupo extends RecyclerView.Adapter<AdapterLinhad
                 }
 
 
-            if (pos == (sortedList.size() - 1)) {
-                mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
+                if (pos == (sortedList.size() - 1)) {
+                    mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
+                }
+
+                titulo.setText(sortedList.get(pos).getTitulo());
+                valor.setText(String.valueOf(df.format(sortedList.get(pos).getValor())));
+                data.setText(sortedList.get(pos).getData());
+
+                }
             }
-            String sTitulo = "Titulo: "+(dataSnapshot.child("titulo").getValue(String.class));
-            String sValor   = "Valor: "+(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
-            String sData    = "Data: "+(dataSnapshot.child("data").getValue(String.class));
-            String sNome    = "Nome: "+(dataSnapshot.child("nomeColaborador").getValue(String.class));
-            titulo.setText(sTitulo);
-            valor.setText(sValor);
-            data.setText(sData);
-            nomeUsuario.setText(sNome);
-
-
         }
-    }
 
 
-}
+

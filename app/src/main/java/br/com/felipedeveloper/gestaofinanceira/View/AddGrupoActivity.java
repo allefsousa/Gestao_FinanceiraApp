@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import br.com.felipedeveloper.gestaofinanceira.Adapters.AdapterAdcionarUsuario;
+import br.com.felipedeveloper.gestaofinanceira.Adapters.AdicionarUsuarioAdapter;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
@@ -49,7 +49,7 @@ public class AddGrupoActivity extends BaseActivity {
 
     @BindView(R.id.imageaddgrupo)
     ImageView imaAddGrupo;
-    AdapterAdcionarUsuario adapterAdcionarUsuario ;
+    AdicionarUsuarioAdapter adicionarUsuarioAdapter;
     LinearLayoutManager layoutManager;
 
     private DatabaseReference Usuariosreference;
@@ -122,9 +122,9 @@ public class AddGrupoActivity extends BaseActivity {
                             if (usuarioList.get(i).getUsuarioEmail().equals(emailDigitado)){
                                 exibirList.add(usuarioList.get(i));
                                 exibirList.add(usuarioLogado);
-                                adapterAdcionarUsuario = new AdapterAdcionarUsuario(exibirList,context);
-                                adapterAdcionarUsuario.notifyDataSetChanged();
-                                recyclerViewuser.setAdapter(adapterAdcionarUsuario);
+                                adicionarUsuarioAdapter = new AdicionarUsuarioAdapter(exibirList,context);
+                                adicionarUsuarioAdapter.notifyDataSetChanged();
+                                recyclerViewuser.setAdapter(adicionarUsuarioAdapter);
                                 inputEmailGrupo.getText().clear();
                             }
                         }
@@ -192,7 +192,7 @@ public class AddGrupoActivity extends BaseActivity {
         inputEmailGrupo.getText().clear();
         inputNomeGrupo.getText().clear();
         inputSaldoGrupo.getText().clear();
-        adapterAdcionarUsuario.clear();
+        adicionarUsuarioAdapter.clear();
     }
     @Override
     public DatabaseReference configFirebase(DatabaseReference reference) {
