@@ -56,7 +56,7 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context,TransacoesActivity.class);
-                intent.putExtra("nomeop",cartaoArray.get(position).getTituloCartao());
+                intent.putExtra("nomeop",cartaoArray.get(position).getIdcartao());
                 context.startActivity(intent);
             }
         });

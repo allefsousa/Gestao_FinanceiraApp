@@ -117,7 +117,7 @@ public class MeiodePagamentoActivity extends BaseActivity {
                 if (opcaofinanceira.equals(OpcoesFinanceirasEnum.cartao.getValor())) {
                     cartao.setIdcartao(UUID.randomUUID().toString());
                     lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.cartao.getValor());
-                    lancamento.setNomeopFinanceira(edtTituloBanco.getText().toString());
+                    lancamento.setNomeopFinanceira(cartao.getIdcartao());
                     cartao.setTituloCartao(edtTituloBanco.getText().toString());
                     if (!edtSaldoBanco.getText().toString().isEmpty()) {
                         cartao.setSaldoCartao(Double.parseDouble(trocaVirgulaPonto));
@@ -131,7 +131,7 @@ public class MeiodePagamentoActivity extends BaseActivity {
                     carteira.setIdCarteira(UUID.randomUUID().toString());
                     carteira.setTituloCarteira(edtTituloBanco.getText().toString());
                     lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.carteira.getValor());
-                    lancamento.setNomeopFinanceira(edtTituloBanco.getText().toString());
+                    lancamento.setNomeopFinanceira(carteira.getIdCarteira());
                     if (!edtSaldoBanco.getText().toString().isEmpty()) {
                         carteira.setSaldoCarteira(Double.parseDouble(trocaVirgulaPonto));
                         myreference.child("carteira").child(carteira.getIdCarteira()).setValue(carteira);
@@ -145,7 +145,7 @@ public class MeiodePagamentoActivity extends BaseActivity {
                     contasBancarias.setIdContaBanco(UUID.randomUUID().toString());
                     contasBancarias.setTituloContabanco(edtTituloBanco.getText().toString());
                     lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.banco.getValor());
-                    lancamento.setNomeopFinanceira(edtTituloBanco.getText().toString());
+                    lancamento.setNomeopFinanceira(contasBancarias.getIdContaBanco());
                     if (!edtSaldoBanco.getText().toString().isEmpty()) {
                         contasBancarias.setSaldoContabancaria(Double.parseDouble(trocaVirgulaPonto));
                         myreference.child("banco").child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);

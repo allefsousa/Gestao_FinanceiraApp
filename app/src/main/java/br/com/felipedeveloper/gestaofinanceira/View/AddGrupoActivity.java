@@ -59,6 +59,7 @@ public class AddGrupoActivity extends BaseActivity {
     private Grupo grupo;
     private List<Usuario> usuarioList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,7 +195,6 @@ public class AddGrupoActivity extends BaseActivity {
 
     @Override
     public DatabaseReference configFirebase(DatabaseReference reference) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
         reference = firebaseDatabase.getReference().child("financeiro").child("grupos");// definindo qual o pont oque  a referencia do firebase ficara
         return reference;

@@ -1,10 +1,15 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.LinhadoTempoPessoalAdapter;
@@ -24,6 +30,7 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class TransacoesActivity extends AppCompatActivity {
@@ -37,6 +44,11 @@ public class TransacoesActivity extends AppCompatActivity {
     TextView statusfinal;
     @BindView(R.id.toolbarcontet)
     Toolbar toolbar;
+    @BindView(R.id.floatfiltro)
+    FloatingActionButton floatingActionFiltro;
+    Context context;
+    String mes[];
+    int filtroMes = 0;
     private Double totalstatus = 0.0;
     private Double totaladcionado = 0.0;
     private Double totalgasto = 0.0;
@@ -54,11 +66,18 @@ public class TransacoesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_transacoes);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Transações");
+        context = TransacoesActivity.this;
         list = new ArrayList<>();
         df = new DecimalFormat("#0.00");
+//        RelativeLayout item = (RelativeLayout)findViewById(R.id.item);
+
+//        item.addView(child);
+        mes = getResources().getStringArray(R.array.meses);
+        final ArrayAdapter<String> mesadapter = new ArrayAdapter<String>(TransacoesActivity.this, android.R.layout.simple_list_item_1, mes);// passando a lista de titulos para
+        // serem exibidos no modelo padrao de lista
+
 
         nomeOpfinanceira = retornoNomeGrupo(savedInstanceState);
 
@@ -69,36 +88,59 @@ public class TransacoesActivity extends AppCompatActivity {
 
         configFirebase();
 
-
         adapterLinhadoTempo = new LinhadoTempoPessoalAdapter(TransacoesActivity.this, nomeOpfinanceira);
         LinearLayoutManager layoutManager = new LinearLayoutManager(TransacoesActivity.this);
         recyclerViewtran.setLayoutManager(layoutManager);
         recyclerViewtran.setAdapter(adapterLinhadoTempo);
 
-        myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
+        floatingActionFiltro.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Lancamento lancamento;
-                for (DataSnapshot dd : dataSnapshot.getChildren()) {
-                    lancamento = dd.getValue(Lancamento.class);
-                    if (nomeOpfinanceira.equals("Transacoesgeral")) {
-                        adapterLinhadoTempo.addItemm(lancamento);
-                    } else {
-                        if (lancamento.getNomeopFinanceira().equals(nomeOpfinanceira)) {
-                            adapterLinhadoTempo.addItemm(lancamento);
-                        }
+            public void onClick(View view) {
+                final View child = getLayoutInflater().inflate(R.layout.filtro_dialog, null);
+                final Spinner spinner = child.findViewById(R.id.spinermes);
+                spinner.setAdapter(mesadapter);
+                Calendar calendar = Calendar.getInstance();
+                adapterLinhadoTempo.removeItem();
+
+
+                SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(TransacoesActivity.this, SweetAlertDialog.NORMAL_TYPE);
+                sweetAlertDialog.setTitleText("Filtro");
+                sweetAlertDialog.setConfirmText("Filtrar");
+                sweetAlertDialog.setCustomView(child);
+                sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                        filtroMes = spinner.getSelectedItemPosition();
+
+                        sweetAlertDialog.dismiss();
+                        BuscarTransacoes();
+                        // adapter clear;
+
+
+//                                boolean a = ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+//                                        editText.getWindowToken(), 0);
+//                                if (a) {
+//                                    sweetAlertDialog.setTitleText("Deleted!")
+//                                            .setContentText("Your imaginary file has been deleted!")
+//                                            .setConfirmText(editText.getText().toString())
+//                                            .setConfirmClickListener(null)
+//                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+//                                }
+
+
                     }
+                });
+                sweetAlertDialog.show();
 
-                }
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
 
             }
+
+
         });
+
+
+        BuscarTransacoes();
 
 
         myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
@@ -120,6 +162,42 @@ public class TransacoesActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void BuscarTransacoes() {
+        myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Lancamento lancamento;
+                for (DataSnapshot dd : dataSnapshot.getChildren()) {
+                    lancamento = dd.getValue(Lancamento.class);
+                    if (nomeOpfinanceira.equals("Transacoesgeral")) {
+                            adapterLinhadoTempo.addItemm(lancamento);
+
+                    } else {
+                        if (lancamento.getNomeopFinanceira().equals(nomeOpfinanceira)) {
+                            String ac[] = lancamento.getData().split("/");
+                            int a = Integer.parseInt(ac[1]);
+                            if (filtroMes == 0){
+                                adapterLinhadoTempo.addItemm(lancamento);
+                            }
+                            if (a==(filtroMes)){
+                                adapterLinhadoTempo.addItemm(lancamento);
+                            }
+
+                        }
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void totalGastoPeriodo(List<Lancamento> a) {

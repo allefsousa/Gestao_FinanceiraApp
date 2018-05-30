@@ -56,7 +56,7 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context,TransacoesActivity.class);
-                intent.putExtra("nomeop",contasBancariasArray.get(position).getTituloContabanco());
+                intent.putExtra("nomeop",contasBancariasArray.get(position).getIdContaBanco());
                 context.startActivity(intent);
             }
         });

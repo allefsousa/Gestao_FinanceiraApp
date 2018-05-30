@@ -22,7 +22,6 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTempoPessoalAdapter.ViewHolder> {
 
     String nomefinanceiro;
-    List<String> lancamentoList;
     private Context context;
     private DecimalFormat df;
     private SortedList<Lancamento> lancamentoSortedList = new SortedList<Lancamento>(Lancamento.class, new SortedList.Callback<Lancamento>() {
@@ -68,7 +67,7 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
     public LinhadoTempoPessoalAdapter(Context context, String nomeGrupo) {
         this.context = context;
         this.nomefinanceiro = nomeGrupo;
-        lancamentoList = new ArrayList<>();
+
     }
 
     @NonNull
@@ -89,8 +88,8 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
         notifyDataSetChanged();
     }
 
-    public void removeItem(Lancamento data) {
-        lancamentoList.remove(data);
+    public void removeItem( ) {
+        lancamentoSortedList.clear();
         notifyDataSetChanged();
     }
 

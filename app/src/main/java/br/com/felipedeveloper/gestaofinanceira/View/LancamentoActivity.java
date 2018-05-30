@@ -101,7 +101,7 @@ public class LancamentoActivity extends AppCompatActivity {
         myCalendar = Calendar.getInstance();
         final android.support.v7.widget.SwitchCompat aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
-        //region Tratamento de erros
+        //region Tratamento de labels de Erros
         textvalor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -150,7 +150,7 @@ public class LancamentoActivity extends AppCompatActivity {
 
             }
         });
-        //endregion
+        //endregion  exi
         textvalor.addTextChangedListener(onTextChangedListener());
 
 
