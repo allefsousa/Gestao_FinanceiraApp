@@ -56,4 +56,10 @@ public class LoginEmailActivity extends AppCompatActivity implements NavigationV
         adapter.addFragment(new EmailCadastroFragment(),"Cadastro");
         uViewPager.setAdapter(adapter); // adiciona as tabs a pagina.
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        finish();
+        return true;
+    }
 }

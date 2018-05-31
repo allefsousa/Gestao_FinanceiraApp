@@ -210,10 +210,19 @@ public class MenuActivity extends AppCompatActivity {
         if (id == R.id.action_call) {
             Intent intent = new Intent(MenuActivity.this, UsuarioConfiguracaoActivity.class);
             startActivity(intent);
+            finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    /**
+     * meotdo responsavel por tratar o botão fisico de voltar do celular
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
     }
 
 

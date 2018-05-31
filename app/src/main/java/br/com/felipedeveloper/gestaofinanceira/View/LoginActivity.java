@@ -88,14 +88,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View view) {
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
-               // startActivity(new Intent(LoginActivity.this,MenuActivity.class));
 
             }
         });
         btnemaillogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,LoginEmailActivity.class));
+                Intent intent = new Intent(LoginActivity.this,LoginEmailActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
         btngooglelogin.setOnClickListener(new View.OnClickListener() {
@@ -159,11 +160,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void salvarUsuarioBD(FirebaseUser firebaseUser) {
-        user.setUsuarioEmail(firebaseUser.getEmail());
-        user.setUsuarioNome(firebaseUser.getDisplayName());
-        user.setFotoUrl(firebaseUser.getPhotoUrl().toString());
-        user.setIdUsuario(firebaseUser.getUid());
-        reference.child(user.getIdUsuario()).setValue(user);
+        if (firebaseUser != null){
+            user.setUsuarioEmail(firebaseUser.getEmail());
+            user.setUsuarioNome(firebaseUser.getDisplayName());
+            user.setFotoUrl(firebaseUser.getPhotoUrl().toString());
+            user.setIdUsuario(firebaseUser.getUid());
+            reference.child(user.getIdUsuario()).setValue(user);
+        }
+
 
     }
 

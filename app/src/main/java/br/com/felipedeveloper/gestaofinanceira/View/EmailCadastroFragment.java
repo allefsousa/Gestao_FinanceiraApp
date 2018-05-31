@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -87,13 +88,21 @@ public class EmailCadastroFragment extends Fragment {
         reference = firebaseDatabase.getReference().child("usuario");
     }
 
-    private void criarContaFirebase(Usuario user) {
+    private void criarContaFirebase(final Usuario user) {
         firebaseAuth.createUserWithEmailAndPassword(user.getUsuarioEmail(), user.getUsuarioSenha()).addOnCompleteListener((Activity) rootView.getContext(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     limparcampos();
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    // atualizando o usuario cadastrad para exibir o nome no app
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(user.getUsuarioNome())
+                            .build();
+
+                    if (firebaseUser != null){
+                        firebaseUser.updateProfile(profileUpdates);
+                    }
                     salvarUsuarioBD(firebaseUser);
                     ExibirMensagem(rootView.getContext(), SweetAlertDialog.SUCCESS_TYPE, "Conta criada com sucesso !");
 

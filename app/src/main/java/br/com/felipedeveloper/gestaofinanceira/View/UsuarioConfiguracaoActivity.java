@@ -43,11 +43,6 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
     private FirebaseAuth auth;
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +127,13 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
         });
     }
 
+
     public void ExibirMensagem(Context context, int successType, String s) {
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(UsuarioConfiguracaoActivity.this,MenuActivity.class));
+        finish();
     }
 }
