@@ -115,20 +115,6 @@ public class TransacoesActivity extends AppCompatActivity {
 
                         sweetAlertDialog.dismiss();
                         BuscarTransacoes();
-                        // adapter clear;
-
-
-//                                boolean a = ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-//                                        editText.getWindowToken(), 0);
-//                                if (a) {
-//                                    sweetAlertDialog.setTitleText("Deleted!")
-//                                            .setContentText("Your imaginary file has been deleted!")
-//                                            .setConfirmText(editText.getText().toString())
-//                                            .setConfirmClickListener(null)
-//                                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-//                                }
-
-
                     }
                 });
                 sweetAlertDialog.show();
@@ -158,6 +144,35 @@ public class TransacoesActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+        /**
+         * Metodo responsavel por exibir ou não o botão de filtro
+         * caso a tela seja rolada para cima o botão perde a visibilidade
+         */
+        recyclerViewtran.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy >0) {
+                    // Scroll Down
+                    if (floatingActionFiltro.isShown()) {
+                        floatingActionFiltro.hide();
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!floatingActionFiltro.isShown()) {
+                        floatingActionFiltro.show();
+                    }
+                }
             }
         });
 
@@ -248,4 +263,6 @@ public class TransacoesActivity extends AppCompatActivity {
         }
         return newString;
     }
+
+
 }
