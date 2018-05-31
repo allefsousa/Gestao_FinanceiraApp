@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,10 +27,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsuarioConfiguracaoActivity extends BaseActivity {
 
-    @BindView(R.id.btnsair)
-    Button btsair;
-    @BindView(R.id.btnrestaurar)
-    Button btnrestaurar;
+    @BindView(R.id.checksair)
+    CheckedTextView btsair;
+    @BindView(R.id.checkrestaurar)
+    CheckedTextView btnrestaurar;
+    @BindView(R.id.checkNome)
+    CheckedTextView checkNome;
     @BindView(R.id.circleimageusuario)
     CircleImageView circleImageView;
     private String idUser;
@@ -57,8 +60,9 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
         reference = configFirebase(reference);
         idUser = auth.getCurrentUser().getUid();
         if (!idUser.isEmpty()){
-            Picasso.with(UsuarioConfiguracaoActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(circleImageView);
+            Picasso.with(UsuarioConfiguracaoActivity.this).load(auth.getCurrentUser().getPhotoUrl()).noFade().into(circleImageView);
         }
+        checkNome.setText("Nome: "+auth.getCurrentUser().getDisplayName()+"\n\nE-Mail: "+auth.getCurrentUser().getEmail());
         btsair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -161,16 +161,16 @@ public class TransacoesActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy >0) {
+                if (dy >0) { // posição inicial do recycler view
                     // Scroll Down
                     if (floatingActionFiltro.isShown()) {
-                        floatingActionFiltro.hide();
+                        floatingActionFiltro.hide(); // tirando a visibilidade
                     }
                 }
                 else if (dy <0) {
                     // Scroll Up
                     if (!floatingActionFiltro.isShown()) {
-                        floatingActionFiltro.show();
+                        floatingActionFiltro.show(); // fazendo o botão aparecer
                     }
                 }
             }

@@ -32,8 +32,8 @@ public class GrupoActivity extends BaseActivity {
     Context context;
     EditText editText;
     @BindView(R.id.fabaddgrupo)
-    FloatingActionButton floatingActionButton;
-    DatabaseReference reference,mm;
+    FloatingActionButton floatingAddGrupo;
+    DatabaseReference reference;
     String idUserlogado;
     List<Grupo> grupoList;
     Grupo grupo;
@@ -51,7 +51,8 @@ public class GrupoActivity extends BaseActivity {
         ButterKnife.bind(this);
         context = GrupoActivity.this;
         editText = new EditText(context);
-        mm= FirebaseDatabase.getInstance().getReference().child("financeiro");
+        reference = configFirebase(reference);
+        reference= FirebaseDatabase.getInstance().getReference().child("financeiro");
 
         grupoList = new ArrayList<>();
         grupo = new Grupo();
@@ -65,7 +66,7 @@ public class GrupoActivity extends BaseActivity {
         recyclerViewGrupos.addItemDecoration(dividerItemDecoration);
 
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        floatingAddGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(context,AddGrupoActivity.class));
@@ -73,7 +74,7 @@ public class GrupoActivity extends BaseActivity {
         });
 
 
-        mm.child("grupos").addValueEventListener(new ValueEventListener() {
+        reference.child("grupos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Grupo grupo;
@@ -93,6 +94,36 @@ public class GrupoActivity extends BaseActivity {
 
             }
         });
+
+        /**
+         * Metodo responsavel por exibir ou não o botão de filtro
+         * caso a tela seja rolada para cima o botão perde a visibilidade
+         */
+        recyclerViewGrupos.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy >0) { // posição inicial do recycler view
+                    // Scroll Down
+                    if (floatingAddGrupo.isShown()) {
+                        floatingAddGrupo.hide(); // tirando a visibilidade
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!floatingAddGrupo.isShown()) {
+                        floatingAddGrupo.show(); // fazendo o botão aparecer
+                    }
+                }
+            }
+        });
+
 
 
     }

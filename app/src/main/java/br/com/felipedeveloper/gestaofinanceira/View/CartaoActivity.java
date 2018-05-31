@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 public class CartaoActivity extends BaseActivity {
 
     @BindView(R.id.floatnovo)
-    FloatingActionButton flo;
+    FloatingActionButton floatingNovocartao;
     @BindView(R.id.recyclerViewcartoes)
     RecyclerView recyclerViewCartoes;
     FirebaseAuth auth;
@@ -71,6 +71,7 @@ public class CartaoActivity extends BaseActivity {
         myreference.child("cartao").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                cartaoList.clear();
                 for (DataSnapshot d : dataSnapshot.getChildren()){
                     cartao = d.getValue(Cartao.class);
                     cartaoList.add(cartao);
@@ -88,7 +89,7 @@ public class CartaoActivity extends BaseActivity {
 
 
 
-        flo.setOnClickListener(new View.OnClickListener() {
+        floatingNovocartao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CartaoActivity.this,MeiodePagamentoActivity.class);
@@ -97,6 +98,37 @@ public class CartaoActivity extends BaseActivity {
 
             }
         });
+
+        /**
+         * Metodo responsavel por exibir ou não o botão de filtro
+         * caso a tela seja rolada para cima o botão perde a visibilidade
+         */
+        recyclerViewCartoes.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy >0) { // posição inicial do recycler view
+                    // Scroll Down
+                    if (floatingNovocartao.isShown()) {
+                        floatingNovocartao.hide(); // tirando a visibilidade
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!floatingNovocartao.isShown()) {
+                        floatingNovocartao.show(); // fazendo o botão aparecer
+                    }
+                }
+            }
+        });
+
+
     }
 
 

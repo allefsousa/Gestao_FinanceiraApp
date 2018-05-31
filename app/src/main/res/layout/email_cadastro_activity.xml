@@ -98,18 +98,17 @@
             android:hint="Confirme sua Senha" />
     </android.support.design.widget.TextInputLayout>
 
-    <Button
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/btnsalvar"
-        android:layout_width="296dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="57dp"
-        android:layout_marginStart="57dp"
-        android:layout_marginTop="212dp"
-        android:text="Registrar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="112dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
-        app:layout_constraintVertical_bias="1.0" />
+        app:srcCompat="@drawable/ic_check_white_24dp" />
 </android.support.constraint.ConstraintLayout>
 </ScrollView>

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class EmailCadastroFragment extends Fragment {
 
-    private Button btaddusuario;
+    private FloatingActionButton btaddusuario;
     private EditText edtConfirmasenha;
     private EditText edtemail;
     private EditText edtnome;

@@ -60,6 +60,13 @@ public class CarteiraActivity extends BaseActivity {
         financeiroreference.child("carteira").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                /**
+                 * por que limpar antes de adicionar ?
+                 *  pelo fato de você adicionar uma nova carteira em outra tela e logo em seguida retornar a esta
+                 *   desse modo os dados anteriores sao mantidos na lista e ao retornar mostra elementos duplicados
+                 */
+                carteiraList.clear();
+
                 for (DataSnapshot a : dataSnapshot.getChildren()){
                     carteira = a.getValue(Carteira.class);
                     carteiraList.add(carteira);
@@ -84,6 +91,36 @@ public class CarteiraActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        /**
+         * Metodo responsavel por exibir ou não o botão de filtro
+         * caso a tela seja rolada para cima o botão perde a visibilidade
+         */
+        recyclerViewCarteira.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy >0) { // posição inicial do recycler view
+                    // Scroll Down
+                    if (floatActionAddCarteira.isShown()) {
+                        floatActionAddCarteira.hide(); // tirando a visibilidade
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!floatActionAddCarteira.isShown()) {
+                        floatActionAddCarteira.show(); // fazendo o botão aparecer
+                    }
+                }
+            }
+        });
+
 
     }
 }

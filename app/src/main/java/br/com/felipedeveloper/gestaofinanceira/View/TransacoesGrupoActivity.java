@@ -32,26 +32,23 @@ import butterknife.ButterKnife;
 
 public class TransacoesGrupoActivity extends AppCompatActivity {
     @BindView(R.id.recyclergrupotrans)
-    RecyclerView recyclerViewtran;
+    RecyclerView recyclerViewtranGrupo;
     @BindView(R.id.edittotaladicionado)
     TextView totaladiconado;
     @BindView(R.id.edittotalgasto)
     TextView totalGasto;
     @BindView(R.id.editstatusfinal)
     TextView statusfinal;
-    Double totalstatus = 0.0;
-    Double totaladcionado = 0.0;
-    Double totalgasto = 0.0;
     List<LancamentoGrupo> list;
     @BindView(R.id.toolbargrupo)
     Toolbar toolbarGrupo;
     @BindView(R.id.floatlancamentogrupo)
     FloatingActionButton floatingActionButton;
+
     Context context = TransacoesGrupoActivity.this;
     private LinhadoTempoGrupoAdapter adapterLinhadoTempo;
     private DatabaseReference myreference;
-    private FirebaseUser firebaseUser;
-    String nomeGrupo;
+    private String nomeGrupo;
     private DecimalFormat df;
 
 
@@ -80,14 +77,13 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
         df = new DecimalFormat("#0.00");
         adapterLinhadoTempo = new LinhadoTempoGrupoAdapter(context,nomeGrupo);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        recyclerViewtran.setLayoutManager(layoutManager);
-        recyclerViewtran.setAdapter(adapterLinhadoTempo);
+        recyclerViewtranGrupo.setLayoutManager(layoutManager);
+        recyclerViewtranGrupo.setAdapter(adapterLinhadoTempo);
 
         myreference.child("lancamentos").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 adapterLinhadoTempo.addItem(dataSnapshot);
-                // totalGastoPeriodo(dataSnapshot);
             }
 
             @Override
@@ -134,10 +130,43 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
             }
         });
 
+        /**
+         * Metodo responsavel por exibir ou não o botão de filtro
+         * caso a tela seja rolada para cima o botão perde a visibilidade
+         */
+        recyclerViewtranGrupo.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy >0) { // posição inicial do recycler view
+                    // Scroll Down
+                    if (floatingActionButton.isShown()) {
+                        floatingActionButton.hide(); // tirando a visibilidade
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!floatingActionButton.isShown()) {
+                        floatingActionButton.show(); // fazendo o botão aparecer
+                    }
+                }
+            }
+        });
+
+
 
     }
 
     private void totalGastoPeriodo(List<LancamentoGrupo> a) {
+        Double totalstatus;
+        Double totaladcionado = 0.0;
+        Double totalgasto = 0.0;
         if (!a.isEmpty())
             for (LancamentoGrupo lan : a) {
 
@@ -155,7 +184,6 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
     }
 
     private void configFirebase() {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         myreference = firebaseDatabase.getReference().child("financeiro").child("grupos").child(nomeGrupo);
 

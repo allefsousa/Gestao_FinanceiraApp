@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             @Override
             public void onClick(View view) {
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("email", "public_profile"));
-                startActivity(new Intent(LoginActivity.this,MenuActivity.class));
+               // startActivity(new Intent(LoginActivity.this,MenuActivity.class));
 
             }
         });

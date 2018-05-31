@@ -162,7 +162,34 @@ public class AddGrupoActivity extends BaseActivity {
 
             }
         });
+
+        recyclerViewuser.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy >0) { // posição inicial do recycler view
+                    // Scroll Down
+                    if (floatingActionButton.isShown()) {
+                        floatingActionButton.hide(); // tirando a visibilidade
+                    }
+                }
+                else if (dy <0) {
+                    // Scroll Up
+                    if (!floatingActionButton.isShown()) {
+                        floatingActionButton.show(); // fazendo o botão aparecer
+                    }
+                }
+            }
+        });
+
     }
+
 
     private void fechaTeclado(View v) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

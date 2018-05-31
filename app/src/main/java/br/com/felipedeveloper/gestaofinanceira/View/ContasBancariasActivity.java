@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -29,27 +27,24 @@ import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ContasBancariasActivity extends AppCompatActivity {
+public class ContasBancariasActivity extends BaseActivity {
     @BindView(R.id.btnnovobanco)
-    FloatingActionButton btnaddbanco;
+    FloatingActionButton floatingAddBanco;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
     String idUser;
     AlertDialog alertDialog;
     RecyclerView recyclerView;
     List<ContasBancarias> contasBancariasList;
-    private DatabaseReference myreference;
-    ValueEventListener valueEventListener;
     ContasBancarias contasBancarias;
+    private DatabaseReference myreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contas_bancarias);
         ButterKnife.bind(this);
-        auth = FirebaseAuth.getInstance();
-        idUser = auth.getCurrentUser().getUid();
-        IniciaFirebase();
+        myreference = configFirebase(myreference);
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         contasBancariasList = new ArrayList<>();
@@ -60,18 +55,17 @@ public class ContasBancariasActivity extends AppCompatActivity {
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        myreference.addValueEventListener(new ValueEventListener() {
-
+        myreference.child("banco").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                contasBancariasList.clear();
 
-
-                for (DataSnapshot dd : dataSnapshot.getChildren()){
-                  contasBancarias= dd.getValue(ContasBancarias.class);
+                for (DataSnapshot dd : dataSnapshot.getChildren()) {
+                    contasBancarias = dd.getValue(ContasBancarias.class);
                     contasBancariasList.add(contasBancarias);
                 }
-                BancoAdapter bancoAdapter = new BancoAdapter(contasBancariasList,ContasBancariasActivity.this);
+                BancoAdapter bancoAdapter = new BancoAdapter(contasBancariasList, ContasBancariasActivity.this);
                 recyclerView.setAdapter(bancoAdapter);
             }
 
@@ -82,16 +76,40 @@ public class ContasBancariasActivity extends AppCompatActivity {
         });
 
 
-
-
-
-        btnaddbanco.setOnClickListener(new View.OnClickListener() {
+        floatingAddBanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContasBancariasActivity.this,MeiodePagamentoActivity.class);
-                intent.putExtra("opcao","banco");
+                Intent intent = new Intent(ContasBancariasActivity.this, MeiodePagamentoActivity.class);
+                intent.putExtra("opcao", "banco");
                 startActivity(intent);
 
+            }
+        });
+        /**
+         * Metodo responsavel por exibir ou não o botão de filtro
+         * caso a tela seja rolada para cima o botão perde a visibilidade
+         */
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) { // posição inicial do recycler view
+                    // Scroll Down
+                    if (floatingAddBanco.isShown()) {
+                        floatingAddBanco.hide(); // tirando a visibilidade
+                    }
+                } else if (dy < 0) {
+                    // Scroll Up
+                    if (!floatingAddBanco.isShown()) {
+                        floatingAddBanco.show(); // fazendo o botão aparecer
+                    }
+                }
             }
         });
 
@@ -126,16 +144,6 @@ public class ContasBancariasActivity extends AppCompatActivity {
 
 
     }
-    private void IniciaFirebase() {
-        auth = FirebaseAuth.getInstance();
-        firebaseUser = auth.getCurrentUser();
-        if (firebaseUser != null) {
-            idUser = firebaseUser.getUid();
-        }
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myreference = firebaseDatabase.getReference().child("financeiro").child(idUser).child("banco");
-    }
-
 
     @Override
     protected void onResume() {
