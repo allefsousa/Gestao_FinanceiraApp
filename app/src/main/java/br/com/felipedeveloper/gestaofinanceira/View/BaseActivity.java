@@ -18,27 +18,54 @@ import java.util.Locale;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
+/**
+ * Classe Base para as outras  activityes para evitar  escrita de codigo redundante
+ */
 public class BaseActivity extends AppCompatActivity {
     private NumberFormat df;
-//    df = new DecimalFormat("#00.00");
+
+    /**
+     * Metodo responsavel por exibir mensagem ao usuario
+     * @param context activity em questão
+     * @param successType tipo de mensagem se é erro ou sucesso
+     * @param s // Mensagem que se deve passar ao usuario
+     */
     public void ExibirMensagem(Context context, int successType, String s) {
         new SweetAlertDialog(context, successType)
                 .setTitleText(getResources().getString(R.string.app_name))
                 .setContentText(s)
                 .show();
     }
+
+    /**
+     * Metodo responsavel por fazer a configuração do firebase e evitar codigo duplicado
+     * @param reference
+     * @return
+     */
     public DatabaseReference configFirebase(DatabaseReference reference) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
         reference = firebaseDatabase.getReference().child("financeiro").child(firebaseUser.getUid());// definindo qual o pont oque  a referencia do firebase ficara
         return reference;
     }
+
+    /**
+     * Metodo responsavel por retornar uma instancia do BD do no de usuarios
+     * @param reference
+     * @return
+     */
     public DatabaseReference configFirebaseUsuario(DatabaseReference reference) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(); // pegando a instancia do banco de dados do firebase
         reference = firebaseDatabase.getReference().child("usuario");// definindo qual o pont oque  a referencia do firebase ficara
         return reference;
     }
+
+
+    /**
+     * Metodo responsavel por retornar a ID do usuario logado
+     * que é unica e cada usuario logado no app possui a sua.
+     * @return
+     */
     public String UserRetornoId(){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String retorno = null;
@@ -53,6 +80,7 @@ public class BaseActivity extends AppCompatActivity {
 
     /**
      * metodo responsavel por  formatar o campo de valor e ja ir adiconando as virgulas
+     * quando o usuario começa a digitar em um campo  que trabalha com valores em Reais
      * @return
      */
     TextWatcher onTextChangedListener(final EditText textvalor) {
@@ -84,7 +112,7 @@ public class BaseActivity extends AppCompatActivity {
                     formatter.applyPattern("#,###,###,##");
                     String formattedString = formatter.format(longval);
 
-                    //setting text after format to EditText
+
                     textvalor.setText(formattedString);
                     textvalor.setSelection(textvalor.getText().length());
                 } catch (NumberFormatException nfe) {

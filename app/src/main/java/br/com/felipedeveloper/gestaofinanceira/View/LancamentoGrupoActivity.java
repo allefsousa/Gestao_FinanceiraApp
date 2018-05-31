@@ -101,6 +101,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
         aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
 
+        textvalor.addTextChangedListener(onTextChangedListener(textvalor));
+
 
         /**
          * metodo responsavel por buscar dadoso no firebase na child("financeiro")
@@ -642,7 +644,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
         lancamentoGrupo.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
         lancamentoGrupo.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
-        lancamentoGrupo.setValor(Double.parseDouble(textvalor.getText().toString()));// recupara o valor que foi digitado que entra como String //  e o converte para Double conforme a classe espera
+        String trocaVirgulaPonto = textvalor.getText().toString().replaceAll(",", "."); // trocando a virgula da mascara pelo ponto que é aceito pelo Java
+        lancamentoGrupo.setValor(Double.parseDouble(trocaVirgulaPonto));// recupara o valor que foi digitado que entra como String //  e o converte para Double conforme a classe espera
         lancamentoGrupo.setNomeGrupo(Idgrupo);
     }
 
@@ -688,6 +691,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
             }
 
         }
+
 
         return retorno; // retorno global do metodo
     }

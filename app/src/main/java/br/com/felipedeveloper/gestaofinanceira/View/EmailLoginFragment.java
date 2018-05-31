@@ -113,15 +113,19 @@ public class EmailLoginFragment extends Fragment {
                 } else {
                     try {
                         throw task.getException();
-                        // TODO: 29/04/2018 verificar exceptions de login
                     } catch (FirebaseAuthWeakPasswordException e) {
+                        ExibirMensagemErro(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Usuario ou senha em branco");
 
                     } catch (FirebaseAuthInvalidCredentialsException c) {
+                        ExibirMensagemErro(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Senha Incorreta !!");
+
 
                     } catch (FirebaseAuthUserCollisionException d) {
+                        ExibirMensagemErro(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Erro a Fazer Login !!");
+
                         //
                     } catch (Exception e) {
-
+                        ExibirMensagemErro(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Erro a Fazer Login, Tente Novamente !");
                     }
 
                 }
