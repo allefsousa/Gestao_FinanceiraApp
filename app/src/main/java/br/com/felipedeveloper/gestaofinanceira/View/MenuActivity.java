@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -75,7 +77,6 @@ public class MenuActivity extends AppCompatActivity {
         cartaoModel = new Cartao();
         df = new DecimalFormat("#0.00");
 
-
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -133,11 +134,12 @@ public class MenuActivity extends AppCompatActivity {
 
             }
         });
-
         //region Listners de Ação dos botoes
         cardCartao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 Intent intent = new Intent(MenuActivity.this, CartaoActivity.class);
 //                new Intent(MenuActivity.this,CartaoActivity.class);
                 startActivity(intent);
