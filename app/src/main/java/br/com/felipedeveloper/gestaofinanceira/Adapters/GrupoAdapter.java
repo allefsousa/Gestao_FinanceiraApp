@@ -18,7 +18,9 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity;
 
-
+/**
+ * Adapter responsavel por exibir a lista de Grupos
+ */
 public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGrupo> {
     private Context context;
     private List<Grupo> grupoList;

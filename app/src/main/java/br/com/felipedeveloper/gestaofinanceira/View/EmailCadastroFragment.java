@@ -13,9 +13,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,10 +46,12 @@ public class EmailCadastroFragment extends Fragment {
 
     //endregion
 
+    //region Variaveis Globais-
     private View rootView;
     private FirebaseAuth firebaseAuth;
     private Usuario user;
     private DatabaseReference reference;
+    //endregion
 
     @Nullable
     @Override
@@ -73,8 +73,6 @@ public class EmailCadastroFragment extends Fragment {
         user = new Usuario();
         inicializaFirebase();
         firebaseAuth = FirebaseAuth.getInstance(); // pegando a instancia de login do firebase
-
-
 
 
         //region Tratamento Labels erro view
@@ -153,16 +151,18 @@ public class EmailCadastroFragment extends Fragment {
             public void onClick(View view) {
                 edtConfirmasenha.clearFocus();
                 boolean validaOk = ValidarCampos();
-
-                user.setUsuarioNome(edtnome.getText().toString());
-                user.setUsuarioEmail(edtemail.getText().toString());
-                user.setUsuarioSenha(edtsenha.getText().toString());
-                user.setUsuarioconfirmaSenha(edtConfirmasenha.getText().toString());
-                if (!user.getUsuarioEmail().isEmpty()) {
-                    if (user.Verificasenha()) {
-                        criarContaFirebase(user);
-                    }else {
-                        ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Senhas nao conferem !");
+                if (validaOk) {
+                    // atribuindo valor das views para o objeto usuario
+                    user.setUsuarioNome(edtnome.getText().toString());
+                    user.setUsuarioEmail(edtemail.getText().toString());
+                    user.setUsuarioSenha(edtsenha.getText().toString());
+                    user.setUsuarioconfirmaSenha(edtConfirmasenha.getText().toString());
+                    if (!user.getUsuarioEmail().isEmpty()) {
+                        if (user.Verificasenha()) {
+                            criarContaFirebase(user); // metodo que cria a conta
+                        } else {
+                            ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Senhas nao conferem !");
+                        }
                     }
                 }
 
@@ -174,51 +174,71 @@ public class EmailCadastroFragment extends Fragment {
 
     }
 
+    /**
+     * validando os campos e retorna True se todos tiverem corretos
+     *
+     * @return
+     */
     private boolean ValidarCampos() {
         Boolean retorno = false;
-        if (edtnome.getText().toString().isEmpty()){
-
+        if (edtnome.getText().toString().isEmpty()) {
+            inputLayoutNome.setError("Nome Invalido.");
         }
-        if (edtsenha.getText().toString().isEmpty()){
-
+        if (edtsenha.getText().toString().isEmpty()) {
+            inputLayoutSenha.setError("Senha Invalida.");
         }
-        if (edtemail.getText().toString().isEmpty()){
-
+        if (edtemail.getText().toString().isEmpty()) {
+            inputLayoutEmail.setError("Email Invalido.");
         }
-        if (edtConfirmasenha.getText().toString().isEmpty()){
-
+        if (edtConfirmasenha.getText().toString().isEmpty()) {
+            inputLayoutConfirma.setError("senha Invalida");
         }
-        if (edtnome.getText().toString().isEmpty() && edtsenha.getText().toString().isEmpty() && edtemail.getText().toString().isEmpty() && edtConfirmasenha.getText().toString().isEmpty()){
+        if (edtnome.getText().toString().isEmpty() && edtsenha.getText().toString().isEmpty() && edtemail.getText().toString().isEmpty() && edtConfirmasenha.getText().toString().isEmpty()) {
             retorno = true;
         }
-        return  retorno;
+        return retorno;
     }
 
+    /**
+     * instancia do firebase para salvar o usuario logado no BD
+     */
     private void inicializaFirebase() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         reference = firebaseDatabase.getReference().child("usuario");
     }
 
+    /**
+     * criando a conta do usuario no firebase
+     * porem essa conta só é criada com email e senha assim nao exibindo o nome do usuario em futuras consultas
+     * por isso um metodo de update do usuario foi criado para adicionar o nome do usuario
+     *
+     * @param user
+     */
     private void criarContaFirebase(final Usuario user) {
         firebaseAuth.createUserWithEmailAndPassword(user.getUsuarioEmail(), user.getUsuarioSenha()).addOnCompleteListener((Activity) rootView.getContext(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     limparcampos();
-                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser(); // pegando a instancia do usuario logado apos cadastro
+
                     // atualizando o usuario cadastrad para exibir o nome no app
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(user.getUsuarioNome())
                             .build();
 
-                    if (firebaseUser != null){
-                        firebaseUser.updateProfile(profileUpdates);
+                    if (firebaseUser != null) {
+                        firebaseUser.updateProfile(profileUpdates);// atualizando perfil
                     }
-                    salvarUsuarioBD(firebaseUser);
+                    salvarUsuarioBD(firebaseUser); // salvando usuario no BD
                     ExibirMensagem(rootView.getContext(), SweetAlertDialog.SUCCESS_TYPE, "Conta criada com sucesso !");
 
 
                 }
+                /**
+                 * caso nao seja sucesso criar a conta
+                 * abaixo segui o tratamento de erro
+                 */
                 if (!task.isSuccessful()) {
 
                     try {
@@ -228,15 +248,14 @@ public class EmailCadastroFragment extends Fragment {
                         edtsenha.setText("");
                         edtConfirmasenha.setText("");
                         edtsenha.requestFocus();
-//                        icadSenha.setError("Senha Fraca, Utilize Numeros e Letras.");
+                        inputLayoutSenha.setError("Senha Fraca, Utilize Numeros e Letras");
+                        inputLayoutConfirma.setError("Senha Fraca, Utilize Numeros e Letras");
                         edtsenha.requestFocus();
                     } catch (FirebaseAuthInvalidCredentialsException c) {
-                        ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Email invalido !!");
                         edtemail.setText("");
                         edtemail.requestFocus();
-//                       icadEmail.setError("Email invalido !!");
+                        inputLayoutEmail.setError("Email Invalido");
                     } catch (FirebaseAuthUserCollisionException d) {
-//                        icadEmail.setError("Usuario ja existe!!");
                         ExibirMensagem(rootView.getContext(), SweetAlertDialog.ERROR_TYPE, "Usuario ja existe !!");
                         limparcampos();
                     } catch (Exception e) {
@@ -249,6 +268,12 @@ public class EmailCadastroFragment extends Fragment {
         });
     }
 
+    /**
+     * Exibir mensagem ao usuario
+     * @param context
+     * @param successType
+     * @param s
+     */
     private void ExibirMensagem(Context context, int successType, String s) {
         new SweetAlertDialog(context, successType)
                 .setTitleText(getResources().getString(R.string.app_name))
@@ -256,6 +281,10 @@ public class EmailCadastroFragment extends Fragment {
                 .show();
     }
 
+    /**
+     * responsavel por salvar o usuario no BD do firebase
+     * @param firebaseUser
+     */
     private void salvarUsuarioBD(FirebaseUser firebaseUser) {
         user.setUsuarioEmail(firebaseUser.getEmail());
         user.setUsuarioNome(user.getUsuarioNome());

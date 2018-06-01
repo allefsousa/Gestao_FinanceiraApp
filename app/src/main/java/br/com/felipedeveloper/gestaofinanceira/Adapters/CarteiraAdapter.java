@@ -22,12 +22,13 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import br.com.felipedeveloper.gestaofinanceira.View.TransacoesActivity;
 
-
+/**
+ * Adapter responsavel por exibir a lista de Carteiras
+ */
 public class CarteiraAdapter extends RecyclerView.Adapter<CarteiraAdapter.ViewHolderAgencia> {
 
     private List<Carteira> carteiraList;
     private Activity context;
-    private int clickFlag = 0;
     private NumberFormat df;
 
     public CarteiraAdapter(List<Carteira> carteiras, Activity activity) {

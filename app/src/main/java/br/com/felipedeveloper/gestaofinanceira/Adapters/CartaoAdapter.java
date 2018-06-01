@@ -18,7 +18,9 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import br.com.felipedeveloper.gestaofinanceira.View.TransacoesActivity;
 
-
+/**
+ * Adapter responsavel por exibir a lista de cartoes
+ */
 public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolderCartao> {
 
     private List<Cartao> cartaoArray;

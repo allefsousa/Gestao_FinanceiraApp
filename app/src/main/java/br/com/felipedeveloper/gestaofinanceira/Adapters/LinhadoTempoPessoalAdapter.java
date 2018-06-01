@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.SortedList;
@@ -19,6 +20,7 @@ import com.github.vipulasri.timelineview.TimelineView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.CheckedOutputStream;
 
 import br.com.felipedeveloper.gestaofinanceira.Model.Lancamento;
 import br.com.felipedeveloper.gestaofinanceira.R;
@@ -28,8 +30,6 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
     String nomefinanceiro;
     private Context context;
     private DecimalFormat df;
-    private boolean multiSelect = false;
-    private List<Lancamento> lancamentoList;
     private SortedList<Lancamento> lancamentoSortedList = new SortedList<Lancamento>(Lancamento.class, new SortedList.Callback<Lancamento>() {
         @Override
         public void onInserted(int position, int count) {
@@ -73,8 +73,6 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
     public LinhadoTempoPessoalAdapter(Context context, String nomeGrupo) {
         this.context = context;
         this.nomefinanceiro = nomeGrupo;
-        lancamentoList = new ArrayList<>();;
-
     }
 
     @NonNull
@@ -144,27 +142,21 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
         private void render(SortedList<Lancamento> sortedList, int pos) {
             cardViewlinha.setUseCompatPadding(true);
 
-
-
-                // TODO: 21/05/2018  Dois metodos igal refatorar e so azer a chamada
-
                 Integer statusop = (sortedList.get(pos).getStatusOp());
                 if (pos == 0) {
-                    mTimelineView.initLine(1);
+                    mTimelineView.initLine(1); // iniciando Timeline
                 }
+
                 if (statusop != null) {
                     switch (statusop) {
-                        case 0:
-                            mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                            cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
-                            mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
-                            status.setText("DEBITO");
+                        case 0: //DEBITO
+                            configCreditoDebitoTimeLine(context.getResources().getDrawable(R.drawable.ic_marker),
+                                    context.getResources().getColor(R.color.colorSwitchdebito), "DEBITO");
+
                             break;
-                        case 1:
-                            mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                            mTimelineView.setMarkerColor(context.getResources().getColor(R.color.listagastos));
-                            cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.listagastos));
-                            status.setText("CREDITO");
+                        case 1://CREDITO
+                            configCreditoDebitoTimeLine(context.getResources().getDrawable(R.drawable.ic_marker),
+                                    context.getResources().getColor(R.color.listagastos), "CREDITO");
                             break;
                     }
                 }
@@ -179,7 +171,14 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
                 data.setText(sortedList.get(pos).getData());
 
                 }
-            }
+
+        private void configCreditoDebitoTimeLine(Drawable drawable, int color, String opfinanceira) {
+            mTimelineView.setMarker(drawable);
+            mTimelineView.setMarkerColor(color);
+            cardViewlinha.setCardBackgroundColor(color);
+            status.setText(opfinanceira);
+        }
+    }
 
         }
 

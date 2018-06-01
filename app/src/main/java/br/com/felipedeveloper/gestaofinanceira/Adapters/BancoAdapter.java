@@ -19,7 +19,9 @@ import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import br.com.felipedeveloper.gestaofinanceira.View.TransacoesActivity;
 
-
+/**
+ * Adapter responsavel por exibir a lista de bancos
+ */
 public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAgencia> {
 
     private List<ContasBancarias> contasBancariasArray;

@@ -16,7 +16,9 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
+/**
+ * adapter responsavel por exibir os usuarios do grupo
+ */
 public class AdicionarUsuarioAdapter extends RecyclerView.Adapter<AdicionarUsuarioAdapter.ViewHoderUsuario> {
     @NonNull
     private List<Usuario> usuarioList;
@@ -41,7 +43,7 @@ public class AdicionarUsuarioAdapter extends RecyclerView.Adapter<AdicionarUsuar
         holder.textNome.setText(usuarioList.get(position).getUsuarioNome());
         holder.textEmail.setText(usuarioList.get(position).getUsuarioEmail());
         if (usuarioList.get(position).getFotoUrl() != null){
-            Glide.with(context).load(usuarioList.get(position).getFotoUrl()).into(holder.imageView);
+            Glide.with(context).load(usuarioList.get(position).getFotoUrl()).into(holder.imageView); // baixando a foto do usuario
         }
 
     }

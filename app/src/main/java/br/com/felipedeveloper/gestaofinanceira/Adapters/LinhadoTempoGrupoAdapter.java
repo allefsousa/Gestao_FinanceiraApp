@@ -1,6 +1,7 @@
 package br.com.felipedeveloper.gestaofinanceira.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
@@ -18,6 +19,12 @@ import java.text.DecimalFormat;
 import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.R;
 
+/**
+ * Exibindo os itens da linha do tempo do grupo
+ * quem foi que fez o lancamento
+ * se foi credito ou debito qual o valor
+ * qual a cor que deve ser
+ */
 public class LinhadoTempoGrupoAdapter extends RecyclerView.Adapter<LinhadoTempoGrupoAdapter.ViewHolder> {
 
     private Context context;
@@ -97,9 +104,10 @@ public class LinhadoTempoGrupoAdapter extends RecyclerView.Adapter<LinhadoTempoG
         sortedList.remove(data);
         notifyDataSetChanged();
     }
+
     @Override
     public int getItemViewType(int position) {
-        return TimelineView.getTimeLineViewType(position,getItemCount());
+        return TimelineView.getTimeLineViewType(position, getItemCount());
     }
 
 
@@ -109,7 +117,9 @@ public class LinhadoTempoGrupoAdapter extends RecyclerView.Adapter<LinhadoTempoG
     }
 
 
-
+    /**
+     * elementos da view que irei exibir
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         TimelineView mTimelineView;
         TextView data;
@@ -132,11 +142,14 @@ public class LinhadoTempoGrupoAdapter extends RecyclerView.Adapter<LinhadoTempoG
             cardViewlinha.setUseCompatPadding(true);
         }
 
-
+        /**
+         * montando a linha do tempo de gastos
+         *
+         * @param dataSnapshot
+         * @param pos
+         */
         private void render(DataSnapshot dataSnapshot, int pos) {
             cardViewlinha.setUseCompatPadding(true);
-
-
 
 
             Integer statusop = (dataSnapshot.child("statusOp").getValue(Integer.class));
@@ -144,38 +157,40 @@ public class LinhadoTempoGrupoAdapter extends RecyclerView.Adapter<LinhadoTempoG
                 mTimelineView.initLine(1);
 
             }
-                if (statusop != null) {
-                    switch (statusop) {
-                        case 0:
-                            mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                            cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.colorSwitchdebito));
-                            mTimelineView.setMarkerColor(context.getResources().getColor(R.color.colorSwitchdebito));
-
-                            status.setText("DEBITO");
-                            break;
-                        case 1:
-                            mTimelineView.setMarker(context.getResources().getDrawable(R.drawable.ic_marker));
-                            mTimelineView.setMarkerColor(context.getResources().getColor(R.color.listagastos));
-                            cardViewlinha.setCardBackgroundColor(context.getResources().getColor(R.color.listagastos));
-                            status.setText("CREDITO");
-                            break;
-                    }
+            if (statusop != null) {
+                switch (statusop) {
+                    case 0: //DEBITO
+                        configTimelineCreditoDebito(context.getResources().getDrawable(R.drawable.ic_marker), context.getResources().getColor(R.color.colorSwitchdebito), "DEBITO");
+                        status.setText("DEBITO");
+                        break;
+                    case 1:// CREDITO
+                        configTimelineCreditoDebito(context.getResources().getDrawable(R.drawable.ic_marker), context.getResources().getColor(R.color.listagastos), "CREDITO");
+                        break;
                 }
+            }
 
 
             if (pos == (sortedList.size() - 1)) {
                 mTimelineView.setEndLine(context.getResources().getColor(R.color.float_transparent), 4);
             }
-            String sTitulo = "Titulo: "+(dataSnapshot.child("titulo").getValue(String.class));
-            String sValor   = "Valor: "+(String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
-            String sData    = "Data: "+(dataSnapshot.child("data").getValue(String.class));
-            String sNome    = "Nome: "+(dataSnapshot.child("nomeColaborador").getValue(String.class));
+            // Montando e exbindo o texto da view
+            String sTitulo = "Titulo: " + (dataSnapshot.child("titulo").getValue(String.class));
+            String sValor = "Valor: " + (String.valueOf(df.format(dataSnapshot.child("valor").getValue(Double.class))));
+            String sData = "Data: " + (dataSnapshot.child("data").getValue(String.class));
+            String sNome = "Nome: " + (dataSnapshot.child("nomeColaborador").getValue(String.class));
             titulo.setText(sTitulo);
             valor.setText(sValor);
             data.setText(sData);
             nomeUsuario.setText(sNome);
 
 
+        }
+
+        private void configTimelineCreditoDebito(Drawable drawable, int color, String opfinanceira) {
+            mTimelineView.setMarker(drawable);
+            mTimelineView.setMarkerColor(color);
+            cardViewlinha.setCardBackgroundColor(color);
+            status.setText(opfinanceira);
         }
     }
 
