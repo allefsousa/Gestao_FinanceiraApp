@@ -2,8 +2,8 @@ package br.com.felipedeveloper.gestaofinanceira.View;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,19 +20,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.AdicionarUsuarioAdapter;
+import br.com.felipedeveloper.gestaofinanceira.Helper.CreditoDebitoEnum;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
+import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.Usuario;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
@@ -72,6 +77,9 @@ public class AddGrupoActivity extends BaseActivity {
     private Context context = AddGrupoActivity.this;
     private Grupo grupo;
     private List<Usuario> usuarioList;
+    private LancamentoGrupo lancamentoGrupo;
+    FirebaseAuth firebaseAuth;
+    Usuario usuario;
     //endregion
 
 
@@ -83,11 +91,13 @@ public class AddGrupoActivity extends BaseActivity {
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // adiconando support a toolbar
         ButterKnife.bind(this); // anotation processor para evitar codigo redundant
-
+        firebaseAuth = FirebaseAuth.getInstance();
         // recuperandoa referencia do Banco de dados e do usuario logado
         Financeiroreference = configFirebase(Financeiroreference);
         Usuariosreference = configFirebaseUsuario(Usuariosreference);
         floatingActionButton.hide();// retirando a visibilidade do botão de criar o grupo
+        // Adiconando no editext o tratamento de valor
+        inputSaldoGrupo.addTextChangedListener(onTextChangedListener(inputSaldoGrupo));
 
         InitObjects();// inicializando as variaveis Globais
 
@@ -157,10 +167,11 @@ public class AddGrupoActivity extends BaseActivity {
                                 recyclerViewuser.setAdapter(adicionarUsuarioAdapter); // pasando  o adapter
                                 inputEmailGrupo.getText().clear(); // limpando compo de email
                                 floatingActionButton.show(); // exibindo o botão para que o grupo possa ser salvo
-                            }else {
-                                ExibirMensagem(AddGrupoActivity.this, SweetAlertDialog.ERROR_TYPE,"Usuario não Encontrado.\n Verifique o Email Informado");
                             }
                         }
+                    }
+                    if (exibirList.size() == 0) { // se a lista de usuarios for igual a zero é pq não foi encontrado nenhum
+                        ExibirMensagem(AddGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Usuario não Encontrado.\n Verifique o Email Informado");
                     }
                 }
 
@@ -182,18 +193,28 @@ public class AddGrupoActivity extends BaseActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                // recuperando a data diaria para ser adiconada ao lancamento
+                SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = new Date();
+                String dataformatada = formataData.format(date);
+                dataformatada = dataformatada.replaceAll("-", "/"); // trocando o simbolo de - da data pelo / tradicional
+                Long timestamp = criaTimeStamp();
                 boolean ValidaOK = ValidaEntradas();
-                if (ValidaOK){
-                String uid = UUID.randomUUID().toString(); // gerando a UId unica do grupo
-                grupo.setIdGrupo(uid); // atribuindo id
-                grupo.setNomeGrupo(inputNomeGrupo.getText().toString());// recuperando o nome da view e atribuindo ao objeto
-                grupo.setSaldoGrupo(Double.parseDouble(inputSaldoGrupo.getText().toString()));
-                grupo.setUsuarioList(exibirList); // salnvondo a lista de usuarios no grupo
-                for (int i = 0; i < exibirList.size(); i++) {
-                    Financeiroreference.child(uid).setValue(grupo); // salvando o grupo;
-                }
-                limparCampos();
+
+                lancamentoGrupo.setCreatedAt(timestamp);
+                lancamentoGrupo.setData(dataformatada);
+                lancamentoGrupo.setNomeColaborador(firebaseAuth.getCurrentUser().getDisplayName());
+                lancamentoGrupo.setNomeGrupo(grupo.getIdGrupo());
+                lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Credito.getValor());
+                lancamentoGrupo.setTitulo("Criação Grupo");
+                if (ValidaOK) {
+                    for (int i = 0; i < exibirList.size(); i++) {
+                    }
+                    Financeiroreference.child(grupo.getIdGrupo()).setValue(grupo); // salvando o grupo;
+                    Financeiroreference.child(grupo.getIdGrupo()).child("lancamentos").child(UUID.randomUUID().toString()).setValue(lancamentoGrupo);
+
+                    ExibirMensagem(AddGrupoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Grupo Adicionado.");
+                    limparCampos();
                 }
 
 
@@ -213,13 +234,12 @@ public class AddGrupoActivity extends BaseActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy >0) { // posição inicial do recycler view
+                if (dy > 0) { // posição inicial do recycler view
                     // Scroll Down
                     if (floatingActionButton.isShown()) {
                         floatingActionButton.hide(); // tirando a visibilidade
                     }
-                }
-                else if (dy <0) {
+                } else if (dy < 0) {
                     // Scroll Up
                     if (!floatingActionButton.isShown()) {
                         floatingActionButton.show(); // fazendo o botão aparecer
@@ -229,20 +249,41 @@ public class AddGrupoActivity extends BaseActivity {
         });
 
     }
+    /**
+     * Metodo responsavel por criar o timestamp do lançamento para futuramente ter a precisao de cada lançamento
+     *
+     * @return timesTamp
+     */
+    @NonNull
+    private Long criaTimeStamp() {
+        Calendar cal = Calendar.getInstance();
+        Date data_atual = cal.getTime();
+        final Timestamp ts = new Timestamp(data_atual.getTime());
+        return ts.getTime();
+    }
 
     private boolean ValidaEntradas() {
         boolean retorno = false;
-        if (inputNomeGrupo.getText().toString().isEmpty()){
+
+        if (inputNomeGrupo.getText().toString().isEmpty()) {
             textInputLayout.setError("O nome do grupo é obrigatorio.");
         }
-        if (inputSaldoGrupo.getText().toString().isEmpty()){
-            inputSaldoGrupo.setText(" "); // a variavel precisa ser inicializada mesmo nao sendo obrigadotoria para ser salva no firebase
-
+        if (inputSaldoGrupo.getText().toString().isEmpty()) {
+            String  valorat = "0";
+                grupo.setSaldoGrupo(Double.parseDouble(valorat));  // a variavel precisa ser inicializada mesmo nao sendo obrigadotoria para ser salva no firebase
+        }else {
+            String  valorat = inputSaldoGrupo.getText().toString().replace(",", ""); // removendo as virgulas de validacao
+            grupo.setSaldoGrupo(Double.parseDouble(valorat));
+            lancamentoGrupo.setValor(Double.parseDouble(valorat));
         }
-        if (!inputNomeGrupo.getText().toString().isEmpty()){
+        if (!inputNomeGrupo.getText().toString().isEmpty()) {
+            String uid = UUID.randomUUID().toString(); // gerando a UId unica do grupo
+            grupo.setIdGrupo(uid); // atribuindo id
+            grupo.setNomeGrupo(inputNomeGrupo.getText().toString());
+            grupo.setUsuarioList(exibirList); // salnvondo a lista de usuarios no grupo
             retorno = true;
         }
-        return  retorno;
+        return retorno;
     }
 
     /**
@@ -253,6 +294,7 @@ public class AddGrupoActivity extends BaseActivity {
         exibirList = new ArrayList<>();
         grupo = new Grupo();
         usuarioLogado = new Usuario();
+        lancamentoGrupo = new LancamentoGrupo();
     }
 
     /**
@@ -281,6 +323,7 @@ public class AddGrupoActivity extends BaseActivity {
 
     /**
      * tratamento ao usuario logado para ser exebido na lista de integrantes do grupo e aparecer você
+     *
      * @param usuarioList
      * @return
      */
@@ -312,6 +355,7 @@ public class AddGrupoActivity extends BaseActivity {
     /**
      * sobre escrita do metodo config firebase que se encontra na base reference
      * a sobre escrita se deu pelo fato de mudar o Nó
+     *
      * @param reference
      * @return
      */

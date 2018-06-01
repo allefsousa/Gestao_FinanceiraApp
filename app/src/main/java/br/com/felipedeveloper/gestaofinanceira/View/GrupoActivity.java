@@ -29,8 +29,7 @@ import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class GrupoActivity extends BaseActivity {
-    Context context;
-    EditText editText;
+    //region Variaveis Globais e Variaveis Da view
     @BindView(R.id.fabaddgrupo)
     FloatingActionButton floatingAddGrupo;
     DatabaseReference reference;
@@ -39,6 +38,7 @@ public class GrupoActivity extends BaseActivity {
     @BindView(R.id.recyclertitulogrupo)
     RecyclerView recyclerViewGrupos;
     GrupoAdapter grupoAdapter;
+    //endregion
 
 
 
@@ -48,48 +48,45 @@ public class GrupoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grupos);
         ButterKnife.bind(this);
-        context = GrupoActivity.this;
-        editText = new EditText(context);
+
+        // referencia do banc para buscar os grupos
         reference = configFirebase(reference);
         reference= FirebaseDatabase.getInstance().getReference().child("financeiro");
 
+        //instanciando novos objetos
         grupoList = new ArrayList<>();
         grupo = new Grupo();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.canScrollVertically();
-        layoutManager.setOrientation(LinearLayout.VERTICAL);
-        recyclerViewGrupos.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewGrupos.getContext(),
-                layoutManager.getOrientation());
-        recyclerViewGrupos.addItemDecoration(dividerItemDecoration);
+        ConfigRecyclerView();
 
 
         floatingAddGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(context,AddGrupoActivity.class));
+                startActivity(new Intent(GrupoActivity.this,AddGrupoActivity.class));
             }
         });
 
 
+        // buscando os Grupos no Nó Grupos, os adiconando a lista para serem enviado ao adapter
         reference.child("grupos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Grupo grupo;
+
                 grupoList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    grupo = snapshot.getValue(Grupo.class);
+                  Grupo grupo = snapshot.getValue(Grupo.class);
                     grupoList.add(grupo);
                 }
-                grupoAdapter = new GrupoAdapter(context,grupoList);
-                recyclerViewGrupos.setAdapter(grupoAdapter);
+                grupoAdapter = new GrupoAdapter(GrupoActivity.this,grupoList); // passando os grupos para o adapter para mortar a view
+                recyclerViewGrupos.setAdapter(grupoAdapter); // passando o adapter para a lista que exibira os grupos
 
 
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                ExibirMensagem(GrupoActivity.this,SweetAlertDialog.ERROR_TYPE,"Erro ao Buscar Grupos");
 
             }
         });
@@ -127,31 +124,44 @@ public class GrupoActivity extends BaseActivity {
 
     }
 
-    private void mensagem() {
-
-        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
-                .setTitleText("Criar Grupo")
-                .setConfirmText("Adicionar")
-                .setCustomView(editText)
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                        boolean a = ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                                editText.getWindowToken(), 0);
-                        if (a) {
-                            sweetAlertDialog.setTitleText("Deleted!")
-                                    .setContentText("Your imaginary file has been deleted!")
-                                    .setConfirmText(editText.getText().toString())
-                                    .setConfirmClickListener(null)
-                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                        }
-
-
-                    }
-                })
-                .show();
-
-
+    /**
+     * configurando o recycler view que vai exibir os grupos
+     */
+    private void ConfigRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.canScrollVertically();
+        layoutManager.setOrientation(LinearLayout.VERTICAL);
+        recyclerViewGrupos.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewGrupos.getContext(),
+                layoutManager.getOrientation());
+        recyclerViewGrupos.addItemDecoration(dividerItemDecoration);
     }
+
+//    private void mensagem() {
+//
+//        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
+//                .setTitleText("Criar Grupo")
+//                .setConfirmText("Adicionar")
+//                .setCustomView(editText)
+//                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                    @Override
+//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//
+//                        boolean a = ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+//                                editText.getWindowToken(), 0);
+//                        if (a) {
+//                            sweetAlertDialog.setTitleText("Deleted!")
+//                                    .setContentText("Your imaginary file has been deleted!")
+//                                    .setConfirmText(editText.getText().toString())
+//                                    .setConfirmClickListener(null)
+//                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+//                        }
+//
+//
+//                    }
+//                })
+//                .show();
+//
+//
+//    }
 }
