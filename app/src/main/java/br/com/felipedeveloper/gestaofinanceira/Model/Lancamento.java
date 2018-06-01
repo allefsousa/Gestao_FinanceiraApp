@@ -1,5 +1,8 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
+/**
+ * classe de  modelo lancamentos pessoais
+ */
 public class Lancamento {
     private String idLancamento;
     private String titulo;
@@ -70,16 +73,4 @@ public class Lancamento {
     }
 
 
-    public Double adicionaDinheiro(Double dinheiro){
-        Double saldo = valor;
-        saldo = saldo + dinheiro;
-        return saldo;
-
-
-    }
-    public Double retiraDinheiro(Double dinheiro){
-        Double saldo = valor;
-        saldo = saldo - dinheiro;
-        return saldo;
-    }
 }

@@ -1,9 +1,8 @@
 package br.com.felipedeveloper.gestaofinanceira.Helper;
 
 /**
- * Created by allef on 30/05/2018.
+ * constantes do app
  */
-
 public enum OpcoesFinanceirasEnum {
     carteira  ("carteira"),
     banco  ("banco"),

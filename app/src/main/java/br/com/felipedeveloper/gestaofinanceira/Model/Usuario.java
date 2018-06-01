@@ -1,6 +1,8 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
-
+/**
+ * classe de modelo de Usuario
+ */
 public class Usuario {
 
     private String idUsuario;

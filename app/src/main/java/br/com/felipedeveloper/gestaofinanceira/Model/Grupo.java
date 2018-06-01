@@ -7,8 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * Created by allef on 09/05/2018.
+ * classe de modelo utilizada prara criar os Grupos
  */
 
 public class Grupo {
@@ -54,9 +55,17 @@ public class Grupo {
         this.idGrupo = idGrupo;
     }
 
+
+    /**
+     * metodo responsavel por Adiconar dinheiro a grupo
+     * neste caso so atualiza o Hash map do grupo com o valor a ser adicionado
+     * @param c grupo a ser adiconado
+     * @param v2 valor para adiconar
+     * @return hash map retornado para ser salvo no Bd
+     */
     @Exclude
     public Map<String, Object> mapCreditaGrupo(Grupo c, Double v2) {
-        DecimalFormat df = new DecimalFormat("#,###,##");
+        DecimalFormat df = new DecimalFormat("#,###,##"); // formatando os valores
         HashMap<String, Object> result = new HashMap<>();
         Double saldoAtualizado = c.getSaldoGrupo() + v2;
         result.put("idGrupo", c.getIdGrupo());
@@ -65,6 +74,15 @@ public class Grupo {
         result.put("usuarioList", c.getUsuarioList());
         return result;
     }
+
+    /**
+     * metodo responsavel por realizar o debito do grupo neste caso atualizar o hash map
+     * para que o mesmo possas ser atualizado no Bd
+     * operacao de subtração.
+     * @param c
+     * @param v2
+     * @return
+     */
     @Exclude
     public Map<String, Object> mapDebitaGrupo(Grupo c, Double v2) {
         HashMap<String, Object> result = new HashMap<>();

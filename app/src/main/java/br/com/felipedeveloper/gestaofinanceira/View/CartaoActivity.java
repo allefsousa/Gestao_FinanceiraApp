@@ -28,9 +28,11 @@ import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class CartaoActivity extends BaseActivity {
 
+    //region variaveis Globais
     @BindView(R.id.floatnovo)
     FloatingActionButton floatingNovocartao;
     @BindView(R.id.recyclerViewcartoes)
@@ -43,6 +45,7 @@ public class CartaoActivity extends BaseActivity {
     Cartao cartao;
     CartaoAdapter cartaoAdapter;
     private NumberFormat df;
+    //endregion
 
 
     @Override
@@ -51,23 +54,22 @@ public class CartaoActivity extends BaseActivity {
         setContentView(R.layout.activity_cartao);
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         ButterKnife.bind(this);
-        cartao = new Cartao();
+
+        // instancia de objetos
         auth = FirebaseAuth.getInstance();
         idUser = auth.getCurrentUser().getUid();
 
         cartao = new Cartao();
         cartaoList = new ArrayList<>();
         df = new DecimalFormat("#0.00");
+        myreference = configFirebase(myreference); // referencia do Bd
+        ConfigRecyclerView();
 
-        myreference = configFirebase(myreference);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.canScrollVertically();
-        layoutManager.setOrientation(LinearLayout.VERTICAL);
-        recyclerViewCartoes.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewCartoes.getContext(),
-                layoutManager.getOrientation());
-        recyclerViewCartoes.addItemDecoration(dividerItemDecoration);
+        /**
+         * buscando os cartães no BD
+         */
         myreference.child("cartao").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -78,17 +80,18 @@ public class CartaoActivity extends BaseActivity {
                 }
                 cartaoAdapter = new CartaoAdapter(cartaoList,CartaoActivity.this);
                 recyclerViewCartoes.setAdapter(cartaoAdapter);
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                ExibirMensagem(CartaoActivity.this, SweetAlertDialog.ERROR_TYPE,"Erro ao Buscar Cartões");
             }
         });
 
 
-
+        /**
+         * click do botão de adiconar um novo cartão
+         * passando a palavra cartao para outra activity tratar como um cadatro de cartao
+         */
         floatingNovocartao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +132,16 @@ public class CartaoActivity extends BaseActivity {
         });
 
 
+    }
+
+    private void ConfigRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.canScrollVertically();
+        layoutManager.setOrientation(LinearLayout.VERTICAL);
+        recyclerViewCartoes.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewCartoes.getContext(),
+                layoutManager.getOrientation());
+        recyclerViewCartoes.addItemDecoration(dividerItemDecoration);
     }
 
 

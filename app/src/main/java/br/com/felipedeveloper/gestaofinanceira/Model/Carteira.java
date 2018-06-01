@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
+/**
+ * classe de modelo da carteira
+ */
 public class Carteira {
     private String idCarteira;
     private Double SaldoCarteira;
@@ -36,17 +38,29 @@ public class Carteira {
         this.tituloCarteira = tituloCarteira;
     }
 
+    /**
+     * Adiconando credito ao Hashmap de cartão , neste caso so atualizando o
+     * saldo do cartão em questão
+     * @param c
+     * @param v2
+     * @return
+     */
     @Exclude
     public Map<String, Object> MapCarteiraCredito(Carteira c, Double v2) {
         HashMap<String, Object> result = new HashMap<>();
-        Double saldoAtualizado = c.getSaldoCarteira() + v2;
+        Double saldoAtualizado = c.getSaldoCarteira() + v2; // atualizando valor com a soma
         result.put("idCarteira", c.getIdCarteira());
         result.put("saldoCarteira", saldoAtualizado);
         result.put("tituloCarteira", c.getTituloCarteira());
         return result;
     }
 
-
+    /**
+     * atualizando o valor da carteira atualizando o seu valor realizando a subtração do valor enviado
+     * @param c carteira a ser atualizado
+     * @param valor valor a ser debitado
+     * @return  hash map de carteira que sera retornado e salvo no banco de dados
+     */
     public Map<String, Object> MapCarteiraDebito(Carteira c, Double valor) {
         HashMap<String, Object> result = new HashMap<>();
 

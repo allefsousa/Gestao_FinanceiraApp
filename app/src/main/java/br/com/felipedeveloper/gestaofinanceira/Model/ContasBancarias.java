@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
+/**
+ * classe de modelo da conta bancaria
+ */
 public class ContasBancarias {
     private String idContaBanco;
     private String tituloContabanco;
     private Double saldoContabancaria;
-    // TODO: 20/04/2018  atualizar saldo para double corrigir possiveis falhas 
 
 
     public Double getSaldoContabancaria() {
@@ -40,6 +41,13 @@ public class ContasBancarias {
         this.saldoContabancaria = saldoContabancaria;
     }
 
+    /**
+     * metodo responsavel por atualizar o hash map da conta bancaria e neste caso executar a operação de debito de seu valor
+     * para posteriormente ser salva no bd
+     * @param ban
+     * @param valor
+     * @return
+     */
     public Map<String,Object> MapBancoDebita(ContasBancarias ban, Double valor) {
         HashMap<String, Object> result = new HashMap<>();
         /**
@@ -57,6 +65,13 @@ public class ContasBancarias {
         return result;
 
     }
+    /**
+     * metodo responsavel por atualizar o hash map da conta bancaria e neste caso executar a operação de credito de seu valor
+     * para posteriormente ser salva no bd
+     * @param ban
+     * @param valor
+     * @return
+     */
     public Map<String,Object> MapBancoCredita(ContasBancarias ban, Double valor) {
         Double saldoAtualizado = ban.getSaldoContabancaria()+valor;
         HashMap<String, Object> result = new HashMap<>();

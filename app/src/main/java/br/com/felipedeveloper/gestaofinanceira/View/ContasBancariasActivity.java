@@ -26,56 +26,62 @@ import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ContasBancariasActivity extends BaseActivity {
+    //region Variaveis Gloabais e item da View
     @BindView(R.id.btnnovobanco)
     FloatingActionButton floatingAddBanco;
+
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
-    String idUser;
     AlertDialog alertDialog;
     RecyclerView recyclerView;
     List<ContasBancarias> contasBancariasList;
     ContasBancarias contasBancarias;
     private DatabaseReference myreference;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contas_bancarias);
         ButterKnife.bind(this);
-        myreference = configFirebase(myreference);
+        myreference = configFirebase(myreference); // recebendo intancia do firebase
+
+        // tratando action bar
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         contasBancariasList = new ArrayList<>();
-        recyclerView = findViewById(R.id.recyclerContasbancarias);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
+
+        // configurando a lista para exibir as contas bancarias
+        configRecyclerView();
 
         myreference.child("banco").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                contasBancariasList.clear();
+                contasBancariasList.clear();  // limpando a lista de bancos
 
                 for (DataSnapshot dd : dataSnapshot.getChildren()) {
-                    contasBancarias = dd.getValue(ContasBancarias.class);
-                    contasBancariasList.add(contasBancarias);
+                    contasBancarias = dd.getValue(ContasBancarias.class); // banco trazido do firebase
+                    contasBancariasList.add(contasBancarias); // banco a dicionado a lista
                 }
-                BancoAdapter bancoAdapter = new BancoAdapter(contasBancariasList, ContasBancariasActivity.this);
-                recyclerView.setAdapter(bancoAdapter);
+                BancoAdapter bancoAdapter = new BancoAdapter(contasBancariasList, ContasBancariasActivity.this); // passando lista de banco para o adapter montar
+                recyclerView.setAdapter(bancoAdapter); // passando o adapter montado ara ser exibido
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                ExibirMensagem(ContasBancariasActivity.this, SweetAlertDialog.ERROR_TYPE,"Erro ao Buscar Bancos !!");
             }
         });
 
-
+        /**
+         * click do botão para adiconar um banco
+         * enviando para outra activity o texto banco para ja ser montado o layou.
+         */
         floatingAddBanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +91,7 @@ public class ContasBancariasActivity extends BaseActivity {
 
             }
         });
+
         /**
          * Metodo responsavel por exibir ou não o botão de filtro
          * caso a tela seja rolada para cima o botão perde a visibilidade
@@ -117,16 +124,24 @@ public class ContasBancariasActivity extends BaseActivity {
     }
 
     /**
+     * configurando Recycler View
+     */
+    private void configRecyclerView() {
+        recyclerView = findViewById(R.id.recyclerContasbancarias);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    /**
      * Metodo responsavel por criar o  dialog para o usuario adicionar os dados do Banco/Agencia
      */
     private void AdicionarBancoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ContasBancariasActivity.this);
         View alview = getLayoutInflater().inflate(R.layout.activity_meio_pagamento, null);
         final ContasBancarias contasBancarias = new ContasBancarias();
-
-//        edtTituloBanco = alview.findViewById(R.id.edtTituloBanco);
-//        agenciaBanco = alview.findViewById(R.id.agencia);
-//        edtSaldoBanco = alview.findViewById(R.id.saldo);
         Button salvar = alview.findViewById(R.id.btnsalvarbanco);
         builder.setView(alview);
         alertDialog = builder.create();
@@ -145,6 +160,7 @@ public class ContasBancariasActivity extends BaseActivity {
 
     }
 
+    //region Ciclo de Vida da Activity
     @Override
     protected void onResume() {
         super.onResume();
@@ -164,4 +180,5 @@ public class ContasBancariasActivity extends BaseActivity {
     protected void onRestart() {
         super.onRestart();
     }
+    //endregion
 }

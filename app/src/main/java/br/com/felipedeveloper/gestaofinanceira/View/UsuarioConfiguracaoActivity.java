@@ -27,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsuarioConfiguracaoActivity extends BaseActivity {
 
+    //region Itens da View
     @BindView(R.id.checksair)
     CheckedTextView btsair;
     @BindView(R.id.checkrestaurar)
@@ -35,12 +36,13 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
     CheckedTextView checkNome;
     @BindView(R.id.circleimageusuario)
     CircleImageView circleImageView;
+    //endregion
+
+    //region Variaveis Globais
     private String idUser;
     DatabaseReference reference;
-
-
-    private FirebaseUser firebaseUser;
     private FirebaseAuth auth;
+    //endregion
 
 
 
@@ -51,12 +53,17 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
         ButterKnife.bind(this);
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // instancias do firebase
         auth = FirebaseAuth.getInstance();
         reference = configFirebase(reference);
         idUser = auth.getCurrentUser().getUid();
+
+        // baixando a imagem do usuario logado caso tenha com base na sua url que o firebase obtem
         if (!idUser.isEmpty()){
             Picasso.with(UsuarioConfiguracaoActivity.this).load(auth.getCurrentUser().getPhotoUrl()).noFade().into(circleImageView);
         }
+        // atribuindo o nome do usuario logado
         checkNome.setText("Nome: "+auth.getCurrentUser().getDisplayName()+"\n\nE-Mail: "+auth.getCurrentUser().getEmail());
         btsair.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,11 +74,11 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
-//                    if (auth.getCurrentUser().getProviderData().) todo verificar providar e deslogar api facebook
                 }
 
             }
         });
+        // botão de restaurar e apagar os dados do app
         btnrestaurar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,6 +137,8 @@ public class UsuarioConfiguracaoActivity extends BaseActivity {
 
     public void ExibirMensagem(Context context, int successType, String s) {
     }
+
+    // metodo do botão fisico de voltar do celular
     @Override
     public void onBackPressed() {
         super.onBackPressed();

@@ -1,6 +1,8 @@
 package br.com.felipedeveloper.gestaofinanceira.Model;
 
-
+/**
+ * classe de modelo de lancamento em grupo
+ */
 public class LancamentoGrupo {
 
     private String titulo;
@@ -79,16 +81,4 @@ public class LancamentoGrupo {
         this.nomeGrupo = nomeGrupo;
     }
 
-    public Double adicionaDinheiro(Double dinheiro){
-        Double saldo = valor;
-        saldo = saldo + dinheiro;
-        return saldo;
-
-
-    }
-    public Double retiraDinheiro(Double dinheiro){
-        Double saldo = valor;
-        saldo = saldo - dinheiro;
-        return saldo;
-    }
 }
