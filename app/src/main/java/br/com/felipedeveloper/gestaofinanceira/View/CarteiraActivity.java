@@ -6,6 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -47,7 +50,6 @@ public class CarteiraActivity extends BaseActivity {
         usuariosreference = configFirebaseUsuario(usuariosreference);
         carteiraList = new ArrayList<>();
         carteira = new Carteira();
-
         layoutManager = new LinearLayoutManager(this);
         layoutManager.canScrollVertically();
         layoutManager.setOrientation(LinearLayout.VERTICAL);
@@ -122,5 +124,7 @@ public class CarteiraActivity extends BaseActivity {
         });
 
 
+
     }
+
 }

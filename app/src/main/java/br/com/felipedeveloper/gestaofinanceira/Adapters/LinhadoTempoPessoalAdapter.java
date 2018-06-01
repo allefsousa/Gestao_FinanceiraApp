@@ -2,10 +2,14 @@ package br.com.felipedeveloper.gestaofinanceira.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,6 +28,8 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
     String nomefinanceiro;
     private Context context;
     private DecimalFormat df;
+    private boolean multiSelect = false;
+    private List<Lancamento> lancamentoList;
     private SortedList<Lancamento> lancamentoSortedList = new SortedList<Lancamento>(Lancamento.class, new SortedList.Callback<Lancamento>() {
         @Override
         public void onInserted(int position, int count) {
@@ -67,6 +73,7 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
     public LinhadoTempoPessoalAdapter(Context context, String nomeGrupo) {
         this.context = context;
         this.nomefinanceiro = nomeGrupo;
+        lancamentoList = new ArrayList<>();;
 
     }
 
@@ -79,8 +86,15 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.render(lancamentoSortedList, position);
+        holder.cardViewlinha.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+                return true;
+            }
+        });
 
     }
     public void addItemm(Lancamento lancamento) {
@@ -92,6 +106,7 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
         lancamentoSortedList.clear();
         notifyDataSetChanged();
     }
+
 
     @Override
     public int getItemCount() {
@@ -165,6 +180,7 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
 
                 }
             }
+
         }
 
 

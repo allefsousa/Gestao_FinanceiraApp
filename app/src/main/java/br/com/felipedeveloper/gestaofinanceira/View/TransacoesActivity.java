@@ -70,7 +70,7 @@ public class TransacoesActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Transações");
         context = TransacoesActivity.this;
         list = new ArrayList<>();
-        df = new DecimalFormat("#0.00");
+        df = new DecimalFormat("#,###,##");
 //        RelativeLayout item = (RelativeLayout)findViewById(R.id.item);
 
 //        item.addView(child);
@@ -100,7 +100,7 @@ public class TransacoesActivity extends AppCompatActivity {
                 final Spinner spinner = child.findViewById(R.id.spinermes);
                 spinner.setAdapter(mesadapter);
                 Calendar calendar = Calendar.getInstance();
-                adapterLinhadoTempo.removeItem();
+
 
 
                 SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(TransacoesActivity.this, SweetAlertDialog.NORMAL_TYPE);
@@ -110,7 +110,7 @@ public class TransacoesActivity extends AppCompatActivity {
                 sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-
+                        adapterLinhadoTempo.removeItem();
                         filtroMes = spinner.getSelectedItemPosition();
 
                         sweetAlertDialog.dismiss();

@@ -74,7 +74,7 @@ public class TransacoesGrupoActivity extends AppCompatActivity {
         });
         configFirebase();
         list = new ArrayList<>();
-        df = new DecimalFormat("#0.00");
+        df = new DecimalFormat("#,###,##");
         adapterLinhadoTempo = new LinhadoTempoGrupoAdapter(context,nomeGrupo);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerViewtranGrupo.setLayoutManager(layoutManager);

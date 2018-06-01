@@ -620,7 +620,7 @@ public class LancamentoActivity extends AppCompatActivity {
             String virgulaponto;
             lancamento.setData(textdata.getText().toString());
             lancamento.setTitulo(texttitulo.getText().toString());
-            virgulaponto = textvalor.getText().toString().replaceAll(",", ".");
+            virgulaponto = textvalor.getText().toString().replaceAll(",", "");
             lancamento.setValor(Double.parseDouble(virgulaponto));
             lancamento.setStatusOp(spinneropcao.getSelectedItemPosition());
         }
