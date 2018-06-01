@@ -427,7 +427,7 @@ public class LancamentoActivity extends AppCompatActivity {
                     if (rec != null) {
                         atualizaSaldoOpFinanceira(ret, cardatualiza.getIdcartao(), rec, false);
                         retorno = cardatualiza.getTituloCartao();
-                    } else { // TODO: 21/05/2018 analisar dupla menssage ao adiconar dinheiro 
+                    } else { // TODO: 21/05/2018 analisar dupla menssage ao adiconar dinheiro
                         ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
                     }
 

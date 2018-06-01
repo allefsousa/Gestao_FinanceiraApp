@@ -73,7 +73,7 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolderGr
 
         public ViewHolderGrupo(View itemView) {
             super(itemView);
-            df = new DecimalFormat("#0.00");
+            df = new DecimalFormat("#,###,##");
             textTituloGrupo = itemView.findViewById(R.id.tituloitem);
             textSaldoGrupo = itemView.findViewById(R.id.saldoitem);
             cardView = itemView.findViewById(R.id.cardView);

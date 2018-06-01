@@ -113,7 +113,7 @@ public class LinhadoTempoPessoalAdapter extends RecyclerView.Adapter<LinhadoTemp
 
         public ViewHolder(View itemView, int viewType) {
             super(itemView);
-            df = new DecimalFormat("#0.00");
+            df = new DecimalFormat("#,###,##");
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
             mTimelineView = itemView.findViewById(R.id.time_marker);
             titulo = itemView.findViewById(R.id.text_timeline_title);

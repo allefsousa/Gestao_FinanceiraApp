@@ -34,7 +34,6 @@ public class GrupoActivity extends BaseActivity {
     @BindView(R.id.fabaddgrupo)
     FloatingActionButton floatingAddGrupo;
     DatabaseReference reference;
-    String idUserlogado;
     List<Grupo> grupoList;
     Grupo grupo;
     @BindView(R.id.recyclertitulogrupo)

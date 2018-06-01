@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,6 +15,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -98,7 +102,6 @@ public class MeiodePagamentoActivity extends BaseActivity {
         btnAdicionarBanco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 SimpleDateFormat formataData = new SimpleDateFormat("dd-MM-yyyy");
                 Date date = new Date();
                 String dataformatada = formataData.format(date);
@@ -107,7 +110,7 @@ public class MeiodePagamentoActivity extends BaseActivity {
                 String trocaVirgulaPonto;
                 lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
                 lancamento.setData(dataformatada);
-                trocaVirgulaPonto = edtSaldoBanco.getText().toString().replaceAll(",", ".");
+                trocaVirgulaPonto = edtSaldoBanco.getText().toString().replaceAll(",", ""); // salva sem a virgula e depois a coloca novamente
                 lancamento.setValor(Double.parseDouble(trocaVirgulaPonto));
                 lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
                 lancamento.setIdLancamento(UUID.randomUUID().toString());

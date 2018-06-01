@@ -76,7 +76,7 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
             super(itemView);
             titulocartao = itemView.findViewById(R.id.tituloitem);
             saldocartao = itemView.findViewById(R.id.saldoitem);
-            df = new DecimalFormat("#0.00");
+            df = new DecimalFormat("#,###,##");
             cardView = itemView.findViewById(R.id.cardView);
         }
     }

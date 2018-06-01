@@ -64,10 +64,6 @@ public class LinhadoTempoGrupoAdapter extends RecyclerView.Adapter<LinhadoTempoG
         }
     });
 
-    public LinhadoTempoGrupoAdapter(Context context) {
-        this.context = context;
-    }
-
     public LinhadoTempoGrupoAdapter(Context context, String nomeGrupo) {
         this.context = context;
         idGrupoSelecionado = nomeGrupo;
@@ -125,7 +121,7 @@ public class LinhadoTempoGrupoAdapter extends RecyclerView.Adapter<LinhadoTempoG
 
         public ViewHolder(View itemView) {
             super(itemView);
-            df = new DecimalFormat("#0.00");
+            df = new DecimalFormat("#,###,##");
             cardViewlinha = itemView.findViewById(R.id.cardmovimentacao);
             mTimelineView = itemView.findViewById(R.id.time_marker);
             titulo = itemView.findViewById(R.id.text_timeline_title);

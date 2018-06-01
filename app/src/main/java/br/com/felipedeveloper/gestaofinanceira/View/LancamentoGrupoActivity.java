@@ -37,7 +37,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import br.com.felipedeveloper.gestaofinanceira.Helper.CreditoDebitoEnum;
 import br.com.felipedeveloper.gestaofinanceira.Model.Cartao;
+import br.com.felipedeveloper.gestaofinanceira.Model.Carteira;
 import br.com.felipedeveloper.gestaofinanceira.Model.ContasBancarias;
 import br.com.felipedeveloper.gestaofinanceira.Model.Grupo;
 import br.com.felipedeveloper.gestaofinanceira.Model.LancamentoGrupo;
@@ -66,7 +68,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
     @BindView(R.id.spinneropbancaria)
     Spinner spinneropcao;
     @BindView(R.id.checkedTextView)
-    CheckBox checkBox;
+    CheckBox checkFontesDesconhecidas;
     android.support.v7.widget.SwitchCompat aSwitch;
     //endregion
 
@@ -75,6 +77,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
     LancamentoGrupo lancamentoGrupo;
     List<ContasBancarias> contasBancariasList;
     List<Cartao> cartaoList;
+    List<Carteira> carteiraList;
     List<String> financeiroSpinnerlist;
     DataSnapshot globalSnapshot;
     String nomeopFinanceira;
@@ -115,8 +118,9 @@ public class LancamentoGrupoActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Cartao card;
-                String titulosCardConta;
+                String tituloOpFinanceira;
                 ContasBancarias bancarias;
+                Carteira carteira;
                 globalSnapshot = dataSnapshot; // varivel de nó global do firebase
 
                 /**
@@ -136,8 +140,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 for (DataSnapshot d : dataSnapshot.child(firebaseUser.getUid()).child("banco").getChildren()) {
                     bancarias = d.getValue(ContasBancarias.class);
                     if (bancarias != null) { // se a variavel bancarias nao for vazia adiciono no arrayLIst de bancos para serem exibidos no spinner.
-                        titulosCardConta = bancarias.getTituloContabanco();// capturando o nome dos bancos do usuario logado
-                        financeiroSpinnerlist.add(titulosCardConta); //  adicionando somente o titulo dos bancos na lista de strings
+                        tituloOpFinanceira = bancarias.getTituloContabanco();// capturando o nome dos bancos do usuario logado
+                        financeiroSpinnerlist.add(tituloOpFinanceira); //  adicionando somente o titulo dos bancos na lista de strings
                     }
                     contasBancariasList.add(bancarias); // agora adiciono o objeto banco a lista de bancos
                 }
@@ -149,10 +153,20 @@ public class LancamentoGrupoActivity extends BaseActivity {
                 for (DataSnapshot d : dataSnapshot.child(firebaseUser.getUid()).child("cartao").getChildren()) {
                     card = d.getValue(Cartao.class);// objeto de cartao que recebe o cartao do firebase
                     if (card != null) {
-                        titulosCardConta = card.getTituloCartao(); // recuperando somente o nome dos cartoes  do usuario
-                        financeiroSpinnerlist.add(titulosCardConta); // adicionando o nome do cartao na mesma lista de string para exibilas no spinner
+                        tituloOpFinanceira = card.getTituloCartao(); // recuperando somente o nome dos cartoes  do usuario
+                        financeiroSpinnerlist.add(tituloOpFinanceira); // adicionando o nome do cartao na mesma lista de string para exibilas no spinner
                     }
                     cartaoList.add(card); // adicionando o objeto cartão a lista de cartoes
+
+                }
+
+                for (DataSnapshot d : dataSnapshot.child(firebaseUser.getUid()).child("carteira").getChildren()) {
+                    carteira = d.getValue(Carteira.class);// objeto de carteira que recebe a cartera do firebase
+                    if (carteira != null) {
+                        tituloOpFinanceira = carteira.getTituloCarteira(); // recuperando somente o nome das carteiras  do usuario
+                        financeiroSpinnerlist.add(tituloOpFinanceira); // adicionando o nome da carteira na mesma lista de string para exibilas no spinner
+                    }
+                    carteiraList.add(carteira); // adicionando o objeto cartão a lista de cartoes
 
                 }
 
@@ -198,7 +212,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
         //endregion
 
         //region click CheckBox fontes desconhecidas
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkFontesDesconhecidas.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
@@ -290,7 +304,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                  * neste caso se é CREDITO ou DEBITO a operação a ser feita
                  */
                 if (aSwitch.isChecked()) { // creditar valor no grupo
-                    lancamentoGrupo.setStatusOp(1);// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+                    lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Credito.getValor());// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
                     final Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamentoGrupo.getValor());
                     /**
                      * Debitando cartao de credito ou conta
@@ -302,11 +316,13 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                 statusSaldo = operacaoDebitoCartao(ret);
                             } else if (ret.equals("banco")) {
                                 statusSaldo = adicionandoDebitoConta(ret);
+                            }else if(ret.equals("carteira")){
+                                statusSaldo = adicionandoDebitoCarteira(ret);
                             }
 
                             switch (statusSaldo) {
                                 case "DebitocartaoOK":
-                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartao e adicionados ao grupo");
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartão e adicionados ao grupo");
                                     salvarLancamentoFirebase(lancamentoGrupo);
                                     UpdateSaldoGrupo(retorno);
                                     break;
@@ -322,7 +338,15 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                     break;
                                 case "saldoInsulficienteconta":
                                     ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui saldo sulficiente");
+                                    break;
+                                case "DebitocarteiraOK":
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da Carteira e adicionados ao grupo.");
+                                    salvarLancamentoFirebase(lancamentoGrupo);
+                                    UpdateSaldoGrupo(retorno);
+                                    break;
 
+                                case "saldoInsulficientecarteira":
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "A Carteira não possui limite disponivel !");
                                     break;
 
 
@@ -331,7 +355,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                         }
                     }
 
-                    if (checkBox.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
+                    if (checkFontesDesconhecidas.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
 
                         if (retorno != null) {
 
@@ -373,7 +397,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
                         }
                     }
-                    if (!checkBox.isChecked()) {
+
+                    if (!checkFontesDesconhecidas.isChecked()) {
                         if (spinneropcao.getSelectedItemPosition() == 0) {
                             ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.WARNING_TYPE, "Selecione uma conta !");
                         }
@@ -381,9 +406,9 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
                     }
 
-                } else {
+                } else { // Retirando dinheiro do Grupo e adiconando a alguma conta  do usuario ou fonte desconhecida
 
-                    lancamentoGrupo.setStatusOp(0);
+                    lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Debito.getValor());
                     if (g.getSaldoGrupo() < lancamentoGrupo.getValor()) {
                         ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Operação não realizada.\nO grupo não possui saldo sulficiente !");
                     } else {
@@ -397,6 +422,8 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                     retornoOperacao = adicionandoCreditoCartao(ret);
                                 } else if (ret.equals("banco")) {
                                     retornoOperacao = adicionandoCreditoBanco(ret);
+                                }else if (ret.equals("carteira")){
+                                    retornoOperacao = adicionandoCreditoCarteira(ret);
                                 }
                                 switch (retornoOperacao) {
                                     case "CreditoCartaoOK":
@@ -410,12 +437,18 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                         UpdateSaldoGrupo(retorno);
                                         ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua conta bancaria !");
                                         break;
+
+                                    case "CreditoCarteiraOK":
+                                        salvarLancamentoFirebase(lancamentoGrupo);
+                                        UpdateSaldoGrupo(retorno);
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua Carteira !");
+                                        break;
                                 }
 
                             }
 
                         }
-                        if (checkBox.isChecked()) {
+                        if (checkFontesDesconhecidas.isChecked()) {
                             //TAVA AQUI
                             //passar o saldo do grupo para comparar com o valor do debito e analisar como foi feito em lancamentoGrupo
                             if (retorno != null) {
@@ -467,6 +500,77 @@ public class LancamentoGrupoActivity extends BaseActivity {
         });
     }
 
+    private String adicionandoCreditoCarteira(String opFinanceira) {
+        String retornoStatus = "";
+        if (opFinanceira.equals("carteira")) {
+            for (Carteira b : carteiraList) { // percorrendo a lisat de cartoes
+                if (b.getTituloCarteira().equals(nomeopFinanceira)) { // comparando os nomes
+                    Carteira aux;
+                    aux = b; // caso o nome seja encontrado sera armazenado na variavel aux
+
+                    /**
+                     * fazendo uma busca no snapshot global  evitando uma nova consulta e recuperando o cartao que tera seu valor atualizado;
+                     * para recuperar o cartao é passado o nome do nó que no caso é cartao depois a id do usuario logado, e por final
+                     * a id do cartao que foi selecionado no spinner. com isso o objeto é recuperado e esta pronto para ser atualizado.
+                     *  ex: cartao a ser atualizado= "cartao" -> "idUsuariologado"-> "idcartaoselecionado";
+                     */
+                    Carteira carteira = globalSnapshot.child(firebaseUser.getUid()).child(opFinanceira).child(aux.getIdCarteira()).getValue(Carteira.class);
+
+
+                    /**
+                     * Para se atualizar os dados no firebase passar o objeto por enteiro iria o apagar e criar outro com novos dados e Ids
+                     * entao a maneira correta é criando um hashMap e passando odmente oque sera atualizado
+                     * que nesse caso ´o valor.
+                     * o metodo mapcartao de credito  da classe cartao já atualiza os dados. fazendo a soma do valor que tinha e do novo e retornando
+                     * um novo hash map.
+                     * para atualizar os dados é enviado o valor adicionado no editext da view w o objeto que recebera o valor
+                     *
+                     */
+                    Map<String, Object> Mapsaldoatualizado = carteira.MapCarteiraCredito(carteira, lancamentoGrupo.getValor());
+
+                    if (Mapsaldoatualizado != null) {// tratando erro de saldo que é verificado na classe cartao
+                        /**
+                         * passando os caminhos e o map que vai atualizar o que esta no firebase
+                         */
+                        atualizaSaldoOpcaoFinanceiraFirebase(opFinanceira, carteira.getIdCarteira(), Mapsaldoatualizado);
+                        retornoStatus = "CreditoCarteiraOK";
+                    }
+
+
+                }
+
+            }
+
+        }
+        return retornoStatus;
+
+    }
+
+    private String adicionandoDebitoCarteira(String opFinanceira) {
+        String retorno = "";
+        if (opFinanceira.equals("carteira")) {
+            for (Carteira b : carteiraList) {
+                if (b.getTituloCarteira().equals(nomeopFinanceira)) {
+                    Carteira aux;
+                    aux = b;
+                    Carteira carteira = globalSnapshot.child(firebaseUser.getUid()).child(opFinanceira).child(aux.getIdCarteira()).getValue(Carteira.class);
+                    Map<String, Object> rec = carteira.MapCarteiraDebito(carteira, lancamentoGrupo.getValor());
+                    if (rec != null) {
+                        atualizaSaldoOpcaoFinanceiraFirebase(opFinanceira, carteira.getIdCarteira(), rec);
+                        retorno = "DebitocarteiraOK";
+                    } else {
+                        retorno = "saldoInsulficientecarteira";
+                    }
+
+                }
+
+            }
+        }
+
+        return retorno;
+
+    }
+
     private void InitActionBarSupport() {
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -482,6 +586,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
         contasBancariasList = new ArrayList<>();
         financeiroSpinnerlist = new ArrayList<>();
         cartaoList = new ArrayList<>();
+        carteiraList = new ArrayList<>();
         lancamentoGrupo = new LancamentoGrupo();
     }
 
@@ -499,7 +604,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     Cartao cardatualiza = globalSnapshot.child(firebaseUser.getUid()).child(ret).child(aux.getIdcartao()).getValue(Cartao.class);
                     Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamentoGrupo.getValor());
                     if (rec != null) {
-                        atualizaSaldoCartaoBancoFirebase(ret, cardatualiza.getIdcartao(), rec);
+                        atualizaSaldoOpcaoFinanceiraFirebase(ret, cardatualiza.getIdcartao(), rec);
                         retorno = "DebitocartaoOK";
                     } else {
                         retorno = "saldoInsulficientecartao";
@@ -523,7 +628,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     ContasBancarias ban = globalSnapshot.child(firebaseUser.getUid()).child(ret).child(bancarias.getIdContaBanco()).getValue(ContasBancarias.class);
                     Map<String, Object> rec = ban.MapBancoDebita(ban, lancamentoGrupo.getValor());
                     if (rec != null) {
-                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec);
+                        atualizaSaldoOpcaoFinanceiraFirebase(ret, bancarias.getIdContaBanco(), rec);
                         retornoStatus = "DebitocontaoOK";
                     } else {
                         retornoStatus = "saldoInsulficienteconta";
@@ -548,7 +653,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                     Map<String, Object> rec = contBancos.MapBancoCredita(contBancos, lancamentoGrupo.getValor());
                     if (rec != null) {
 
-                        atualizaSaldoCartaoBancoFirebase(ret, bancarias.getIdContaBanco(), rec);
+                        atualizaSaldoOpcaoFinanceiraFirebase(ret, bancarias.getIdContaBanco(), rec);
                         retornoStatus = "CreditoBancoOK";
                     }
 
@@ -594,7 +699,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
                         /**
                          * passando os caminhos e o map que vai atualizar o que esta no firebase
                          */
-                        atualizaSaldoCartaoBancoFirebase(opFinanceira, cardatualiza.getIdcartao(), Mapsaldoatualizado);
+                        atualizaSaldoOpcaoFinanceiraFirebase(opFinanceira, cardatualiza.getIdcartao(), Mapsaldoatualizado);
                         retornoStatus = "CreditoCartaoOK";
                     }
 
@@ -612,12 +717,12 @@ public class LancamentoGrupoActivity extends BaseActivity {
      * tando credito quanto debito
      *
      * @param opFinanceira       nome do nó .EX ou cartao ou banco
-     * @param idcartao           id do cartao ou do banco
+     * @param idOpFinanceira           id do cartao ou do banco
      * @param mapsaldoatualizado hash map do banco ou cartao com os dados atuaalizados para update
      */
-    public void atualizaSaldoCartaoBancoFirebase(String opFinanceira, String idcartao, Map<String, Object> mapsaldoatualizado) {
+    public void atualizaSaldoOpcaoFinanceiraFirebase(String opFinanceira, String idOpFinanceira, Map<String, Object> mapsaldoatualizado) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference(); // recuperando uma nova referenciaa do banco de dados
-        reference.child("financeiro").child(firebaseUser.getUid()).child(opFinanceira).child(idcartao).updateChildren(mapsaldoatualizado);
+        reference.child("financeiro").child(firebaseUser.getUid()).child(opFinanceira).child(idOpFinanceira).updateChildren(mapsaldoatualizado);
     }
 
     /**
@@ -691,6 +796,14 @@ public class LancamentoGrupoActivity extends BaseActivity {
             }
 
         }
+        if (!resultBusca){
+            for (Carteira c : carteiraList){
+                resultBusca = c.getTituloCarteira().equalsIgnoreCase(nomeopFinanceira);
+                if (resultBusca){
+                    retorno = "carteira";
+                }
+            }
+        }
 
 
         return retorno; // retorno global do metodo
@@ -720,7 +833,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
         textvalor.setText("");
         texttitulo.setText("");
 //        spinneropcao.setSelection(0);
-        checkBox.setChecked(false);
+        checkFontesDesconhecidas.setChecked(false);
     }
 
 

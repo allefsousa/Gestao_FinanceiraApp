@@ -76,7 +76,8 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
             textTituloBanco = itemView.findViewById(R.id.tituloitem);
             textSaldoBanco = itemView.findViewById(R.id.saldoitem);
             cardView = itemView.findViewById(R.id.cardView);
-            df = new DecimalFormat("#0.00");
+            df = new DecimalFormat("#,###,##");
+
             click(itemView);
             remove(itemView);
         }

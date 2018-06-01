@@ -74,7 +74,7 @@ public class CarteiraAdapter extends RecyclerView.Adapter<CarteiraAdapter.ViewHo
 
         public ViewHolderAgencia(View itemView) {
             super(itemView);
-            df = new DecimalFormat("#0.00");
+            df = new DecimalFormat("#,###,##");
             textTituloCarteira = itemView.findViewById(R.id.tituloitem);
             textSaldoCarteira = itemView.findViewById(R.id.saldoitem);
             cardView = itemView.findViewById(R.id.cardView);
