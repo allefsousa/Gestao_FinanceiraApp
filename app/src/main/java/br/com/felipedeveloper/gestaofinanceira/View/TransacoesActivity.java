@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -22,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import br.com.felipedeveloper.gestaofinanceira.Adapters.LinhadoTempoPessoalAdapter;
@@ -49,9 +49,6 @@ public class TransacoesActivity extends AppCompatActivity {
     Context context;
     String mes[];
     int filtroMes = 0;
-    private Double totalstatus = 0.0;
-    private Double totaladcionado = 0.0;
-    private Double totalgasto = 0.0;
     private List<Lancamento> list;
     private List<Lancamento> lancamentoList;
     private LinhadoTempoPessoalAdapter adapterLinhadoTempo;
@@ -99,8 +96,6 @@ public class TransacoesActivity extends AppCompatActivity {
                 final View child = getLayoutInflater().inflate(R.layout.filtro_dialog, null);
                 final Spinner spinner = child.findViewById(R.id.spinermes);
                 spinner.setAdapter(mesadapter);
-                Calendar calendar = Calendar.getInstance();
-
 
 
                 SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(TransacoesActivity.this, SweetAlertDialog.NORMAL_TYPE);
@@ -115,6 +110,7 @@ public class TransacoesActivity extends AppCompatActivity {
 
                         sweetAlertDialog.dismiss();
                         BuscarTransacoes();
+
                     }
                 });
                 sweetAlertDialog.show();
@@ -123,28 +119,6 @@ public class TransacoesActivity extends AppCompatActivity {
             }
 
 
-        });
-
-
-        BuscarTransacoes();
-
-
-        myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Lancamento lancamento = snapshot.getValue(Lancamento.class);
-                    list.add(lancamento);
-                }
-                totalGastoPeriodo(list);
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
         });
 
         /**
@@ -161,13 +135,12 @@ public class TransacoesActivity extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (dy >0) { // posição inicial do recycler view
+                if (dy > 0) { // posição inicial do recycler view
                     // Scroll Down
                     if (floatingActionFiltro.isShown()) {
                         floatingActionFiltro.hide(); // tirando a visibilidade
                     }
-                }
-                else if (dy <0) {
+                } else if (dy < 0) {
                     // Scroll Up
                     if (!floatingActionFiltro.isShown()) {
                         floatingActionFiltro.show(); // fazendo o botão aparecer
@@ -175,28 +148,42 @@ public class TransacoesActivity extends AppCompatActivity {
                 }
             }
         });
-
+        BuscarTransacoes();
 
     }
 
+
     private void BuscarTransacoes() {
+
         myreference.child("lancamentos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
                 Lancamento lancamento;
                 for (DataSnapshot dd : dataSnapshot.getChildren()) {
                     lancamento = dd.getValue(Lancamento.class);
-                    if (nomeOpfinanceira.equals("Transacoesgeral")) {
+                    list.add(lancamento);
+
+
+                    String ac[] = lancamento.getData().split("/");
+                    int mesDaOperacao = Integer.parseInt(ac[1]);
+
+                    if (nomeOpfinanceira.equals("Transacoesgeral")) { // constante passada pela view de transacoes para diferenciar da view (Cartao, carteira ,banco)
+                        if (filtroMes == 0) {
                             adapterLinhadoTempo.addItemm(lancamento);
+                        }
+                        if (mesDaOperacao == (filtroMes)) {
+                            adapterLinhadoTempo.addItemm(lancamento);
+                        }
 
                     } else {
                         if (lancamento.getNomeopFinanceira().equals(nomeOpfinanceira)) {
-                            String ac[] = lancamento.getData().split("/");
-                            int a = Integer.parseInt(ac[1]);
-                            if (filtroMes == 0){
+
+
+                            if (filtroMes == 0) {
                                 adapterLinhadoTempo.addItemm(lancamento);
                             }
-                            if (a==(filtroMes)){
+                            if (mesDaOperacao == (filtroMes)) {
                                 adapterLinhadoTempo.addItemm(lancamento);
                             }
 
@@ -204,6 +191,8 @@ public class TransacoesActivity extends AppCompatActivity {
                     }
 
                 }
+                totalGastoPeriodo(list);
+
 
 
             }
@@ -216,28 +205,74 @@ public class TransacoesActivity extends AppCompatActivity {
     }
 
     private void totalGastoPeriodo(List<Lancamento> a) {
+         Double totalstatus = 0.0;
+         Double totaladcionado = 0.0;
+         Double totalgasto = 0.0;
+        limparDetalhesOperecoes();
+
         if (!a.isEmpty()) {
             for (Lancamento lan : a) {
-                if (lan.getNomeopFinanceira().equals(nomeOpfinanceira)) {
-                    if (lan.getStatusOp() == 1) {
-                        totaladcionado = totaladcionado + lan.getValor();
-                    } else {
-                        totalgasto = totalgasto - lan.getValor();
-                    }
-                } else if (nomeOpfinanceira.equals("Transacoesgeral")) {
-                    if (lan.getStatusOp() == 1) {
-                        totaladcionado = totaladcionado + lan.getValor();
-                    } else { // TODO: 21/05/2018 refactor
-                        totalgasto = totalgasto - lan.getValor();
-                    }
-                }
 
-                totalstatus = totaladcionado + totalgasto;
-                totalGasto.setText("Debito: " + String.valueOf(df.format(totalgasto)));
-                totaladiconado.setText("Credito: " + String.valueOf(df.format(totaladcionado)));
-                statusfinal.setText("Liquido: " + String.valueOf(df.format(totalstatus)));
+                String data = lan.getData();
+                String mesop[] = data.split("/");
+                int me = Integer.parseInt(mesop[1]);
+
+                if (filtroMes == 0) {
+                    if (lan.getNomeopFinanceira().equals(nomeOpfinanceira)) {
+                        limparDetalhesOperecoes();
+                        if (lan.getStatusOp() == 1) {
+                            totaladcionado = totaladcionado + lan.getValor();
+                        } else {
+                            totalgasto = totalgasto - lan.getValor();
+                        }
+
+                    } else if (nomeOpfinanceira.equals("Transacoesgeral")) {
+                        limparDetalhesOperecoes();
+                        if (lan.getStatusOp() == 1) {
+                            totaladcionado = totaladcionado + lan.getValor();
+                        } else {
+                            totalgasto = totalgasto - lan.getValor();
+                        }
+                    }
+
+                    totalstatus = totaladcionado + totalgasto;
+                    totalGasto.setText("Debito: " + String.valueOf(df.format(totalgasto)));
+                    totaladiconado.setText("Credito: " + String.valueOf(df.format(totaladcionado)));
+                    statusfinal.setText("Liquido: " + String.valueOf(df.format(totalstatus)));
+
+                } else if (filtroMes == (me)) {
+
+                    if (lan.getNomeopFinanceira().equals(nomeOpfinanceira)) {
+                        limparDetalhesOperecoes();
+                        if (lan.getStatusOp() == 1) {
+                            totaladcionado = totaladcionado + lan.getValor();
+                        } else {
+                            totalgasto = totalgasto - lan.getValor();
+                        }
+                    } else if (nomeOpfinanceira.equals("Transacoesgeral")) {
+                        limparDetalhesOperecoes();
+                        if (lan.getStatusOp() == 1) {
+                            totaladcionado = totaladcionado + lan.getValor();
+                        } else {
+                            totalgasto = totalgasto - lan.getValor();
+                        }
+                    }
+
+                    totalstatus = totaladcionado + totalgasto;
+                    totalGasto.setText("Debito: " + String.valueOf(df.format(totalgasto)));
+                    totaladiconado.setText("Credito: " + String.valueOf(df.format(totaladcionado)));
+                    statusfinal.setText("Liquido: " + String.valueOf(df.format(totalstatus)));
+
+                }
             }
         }
+    }
+
+    private void limparDetalhesOperecoes() {
+        totalGasto.setText("");
+        totaladiconado.setText("");
+        statusfinal.setText("");
+
     }
 
     private void configFirebase() {

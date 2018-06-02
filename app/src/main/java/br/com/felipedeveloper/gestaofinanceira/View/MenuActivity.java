@@ -175,6 +175,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MenuActivity.this, TransacoesActivity.class));
+
             }
         });
         //endregion

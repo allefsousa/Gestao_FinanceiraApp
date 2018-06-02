@@ -321,6 +321,8 @@ public class LancamentoActivity extends AppCompatActivity {
                 if (ok) {
                     final Long a = criaTimeStamp(); // recuperando o timestamp criado
                     lancamento.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
+                    String idlancamento = UUID.randomUUID().toString();
+                    lancamento.setIdLancamento(idlancamento);
                     /**
                      * verificando se a opçao de deposito é para conta corrente ou cartao.
                      */
@@ -336,8 +338,8 @@ public class LancamentoActivity extends AppCompatActivity {
 //                            debitoCarteira(ret);
 //                        }
 
-
-                        lancamento.setNomeopFinanceira(spinneropcao.getSelectedItem().toString());
+                        String id = retornoidObjeto(nomeopFinanceira);
+                        lancamento.setNomeopFinanceira(id); // id opçãofinanceira
 
 
                         /**
@@ -359,15 +361,31 @@ public class LancamentoActivity extends AppCompatActivity {
 
 
                         } else {
+                            String statusfinal;
                             lancamento.setStatusOp(CreditoDebitoEnum.Debito.getValor());
-                            salvarLancamentoFirebase(lancamento);
-                            // Metodos para adicionar Debito ao cartao ou banco
-                            debitoCartao(ret);
-                            debitoBanco(ret);
-                            debitoCarteira(ret);
-//                            ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Debito Realizado.");
 
-
+                            if (ret.equals("banco")) {
+                                statusfinal = debitoBanco(ret);
+                                if (statusfinal.equals("okDebito")) {
+                                    salvarLancamentoFirebase(lancamento);
+                                }else {
+                                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                                }
+                            } else if (ret.equals("carteira")) {
+                                statusfinal = debitoCarteira(ret);
+                                if (statusfinal.equals("okDebito")) {
+                                    salvarLancamentoFirebase(lancamento);
+                                }else {
+                                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Carteira não possui Saldo Sulficiente!");
+                                }
+                            } else if (ret.equals("cartao")) {
+                                statusfinal = debitoCartao(ret);
+                                if (statusfinal.equals("okDebito")) { // se a operação de retirar dinheiro foi concluida o retorno é um OKDEBITO para salvar o lancamento
+                                    salvarLancamentoFirebase(lancamento);
+                                }else {
+                                    ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Cartão não possui Saldo Sulficiente!");
+                                }
+                            }
                         }
                     } else {
                         ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Erro !! Tente novamente");
@@ -376,6 +394,48 @@ public class LancamentoActivity extends AppCompatActivity {
             }
         });
         //endregion
+
+    }
+
+    private String retornoidObjeto(String nomeopFinanceira) {
+        Boolean resultBusca = false; // flag para verificar s efoi encontrado
+        String retorno = null; // variavel de retorno
+
+        //percorrendo a lista de cartoes e comparando todos os nomes  com o recbido como paramentro
+        for (Cartao a : cartaoList) {
+            resultBusca = a.getTituloCartao().equalsIgnoreCase(nomeopFinanceira); // retorna true ou false
+            if (resultBusca) {// caso seja true retorna a palavra cartao
+                retorno = a.getIdcartao();
+
+            }
+        }
+        // se o resultado ainda nao foi encontrado percorre a lista de contas bancarias
+        if (!resultBusca) {
+            //percorrendo a lista de cartoes e comparando todos os nomes  com o recbido como paramentro
+            for (ContasBancarias d : contasBancariasList) {
+                resultBusca = d.getTituloContabanco().equalsIgnoreCase(nomeopFinanceira);// retorna true ou false
+                if (resultBusca) { // caso seja true retorna a palavra banco
+                    retorno = d.getIdContaBanco();
+
+                }
+            }
+
+        }
+        // se o resultado ainda nao foi encontrado percorre a lista de carteiras
+        if (!resultBusca) {
+            //percorrendo a lista de carteiras e comparando todos os nomes  com o recbido como paramentro
+            for (Carteira d : carteiraList) {
+                resultBusca = d.getTituloCarteira().equalsIgnoreCase(nomeopFinanceira);// retorna true ou false
+                if (resultBusca) { // caso seja true retorna a palavra carteiras
+                    retorno = d.getIdCarteira();
+
+                }
+            }
+
+        }
+
+        return retorno; // retorno global do metodo
+
 
     }
 
@@ -401,9 +461,9 @@ public class LancamentoActivity extends AppCompatActivity {
                     Map<String, Object> rec = cardatualiza.MapCarteiraDebito(cardatualiza, lancamento.getValor());
                     if (rec != null) {
                         atualizaSaldoOpFinanceira(ret, cardatualiza.getIdCarteira(), rec, false);
-                        retorno = cardatualiza.getTituloCarteira();
-                    } else { // TODO: 21/05/2018 analisar dupla menssage ao adiconar dinheiro
-                        ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                        retorno = "okDebito"; //debitook
+                    } else { //
+                        retorno = "falhaDebito"; // falta de saudo na conta;
                     }
 
                 }
@@ -426,9 +486,9 @@ public class LancamentoActivity extends AppCompatActivity {
                     Map<String, Object> rec = cardatualiza.MapcartaoDebito(cardatualiza, lancamento.getValor());
                     if (rec != null) {
                         atualizaSaldoOpFinanceira(ret, cardatualiza.getIdcartao(), rec, false);
-                        retorno = cardatualiza.getTituloCartao();
-                    } else { // TODO: 21/05/2018 analisar dupla menssage ao adiconar dinheiro
-                        ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                        retorno = "okDebito";
+                    } else {
+                        retorno = "falhaDebito";
                     }
 
                 }
@@ -450,9 +510,9 @@ public class LancamentoActivity extends AppCompatActivity {
                     Map<String, Object> rec = ban.MapBancoDebita(ban, lancamento.getValor());
                     if (rec != null) {
                         atualizaSaldoOpFinanceira(ret, bancarias.getIdContaBanco(), rec, false);
-                        retorno = ban.getTituloContabanco();
+                        retorno = "okDebito";
                     } else {
-                        ExibirMensagem(LancamentoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui Saldo Sulficiente!");
+                        retorno = "falhaDebito";
                     }
 
 
@@ -582,7 +642,7 @@ public class LancamentoActivity extends AppCompatActivity {
      * @param ll é o lançamento que foi digitado na tela pelo usuario. neste momento o envio ao firebase é feito
      */
     private void salvarLancamentoFirebase(Lancamento ll) {
-        myreference.child("lancamentos").child(UUID.randomUUID().toString()).setValue(ll).addOnSuccessListener(new OnSuccessListener<Void>() {
+        myreference.child("lancamentos").child(ll.getIdLancamento()).setValue(ll).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 limpar();// limpando a view apos inserir os dados
@@ -658,6 +718,7 @@ public class LancamentoActivity extends AppCompatActivity {
             resultBusca = a.getTituloCartao().equalsIgnoreCase(nomeopFinanceira); // retorna true ou false
             if (resultBusca) {// caso seja true retorna a palavra cartao
                 retorno = "cartao";
+
             }
         }
         // se o resultado ainda nao foi encontrado percorre a lista de contas bancarias
@@ -667,6 +728,7 @@ public class LancamentoActivity extends AppCompatActivity {
                 resultBusca = d.getTituloContabanco().equalsIgnoreCase(nomeopFinanceira);// retorna true ou false
                 if (resultBusca) { // caso seja true retorna a palavra banco
                     retorno = "banco";
+
                 }
             }
 
@@ -678,13 +740,16 @@ public class LancamentoActivity extends AppCompatActivity {
                 resultBusca = d.getTituloCarteira().equalsIgnoreCase(nomeopFinanceira);// retorna true ou false
                 if (resultBusca) { // caso seja true retorna a palavra carteiras
                     retorno = "carteira";
+
                 }
             }
 
         }
 
         return retorno; // retorno global do metodo
+
     }
+
 
     private void updateLabel() {
         String myFormat = "dd/MM/yy"; //In which you need put here

@@ -121,6 +121,9 @@ public class MeiodePagamentoActivity extends BaseActivity {
             }
         });
         //endregion
+
+
+        lancamento = new Lancamento();
         /**
          * Verificando qual a opcao recebida da ttela anterior
          */
@@ -164,11 +167,8 @@ public class MeiodePagamentoActivity extends BaseActivity {
                 String dataformatada = formataData.format(date);
                 dataformatada = dataformatada.replaceAll("-", "/"); // trocando o simbolo de - da data pelo / tradicional
                 boolean validaOK = false;
-
-
                 Long timestamp = criaTimeStamp(); // criando timestamp para exebir itens na lista com base na hora que foi adicionado
                 String trocaVirgulaPonto;
-                lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor()); // enun que passa o status como cridito
                 lancamento.setData(dataformatada);
                 validaOK = validaCampos();
                 if (validaOK) {
@@ -177,10 +177,11 @@ public class MeiodePagamentoActivity extends BaseActivity {
                      * Adiconando valores ao objeto de lançemento pois nesse momento é necessario fazer um Lancamento para ficar registrado
                      * no bd o valor que voc~e adicionou e posteriormente ser exibido na linha do tempo geral como na do cartão;
                      */
-                    lancamento.setValor(Double.parseDouble(trocaVirgulaPonto));
-                    lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
-                    lancamento.setIdLancamento(UUID.randomUUID().toString());
-                    lancamento.setCreatedAt(timestamp);
+//                    lancamento.setValor(Double.parseDouble(trocaVirgulaPonto));
+//                    lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
+//                    lancamento.setIdLancamento(UUID.randomUUID().toString());
+//                    lancamento.setCreatedAt(timestamp);
+//                    lancamento.setData(dataformatada);
 
                     /**
                      * neste momento é verificado se a opcao financeira recebida pela activity é uma Carteira um cartoa ou um banco
@@ -189,6 +190,11 @@ public class MeiodePagamentoActivity extends BaseActivity {
                         cartao.setIdcartao(UUID.randomUUID().toString());
                         lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.cartao.getValor()); // atribuições especificas a algumas variaveis de lancamento
                         lancamento.setNomeopFinanceira(cartao.getIdcartao());
+                        lancamento.setValor(Double.parseDouble(trocaVirgulaPonto));
+                        lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
+                        lancamento.setIdLancamento(UUID.randomUUID().toString());
+                        lancamento.setCreatedAt(timestamp);
+                        lancamento.setData(dataformatada);
                         cartao.setTituloCartao(edtTituloBanco.getText().toString());
                         if (!edtSaldoBanco.getText().toString().isEmpty()) {
                             cartao.setSaldoCartao(Double.parseDouble(trocaVirgulaPonto));
@@ -207,6 +213,11 @@ public class MeiodePagamentoActivity extends BaseActivity {
                         carteira.setTituloCarteira(edtTituloBanco.getText().toString());
                         lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.carteira.getValor());
                         lancamento.setNomeopFinanceira(carteira.getIdCarteira());
+                        lancamento.setValor(Double.parseDouble(trocaVirgulaPonto));
+                        lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
+                        lancamento.setIdLancamento(UUID.randomUUID().toString());
+                        lancamento.setCreatedAt(timestamp);
+                        lancamento.setData(dataformatada);
                         if (!edtSaldoBanco.getText().toString().isEmpty()) {
                             carteira.setSaldoCarteira(Double.parseDouble(trocaVirgulaPonto));
                             myreference.child("carteira").child(carteira.getIdCarteira()).setValue(carteira);
@@ -224,6 +235,11 @@ public class MeiodePagamentoActivity extends BaseActivity {
                         contasBancarias.setTituloContabanco(edtTituloBanco.getText().toString());
                         lancamento.setTitulo("Adicionando " + OpcoesFinanceirasEnum.banco.getValor());
                         lancamento.setNomeopFinanceira(contasBancarias.getIdContaBanco());
+                        lancamento.setValor(Double.parseDouble(trocaVirgulaPonto));
+                        lancamento.setStatusOp(CreditoDebitoEnum.Credito.getValor());
+                        lancamento.setIdLancamento(UUID.randomUUID().toString());
+                        lancamento.setCreatedAt(timestamp);
+                        lancamento.setData(dataformatada);
                         if (!edtSaldoBanco.getText().toString().isEmpty()) {
                             contasBancarias.setSaldoContabancaria(Double.parseDouble(trocaVirgulaPonto));
                             myreference.child("banco").child(contasBancarias.getIdContaBanco()).setValue(contasBancarias);

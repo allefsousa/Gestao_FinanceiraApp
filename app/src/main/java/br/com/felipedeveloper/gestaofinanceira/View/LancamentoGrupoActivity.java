@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -104,6 +106,41 @@ public class LancamentoGrupoActivity extends BaseActivity {
         aSwitch = findViewById(R.id.switchaaddvalor);
         InitObjetos();
 
+        // metodos utilizados para limpar o erro quando usuario comeca a digitar
+        //region Estetica error
+        texttitulo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                textInptitulo.setError("");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        textdata.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                layoutvalor.setError("");
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        //endregion
         textvalor.addTextChangedListener(onTextChangedListener(textvalor));
 
 
@@ -283,190 +320,106 @@ public class LancamentoGrupoActivity extends BaseActivity {
         btconfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecuperandoDadosdaView();// recuperando oque esta digitado nos campos
-                final Long a = criaTimeStamp(); // recuperando o timestamp criado
-                lancamentoGrupo.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
+                boolean validaOK;
+                validaOK = RecuperandoDadosdaView();// recuperando oque esta digitado nos campos
+                if (validaOK) {
 
-                /**
-                 * verificando se a opçao de deposito é para conta corrente ou cartao.
-                 */
-                nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
-                String ret = verificaOpcaoFinanceira(nomeopFinanceira);
-                // TODO: 15/05/2018 op financeira vazio 
+                    lancamentoGrupo.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
+                    lancamentoGrupo.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
+                    String trocaVirgulaPonto = textvalor.getText().toString().replaceAll(",", ""); // trocando a virgula da mascara pelo ponto que é aceito pelo Java
+                    lancamentoGrupo.setValor(Double.parseDouble(trocaVirgulaPonto));// recupara o valor que foi digitado que entra como String //  e o converte para Double conforme a classe espera
+                    lancamentoGrupo.setNomeGrupo(Idgrupo); // passa pela activity anterior via Bundle
+                    final Long a = criaTimeStamp(); // recuperando o timestamp criado
+                    lancamentoGrupo.setCreatedAt(a);// atribuindo o timestamp ao objeto lançamento que sera enviado a firebase
 
-
-                lancamentoGrupo.setNomeColaborador(firebaseUser.getDisplayName());// TODO: 16/05/2018 validar vazio
-                lancamentoGrupo.setNomeopFinanceira(nomeopFinanceira);
-                Grupo g = globalSnapshot.child("grupos").child(Idgrupo).getValue(Grupo.class);
-
-                /**
-                 * verificando se o switch esta selecionado ou nao.
-                 * neste caso se é CREDITO ou DEBITO a operação a ser feita
-                 */
-                if (aSwitch.isChecked()) { // creditar valor no grupo
-                    lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Credito.getValor());// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
-                    final Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamentoGrupo.getValor());
                     /**
-                     * Debitando cartao de credito ou conta
+                     * verificando se a opçao de deposito é para conta corrente ou cartao.
                      */
-                    if (spinneropcao.getSelectedItemPosition() != 0) {
-                        String statusSaldo = null;
-                        if (!ret.isEmpty()) {
-                            if (ret.equals("cartao")) {
-                                statusSaldo = operacaoDebitoCartao(ret);
-                            } else if (ret.equals("banco")) {
-                                statusSaldo = adicionandoDebitoConta(ret);
-                            }else if(ret.equals("carteira")){
-                                statusSaldo = adicionandoDebitoCarteira(ret);
-                            }
-
-                            switch (statusSaldo) {
-                                case "DebitocartaoOK":
-                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartão e adicionados ao grupo");
-                                    salvarLancamentoFirebase(lancamentoGrupo);
-                                    UpdateSaldoGrupo(retorno);
-                                    break;
-
-                                case "saldoInsulficientecartao":
-                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "O Cartão não possui limite disponivel !");
-
-                                    break;
-                                case "DebitocontaoOK":
-                                    salvarLancamentoFirebase(lancamentoGrupo);
-                                    UpdateSaldoGrupo(retorno);
-                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da conta e adicionados ao grupo");
-                                    break;
-                                case "saldoInsulficienteconta":
-                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui saldo sulficiente");
-                                    break;
-                                case "DebitocarteiraOK":
-                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da Carteira e adicionados ao grupo.");
-                                    salvarLancamentoFirebase(lancamentoGrupo);
-                                    UpdateSaldoGrupo(retorno);
-                                    break;
-
-                                case "saldoInsulficientecarteira":
-                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "A Carteira não possui limite disponivel !");
-                                    break;
+                    nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
+                    String ret = verificaOpcaoFinanceira(nomeopFinanceira);
+                    // TODO: 15/05/2018 op financeira vazio
 
 
-                            }
+                    lancamentoGrupo.setNomeColaborador(firebaseUser.getDisplayName());// TODO: 16/05/2018 validar vazio
+                    lancamentoGrupo.setNomeopFinanceira(nomeopFinanceira);
+                    Grupo g = globalSnapshot.child("grupos").child(Idgrupo).getValue(Grupo.class);
 
-                        }
-                    }
-
-                    if (checkFontesDesconhecidas.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
-
-                        if (retorno != null) {
-
-                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                                    .setTitleText("Team Money")
-                                    .setContentText("Os valores adicionados no grupo\n não seram removidos de nenhuma conta,\n Gostaria de continuar ?")
-                                    .setCancelText("Cancelar")
-                                    .setConfirmText("Adicionar")
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            sweetAlertDialog.showCancelButton(false);
-                                            salvarLancamentoFirebase(lancamentoGrupo);
-                                            UpdateSaldoGrupo(retorno);
-
-
-                                            sweetAlertDialog.setTitle("Team Money");
-                                            sweetAlertDialog.setConfirmText("OK");
-                                            sweetAlertDialog.setContentText("Valores Adicionados !");
-                                            sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                            sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                    sweetAlertDialog.cancel();
-                                                }
-                                            });
-                                            sweetAlertDialog.show();
-                                        }
-                                    })
-                                    .showCancelButton(true)
-                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sDialog) {
-                                            sDialog.cancel();
-
-                                        }
-                                    })
-                                    .show();
-
-                        }
-                    }
-
-                    if (!checkFontesDesconhecidas.isChecked()) {
-                        if (spinneropcao.getSelectedItemPosition() == 0) {
-                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.WARNING_TYPE, "Selecione uma conta !");
-                        }
-
-
-                    }
-
-                } else { // Retirando dinheiro do Grupo e adiconando a alguma conta  do usuario ou fonte desconhecida
-
-                    lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Debito.getValor());
-                    if (g.getSaldoGrupo() < lancamentoGrupo.getValor()) {
-                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Operação não realizada.\nO grupo não possui saldo sulficiente !");
-                    } else {
-                        final Map<String, Object> retorno = g.mapDebitaGrupo(g, lancamentoGrupo.getValor());
-                        if (!lancamentoGrupo.getNomeopFinanceira().equals("Origem dinheiro")) {
-                            String retornoOperacao = null;
-
-                            // so vai entrat aqui quando uma fonte de reda for selecionada
+                    /**
+                     * verificando se o switch esta selecionado ou nao.
+                     * neste caso se é CREDITO ou DEBITO a operação a ser feita
+                     */
+                    if (aSwitch.isChecked()) { // creditar valor no grupo
+                        lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Credito.getValor());// passando o 1 para o objeto lançamento para posteriormente saber qual lançamento foi credito ou debito
+                        final Map<String, Object> retorno = g.mapCreditaGrupo(g, lancamentoGrupo.getValor());
+                        /**
+                         * Debitando cartao de credito ou conta
+                         */
+                        if (spinneropcao.getSelectedItemPosition() != 0) {
+                            String statusSaldo = null;
                             if (!ret.isEmpty()) {
                                 if (ret.equals("cartao")) {
-                                    retornoOperacao = adicionandoCreditoCartao(ret);
+                                    statusSaldo = operacaoDebitoCartao(ret);
                                 } else if (ret.equals("banco")) {
-                                    retornoOperacao = adicionandoCreditoBanco(ret);
-                                }else if (ret.equals("carteira")){
-                                    retornoOperacao = adicionandoCreditoCarteira(ret);
+                                    statusSaldo = adicionandoDebitoConta(ret);
+                                } else if (ret.equals("carteira")) {
+                                    statusSaldo = adicionandoDebitoCarteira(ret);
                                 }
-                                switch (retornoOperacao) {
-                                    case "CreditoCartaoOK":
-                                        salvarLancamentoFirebase(lancamentoGrupo);
-                                        UpdateSaldoGrupo(retorno);
-                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para seu cartão !");
 
-                                        break;
-                                    case "CreditoBancoOK":
+                                switch (statusSaldo) {
+                                    case "DebitocartaoOK":
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartão e adicionados ao grupo");
                                         salvarLancamentoFirebase(lancamentoGrupo);
                                         UpdateSaldoGrupo(retorno);
-                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua conta bancaria !");
                                         break;
 
-                                    case "CreditoCarteiraOK":
+                                    case "saldoInsulficientecartao":
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "O Cartão não possui limite disponivel !");
+
+                                        break;
+                                    case "DebitocontaoOK":
                                         salvarLancamentoFirebase(lancamentoGrupo);
                                         UpdateSaldoGrupo(retorno);
-                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua Carteira !");
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da conta e adicionados ao grupo");
                                         break;
+                                    case "saldoInsulficienteconta":
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Conta não possui saldo sulficiente");
+                                        break;
+                                    case "DebitocarteiraOK":
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos da Carteira e adicionados ao grupo.");
+                                        salvarLancamentoFirebase(lancamentoGrupo);
+                                        UpdateSaldoGrupo(retorno);
+                                        break;
+
+                                    case "saldoInsulficientecarteira":
+                                        ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "A Carteira não possui limite disponivel !");
+                                        break;
+
+
                                 }
 
                             }
-
                         }
-                        if (checkFontesDesconhecidas.isChecked()) {
-                            //TAVA AQUI
-                            //passar o saldo do grupo para comparar com o valor do debito e analisar como foi feito em lancamentoGrupo
+
+                        if (checkFontesDesconhecidas.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
+
                             if (retorno != null) {
+
                                 new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                         .setTitleText("Team Money")
-                                        .setContentText("Os valores removidos do grupo\n não seram adicionados a nenhuma conta,\n Gostaria de continuar ?")
+                                        .setContentText("Os valores adicionados no grupo\n não seram removidos de nenhuma conta,\n Gostaria de continuar ?")
                                         .setCancelText("Cancelar")
-                                        .setConfirmText("Remover")
+                                        .setConfirmText("Adicionar")
                                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                             @Override
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                                 sweetAlertDialog.showCancelButton(false);
                                                 salvarLancamentoFirebase(lancamentoGrupo);
-                                                myreference.child("grupos").child(Idgrupo).updateChildren(retorno);
-// TODO: 24/05/2018  PAREI AQUI FONTES DESCONHECIDAS OK PARA DEBITO E CREDITO ANALISAR PARA DEBITO E CREDITO CARTAO
+                                                UpdateSaldoGrupo(retorno);
+
+
                                                 sweetAlertDialog.setTitle("Team Money");
                                                 sweetAlertDialog.setConfirmText("OK");
-                                                sweetAlertDialog.setContentText("Valores Retirados do Grupo");
+                                                sweetAlertDialog.setContentText("Valores Adicionados !");
                                                 sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                                                 sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                                     @Override
@@ -486,15 +439,108 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                             }
                                         })
                                         .show();
-                            } else {
-                                ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Saldo Grupo Insulficiente !");
+
                             }
-                        } else if (spinneropcao.getSelectedItemPosition() == 0) {
-                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Selecione uma conta para recebimento. !");
+                        }
+
+                        if (!checkFontesDesconhecidas.isChecked()) {
+                            if (spinneropcao.getSelectedItemPosition() == 0) {
+                                ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.WARNING_TYPE, "Selecione uma conta !");
+                            }
+
+
+                        }
+
+                    } else { // Retirando dinheiro do Grupo e adiconando a alguma conta  do usuario ou fonte desconhecida
+
+                        lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Debito.getValor());
+                        if (g.getSaldoGrupo() < lancamentoGrupo.getValor()) {
+                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Operação não realizada.\nO grupo não possui saldo sulficiente !");
+                        } else {
+                            final Map<String, Object> retorno = g.mapDebitaGrupo(g, lancamentoGrupo.getValor());
+                            if (!lancamentoGrupo.getNomeopFinanceira().equals("Origem dinheiro")) {
+                                String retornoOperacao = null;
+
+                                // so vai entrat aqui quando uma fonte de reda for selecionada
+                                if (!ret.isEmpty()) {
+                                    if (ret.equals("cartao")) {
+                                        retornoOperacao = adicionandoCreditoCartao(ret);
+                                    } else if (ret.equals("banco")) {
+                                        retornoOperacao = adicionandoCreditoBanco(ret);
+                                    } else if (ret.equals("carteira")) {
+                                        retornoOperacao = adicionandoCreditoCarteira(ret);
+                                    }
+                                    switch (retornoOperacao) {
+                                        case "CreditoCartaoOK":
+                                            salvarLancamentoFirebase(lancamentoGrupo);
+                                            UpdateSaldoGrupo(retorno);
+                                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para seu cartão !");
+
+                                            break;
+                                        case "CreditoBancoOK":
+                                            salvarLancamentoFirebase(lancamentoGrupo);
+                                            UpdateSaldoGrupo(retorno);
+                                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua conta bancaria !");
+                                            break;
+
+                                        case "CreditoCarteiraOK":
+                                            salvarLancamentoFirebase(lancamentoGrupo);
+                                            UpdateSaldoGrupo(retorno);
+                                            ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "O valor foi transferido para sua Carteira !");
+                                            break;
+                                    }
+
+                                }
+
+                            }
+                            if (checkFontesDesconhecidas.isChecked()) {
+                                //TAVA AQUI
+                                //passar o saldo do grupo para comparar com o valor do debito e analisar como foi feito em lancamentoGrupo
+                                if (retorno != null) {
+                                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                            .setTitleText("Team Money")
+                                            .setContentText("Os valores removidos do grupo\n não seram adicionados a nenhuma conta,\n Gostaria de continuar ?")
+                                            .setCancelText("Cancelar")
+                                            .setConfirmText("Remover")
+                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                    sweetAlertDialog.showCancelButton(false);
+                                                    salvarLancamentoFirebase(lancamentoGrupo);
+                                                    myreference.child("grupos").child(Idgrupo).updateChildren(retorno);
+// TODO: 24/05/2018  PAREI AQUI FONTES DESCONHECIDAS OK PARA DEBITO E CREDITO ANALISAR PARA DEBITO E CREDITO CARTAO
+                                                    sweetAlertDialog.setTitle("Team Money");
+                                                    sweetAlertDialog.setConfirmText("OK");
+                                                    sweetAlertDialog.setContentText("Valores Retirados do Grupo");
+                                                    sweetAlertDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                                    sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                        @Override
+                                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                            sweetAlertDialog.cancel();
+                                                        }
+                                                    });
+                                                    sweetAlertDialog.show();
+                                                }
+                                            })
+                                            .showCancelButton(true)
+                                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sDialog) {
+                                                    sDialog.cancel();
+
+                                                }
+                                            })
+                                            .show();
+                                } else {
+                                    ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Saldo Grupo Insulficiente !");
+                                }
+                            } else if (spinneropcao.getSelectedItemPosition() == 0) {
+                                ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Selecione uma conta para recebimento. !");
+                            }
+
                         }
 
                     }
-
                 }
             }
         });
@@ -717,7 +763,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
      * tando credito quanto debito
      *
      * @param opFinanceira       nome do nó .EX ou cartao ou banco
-     * @param idOpFinanceira           id do cartao ou do banco
+     * @param idOpFinanceira     id do cartao ou do banco
      * @param mapsaldoatualizado hash map do banco ou cartao com os dados atuaalizados para update
      */
     public void atualizaSaldoOpcaoFinanceiraFirebase(String opFinanceira, String idOpFinanceira, Map<String, Object> mapsaldoatualizado) {
@@ -741,17 +787,24 @@ public class LancamentoGrupoActivity extends BaseActivity {
      * atribuindo os dados informados na view  a um objeto lançamento que fara a movimentação dos dados
      * até que o mesmo seja enviado ao firebase
      */
-    private void RecuperandoDadosdaView() {
-        // TODO: 05/05/2018 validar dados inpedir nulo e vazio
+    private boolean RecuperandoDadosdaView() {
+        boolean retorno = false;
         if (textdata.getText().toString().isEmpty()) {
-
+            layoutdata.setError("Data não pode ser Vazia.");
+        }
+        if (textvalor.getText().toString().isEmpty()) {
+            layoutvalor.setError("Valor não pode ser vazio.");
+        }
+        if (texttitulo.getText().toString().isEmpty()) {
+            textInptitulo.setError("Titulo não pode ser vazio.");
         }
 
-        lancamentoGrupo.setData(textdata.getText().toString()); // recuperando oque foi digitado no campo de data
-        lancamentoGrupo.setTitulo(texttitulo.getText().toString()); // recuperando oque foi digitado no titulo
-        String trocaVirgulaPonto = textvalor.getText().toString().replaceAll(",", ""); // trocando a virgula da mascara pelo ponto que é aceito pelo Java
-        lancamentoGrupo.setValor(Double.parseDouble(trocaVirgulaPonto));// recupara o valor que foi digitado que entra como String //  e o converte para Double conforme a classe espera
-        lancamentoGrupo.setNomeGrupo(Idgrupo);
+        if (!texttitulo.getText().toString().isEmpty() && !textvalor.getText().toString().isEmpty() && !textdata.getText().toString().isEmpty()) {
+            retorno = true;
+        }
+
+
+        return retorno;
     }
 
     /**
@@ -796,10 +849,10 @@ public class LancamentoGrupoActivity extends BaseActivity {
             }
 
         }
-        if (!resultBusca){
-            for (Carteira c : carteiraList){
+        if (!resultBusca) {
+            for (Carteira c : carteiraList) {
                 resultBusca = c.getTituloCarteira().equalsIgnoreCase(nomeopFinanceira);
-                if (resultBusca){
+                if (resultBusca) {
                     retorno = "carteira";
                 }
             }
