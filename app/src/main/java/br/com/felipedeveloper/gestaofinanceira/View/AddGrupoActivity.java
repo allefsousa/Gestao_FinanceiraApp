@@ -208,11 +208,12 @@ public class AddGrupoActivity extends BaseActivity {
                 lancamentoGrupo.setStatusOp(CreditoDebitoEnum.Credito.getValor());
                 lancamentoGrupo.setTitulo("Criação Grupo");
                 if (ValidaOK) {
-                    for (int i = 0; i < exibirList.size(); i++) {
-                    }
+
                     Financeiroreference.child(grupo.getIdGrupo()).setValue(grupo); // salvando o grupo;
                     Financeiroreference.child(grupo.getIdGrupo()).child("lancamentos").child(UUID.randomUUID().toString()).setValue(lancamentoGrupo);
-
+                    for (int i = 0; i < exibirList.size(); i++) {
+                        Financeiroreference.child(grupo.getIdGrupo()).child("usuarioList").child(exibirList.get(i).getIdUsuario()).setValue(exibirList.get(i));
+                    }
                     ExibirMensagem(AddGrupoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Grupo Adicionado.");
                     limparCampos();
                 }
@@ -280,7 +281,7 @@ public class AddGrupoActivity extends BaseActivity {
             String uid = UUID.randomUUID().toString(); // gerando a UId unica do grupo
             grupo.setIdGrupo(uid); // atribuindo id
             grupo.setNomeGrupo(inputNomeGrupo.getText().toString());
-            grupo.setUsuarioList(exibirList); // salnvondo a lista de usuarios no grupo
+//            grupo.setUsuarioList(exibirList); // salnvondo a lista de usuarios no grupo
             retorno = true;
         }
         return retorno;

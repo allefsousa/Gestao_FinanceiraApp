@@ -15,7 +15,7 @@ import java.util.Map;
 public class Grupo {
     private String nomeGrupo;
     private Double saldoGrupo;
-    private List<Usuario> usuarioList;
+    private Usuario suarioList;
     private String idGrupo;
 
 
@@ -23,12 +23,12 @@ public class Grupo {
     public Grupo() {
     }
 
-    public List<Usuario> getUsuarioList() {
-        return usuarioList;
+    public Usuario getSuarioList() {
+        return suarioList;
     }
 
-    public void setUsuarioList(List<Usuario> usuarioList) {
-        this.usuarioList = usuarioList;
+    public void setSuarioList(Usuario suarioList) {
+        this.suarioList = suarioList;
     }
 
     public String getNomeGrupo() {
@@ -70,7 +70,7 @@ public class Grupo {
         result.put("idGrupo", c.getIdGrupo());
         result.put("saldoGrupo", (saldoAtualizado));
         result.put("nomeGrupo", c.getNomeGrupo());
-        result.put("usuarioList", c.getUsuarioList());
+        result.put("usuarioList", c.getSuarioList());
         return result;
     }
 
@@ -93,7 +93,7 @@ public class Grupo {
             result.put("idGrupo", c.getIdGrupo());
             result.put("saldoGrupo", (saldoAtualizado));
             result.put("nomeGrupo", c.getNomeGrupo());
-            result.put("usuarioList", c.getUsuarioList());
+            result.put("usuarioList", c.getSuarioList());
 
         }
         return result;

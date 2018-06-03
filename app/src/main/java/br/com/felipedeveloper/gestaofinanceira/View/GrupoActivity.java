@@ -7,11 +7,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +40,7 @@ public class GrupoActivity extends BaseActivity {
     @BindView(R.id.recyclertitulogrupo)
     RecyclerView recyclerViewGrupos;
     GrupoAdapter grupoAdapter;
+    String firebaseAuth;
     //endregion
 
 
@@ -52,7 +55,7 @@ public class GrupoActivity extends BaseActivity {
         // referencia do banc para buscar os grupos
         reference = configFirebase(reference);
         reference= FirebaseDatabase.getInstance().getReference().child("financeiro");
-
+        firebaseAuth = UserRetornoId();
         //instanciando novos objetos
         grupoList = new ArrayList<>();
         grupo = new Grupo();
@@ -76,7 +79,13 @@ public class GrupoActivity extends BaseActivity {
                 grupoList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                   Grupo grupo = snapshot.getValue(Grupo.class);
-                    grupoList.add(grupo);
+                    if (snapshot.child("usuarioList").hasChild(firebaseAuth)){
+                        grupoList.add(grupo);
+                    }
+
+
+
+
                 }
                 grupoAdapter = new GrupoAdapter(GrupoActivity.this,grupoList); // passando os grupos para o adapter para mortar a view
                 recyclerViewGrupos.setAdapter(grupoAdapter); // passando o adapter para a lista que exibira os grupos
