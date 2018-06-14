@@ -2,7 +2,6 @@ package br.com.felipedeveloper.gestaofinanceira.Model;
 
 import com.google.firebase.database.Exclude;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.Map;
 public class Grupo {
     private String nomeGrupo;
     private Double saldoGrupo;
-    private Usuario suarioList;
+    List<String> usuarioList;
     private String idGrupo;
 
 
@@ -23,12 +22,12 @@ public class Grupo {
     public Grupo() {
     }
 
-    public Usuario getSuarioList() {
-        return suarioList;
+    public List<String> getUsuarioList() {
+        return usuarioList;
     }
 
-    public void setSuarioList(Usuario suarioList) {
-        this.suarioList = suarioList;
+    public void setUsuarioList(List<String> usuarioList) {
+        this.usuarioList = usuarioList;
     }
 
     public String getNomeGrupo() {
@@ -70,7 +69,7 @@ public class Grupo {
         result.put("idGrupo", c.getIdGrupo());
         result.put("saldoGrupo", (saldoAtualizado));
         result.put("nomeGrupo", c.getNomeGrupo());
-        result.put("usuarioList", c.getSuarioList());
+        result.put("usuarioList", c.getUsuarioList());
         return result;
     }
 
@@ -93,7 +92,7 @@ public class Grupo {
             result.put("idGrupo", c.getIdGrupo());
             result.put("saldoGrupo", (saldoAtualizado));
             result.put("nomeGrupo", c.getNomeGrupo());
-            result.put("usuarioList", c.getSuarioList());
+            result.put("usuarioList", c.getUsuarioList());
 
         }
         return result;

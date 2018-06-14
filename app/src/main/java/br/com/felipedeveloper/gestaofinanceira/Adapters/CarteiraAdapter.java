@@ -41,8 +41,6 @@ public class CarteiraAdapter extends RecyclerView.Adapter<CarteiraAdapter.ViewHo
     public ViewHolderAgencia onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.item_adapter_cardview, parent, false);
-
-
         return new ViewHolderAgencia(view);
     }
 
@@ -51,7 +49,7 @@ public class CarteiraAdapter extends RecyclerView.Adapter<CarteiraAdapter.ViewHo
         if (!carteiraList.isEmpty() && carteiraList.size() > 0) {
 
             holder.textTituloCarteira.setText(carteiraList.get(position).getTituloCarteira());
-            holder.textSaldoCarteira.setText(String.valueOf(df.format(carteiraList.get(position).getSaldoCarteira()) + " R$"));
+            holder.textSaldoCarteira.setText("R$ "+String.valueOf(df.format(carteiraList.get(position).getSaldoCarteira())));
 //            render(holder,position);
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override

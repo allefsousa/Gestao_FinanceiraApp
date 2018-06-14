@@ -76,17 +76,25 @@ public class GrupoActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                grupoList.clear();
+//                grupoList.clear(); bugou grupo some apos adicionar valor
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                   Grupo grupo = snapshot.getValue(Grupo.class);
-                    if (snapshot.child("usuarioList").hasChild(firebaseAuth)){
-                        grupoList.add(grupo);
+                    List<String> ss;
+                    ss = grupo.getUsuarioList();
+                    for (String a : ss){
+                        if (firebaseAuth.equals(a)){
+                            grupoList.add(grupo);
+                        }
                     }
+//                    if (snapshot.child("usuarioList").hasChild(firebaseAuth)){
+//                        grupoList.add(grupo);
+//                    }
 
 
 
 
                 }
+
                 grupoAdapter = new GrupoAdapter(GrupoActivity.this,grupoList); // passando os grupos para o adapter para mortar a view
                 recyclerViewGrupos.setAdapter(grupoAdapter); // passando o adapter para a lista que exibira os grupos
 

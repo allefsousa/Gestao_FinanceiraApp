@@ -78,6 +78,7 @@ public class AddGrupoActivity extends BaseActivity {
     private Grupo grupo;
     private List<Usuario> usuarioList;
     private LancamentoGrupo lancamentoGrupo;
+    private List<String> idusers;
     FirebaseAuth firebaseAuth;
     Usuario usuario;
     //endregion
@@ -87,7 +88,7 @@ public class AddGrupoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_grupo);
-
+        idusers = new ArrayList<>();
         getSupportActionBar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); // adiconando support a toolbar
         ButterKnife.bind(this); // anotation processor para evitar codigo redundant
@@ -212,8 +213,9 @@ public class AddGrupoActivity extends BaseActivity {
                     Financeiroreference.child(grupo.getIdGrupo()).setValue(grupo); // salvando o grupo;
                     Financeiroreference.child(grupo.getIdGrupo()).child("lancamentos").child(UUID.randomUUID().toString()).setValue(lancamentoGrupo);
                     for (int i = 0; i < exibirList.size(); i++) {
-                        Financeiroreference.child(grupo.getIdGrupo()).child("usuarioList").child(exibirList.get(i).getIdUsuario()).setValue(exibirList.get(i));
+                        idusers.add(exibirList.get(i).getIdUsuario());
                     }
+                    Financeiroreference.child(grupo.getIdGrupo()).child("usuarioList").setValue(idusers);
                     ExibirMensagem(AddGrupoActivity.this,SweetAlertDialog.SUCCESS_TYPE,"Grupo Adicionado.");
                     limparCampos();
                 }

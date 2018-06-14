@@ -50,14 +50,8 @@ public class CarteiraActivity extends BaseActivity {
         usuariosreference = configFirebaseUsuario(usuariosreference);
         carteiraList = new ArrayList<>();
         carteira = new Carteira();
-        layoutManager = new LinearLayoutManager(this);
-        layoutManager.canScrollVertically();
-        layoutManager.setOrientation(LinearLayout.VERTICAL);
-        recyclerViewCarteira.setLayoutManager(layoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewCarteira.getContext(),
-                layoutManager.getOrientation());
-        recyclerViewCarteira.addItemDecoration(dividerItemDecoration);
-        recyclerViewCarteira.setNestedScrollingEnabled(false);
+
+        configRecyclerView();
 
         financeiroreference.child("carteira").addValueEventListener(new ValueEventListener() {
             @Override
@@ -125,6 +119,17 @@ public class CarteiraActivity extends BaseActivity {
 
 
 
+    }
+
+    private void configRecyclerView() {
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.canScrollVertically();
+        layoutManager.setOrientation(LinearLayout.VERTICAL);
+        recyclerViewCarteira.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewCarteira.getContext(),
+                layoutManager.getOrientation());
+        recyclerViewCarteira.addItemDecoration(dividerItemDecoration);
+        recyclerViewCarteira.setNestedScrollingEnabled(false);
     }
 
 }

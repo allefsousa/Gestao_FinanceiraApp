@@ -150,7 +150,8 @@ public class EmailCadastroFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 edtConfirmasenha.clearFocus();
-                boolean validaOk = ValidarCampos();
+                boolean validaOk = false;
+                 validaOk = ValidarCampos();
                 if (validaOk) {
                     // atribuindo valor das views para o objeto usuario
                     user.setUsuarioNome(edtnome.getText().toString());
@@ -226,7 +227,6 @@ public class EmailCadastroFragment extends Fragment {
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(user.getUsuarioNome())
                             .build();
-
                     if (firebaseUser != null) {
                         firebaseUser.updateProfile(profileUpdates);// atualizando perfil
                     }

@@ -46,6 +46,8 @@ public class MeiodePagamentoActivity extends BaseActivity {
     TextInputEditText edtSaldoBanco;
     @BindView(R.id.btnsalvarbanco)
     FloatingActionButton btnAdicionarBanco;
+
+
     //endregion
 
 
@@ -103,6 +105,7 @@ public class MeiodePagamentoActivity extends BaseActivity {
             public void afterTextChanged(Editable editable) {
 
             }
+
         });
         edtSaldoBanco.addTextChangedListener(new TextWatcher() {
             @Override

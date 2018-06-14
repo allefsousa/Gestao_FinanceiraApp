@@ -47,7 +47,7 @@ public class CartaoAdapter extends RecyclerView.Adapter<CartaoAdapter.ViewHolder
         if (!cartaoArray.isEmpty() && cartaoArray.size() > 0) {
 
             holder.titulocartao.setText(cartaoArray.get(position).getTituloCartao());
-            holder.saldocartao.setText(String.valueOf(df.format(cartaoArray.get(position).getSaldoCartao()) + " R$"));
+            holder.saldocartao.setText(String.valueOf("R$ "+ df.format(cartaoArray.get(position).getSaldoCartao())));
             render(holder,position);
         }
 
