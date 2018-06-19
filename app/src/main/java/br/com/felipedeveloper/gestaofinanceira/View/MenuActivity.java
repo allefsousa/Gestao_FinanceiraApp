@@ -85,7 +85,7 @@ public class MenuActivity extends AppCompatActivity {
 
                 /**
                  * limpando os dados da lista pois quando algo é modificado na arvore
-                 * todo o processo do banco de dados é refeito  em tempo real
+                 * toodo o processo do banco de dados é refeito  em tempo real
                  */
                 contasBancariasList.clear();
                 if (dataSnapshot.hasChild("banco")) {

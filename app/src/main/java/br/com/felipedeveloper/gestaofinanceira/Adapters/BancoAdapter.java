@@ -89,7 +89,6 @@ public class BancoAdapter extends RecyclerView.Adapter<BancoAdapter.ViewHolderAg
         }
 
 
-        // FIXME: 19/04/2018  Excluir item ;
         private void click(View itemView) {
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {

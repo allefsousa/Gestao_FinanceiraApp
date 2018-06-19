@@ -337,10 +337,9 @@ public class LancamentoGrupoActivity extends BaseActivity {
                      */
                     nomeopFinanceira = spinneropcao.getSelectedItem().toString();// recebendo o texto selecionado do spinner
                     String ret = verificaOpcaoFinanceira(nomeopFinanceira);
-                    // TODO: 15/05/2018 op financeira vazio
 
 
-                    lancamentoGrupo.setNomeColaborador(firebaseUser.getDisplayName());// TODO: 16/05/2018 validar vazio
+                    lancamentoGrupo.setNomeColaborador(firebaseUser.getDisplayName());
                     lancamentoGrupo.setNomeopFinanceira(nomeopFinanceira);
                     Grupo g = globalSnapshot.child("grupos").child(Idgrupo).getValue(Grupo.class);
 
@@ -508,7 +507,6 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                                     sweetAlertDialog.showCancelButton(false);
                                                     salvarLancamentoFirebase(lancamentoGrupo);
                                                     myreference.child("grupos").child(Idgrupo).updateChildren(retorno);
-// TODO: 24/05/2018  PAREI AQUI FONTES DESCONHECIDAS OK PARA DEBITO E CREDITO ANALISAR PARA DEBITO E CREDITO CARTAO
                                                     sweetAlertDialog.setTitle("Team Money");
                                                     sweetAlertDialog.setConfirmText("OK");
                                                     sweetAlertDialog.setContentText("Valores Retirados do Grupo");

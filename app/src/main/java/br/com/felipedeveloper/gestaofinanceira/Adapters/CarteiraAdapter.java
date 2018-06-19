@@ -105,7 +105,6 @@ public class CarteiraAdapter extends RecyclerView.Adapter<CarteiraAdapter.ViewHo
 
 
 
-        // FIXME: 19/04/2018  Excluir item ;
         public void click(View itemView) {
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {

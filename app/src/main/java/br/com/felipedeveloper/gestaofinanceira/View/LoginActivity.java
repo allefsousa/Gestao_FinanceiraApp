@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                 if(firebaseUser != null){
                     firebaseUser.getUid();
-                    salvarUsuarioBD(firebaseUser); // TODO: 08/04/2018  testar com google e facebook
+                    salvarUsuarioBD(firebaseUser);
                     loginRealizadocomSucesso();
                 }
             }

@@ -176,4 +176,9 @@ public class EmailLoginFragment extends Fragment {
                 .show();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

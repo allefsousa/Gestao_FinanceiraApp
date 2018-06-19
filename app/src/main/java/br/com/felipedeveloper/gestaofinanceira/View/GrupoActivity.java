@@ -76,7 +76,7 @@ public class GrupoActivity extends BaseActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-//                grupoList.clear(); bugou grupo some apos adicionar valor
+                grupoList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                   Grupo grupo = snapshot.getValue(Grupo.class);
                     List<String> ss;
