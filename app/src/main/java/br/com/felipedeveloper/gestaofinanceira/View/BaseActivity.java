@@ -22,7 +22,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Classe Base para as outras  activityes para evitar  escrita de codigo redundante
  */
 public class BaseActivity extends AppCompatActivity {
-    private NumberFormat df;
 
     /**
      * Metodo responsavel por exibir mensagem ao usuario

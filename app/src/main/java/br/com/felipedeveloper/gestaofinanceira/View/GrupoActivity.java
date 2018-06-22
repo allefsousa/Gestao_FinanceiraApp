@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +41,9 @@ public class GrupoActivity extends BaseActivity {
     @BindView(R.id.recyclertitulogrupo)
     RecyclerView recyclerViewGrupos;
     GrupoAdapter grupoAdapter;
+    ValueEventListener valueEventListener;
     String firebaseAuth;
+    List<String> ss ;
     //endregion
 
 
@@ -59,9 +62,9 @@ public class GrupoActivity extends BaseActivity {
         //instanciando novos objetos
         grupoList = new ArrayList<>();
         grupo = new Grupo();
+        ss= new ArrayList<>();
 
         ConfigRecyclerView();
-
 
         floatingAddGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,30 +74,28 @@ public class GrupoActivity extends BaseActivity {
         });
 
 
+
         // buscando os Grupos no Nó Grupos, os adiconando a lista para serem enviado ao adapter
-        reference.child("grupos").addValueEventListener(new ValueEventListener() {
+        valueEventListener = reference.child("grupos").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 grupoList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                   Grupo grupo = snapshot.getValue(Grupo.class);
-                    List<String> ss;
-                    ss = grupo.getUsuarioList();
-                    for (String a : ss){
-                        if (firebaseAuth.equals(a)){
-                            grupoList.add(grupo);
-                        }
-                    }
-//                    if (snapshot.child("usuarioList").hasChild(firebaseAuth)){
-//                        grupoList.add(grupo);
-//                    }
 
+                      ss = grupo.getUsuarioList();//  recuperando a lista de ids de usuarios dos grupos
+                      if (ss != null){
+                          for (String s : ss){
+                              if (firebaseAuth.equals(s)){ // comparando as ids do banco com a do usuario logado para ser exibida
+                                  grupoList.add(grupo); // adicionando o grupo a lista de grupos
+                              }
+                          }
+                      }
 
 
 
                 }
-
                 grupoAdapter = new GrupoAdapter(GrupoActivity.this,grupoList); // passando os grupos para o adapter para mortar a view
                 recyclerViewGrupos.setAdapter(grupoAdapter); // passando o adapter para a lista que exibira os grupos
 
@@ -154,31 +155,16 @@ public class GrupoActivity extends BaseActivity {
         recyclerViewGrupos.addItemDecoration(dividerItemDecoration);
     }
 
-//    private void mensagem() {
-//
-//        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
-//                .setTitleText("Criar Grupo")
-//                .setConfirmText("Adicionar")
-//                .setCustomView(editText)
-//                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                    @Override
-//                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-//
-//                        boolean a = ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-//                                editText.getWindowToken(), 0);
-//                        if (a) {
-//                            sweetAlertDialog.setTitleText("Deleted!")
-//                                    .setContentText("Your imaginary file has been deleted!")
-//                                    .setConfirmText(editText.getText().toString())
-//                                    .setConfirmClickListener(null)
-//                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-//                        }
-//
-//
-//                    }
-//                })
-//                .show();
-//
-//
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reference.child("grupos").addValueEventListener(valueEventListener);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        reference.child("grupos").removeEventListener(valueEventListener);
+        super.onDestroy();
+    }
 }

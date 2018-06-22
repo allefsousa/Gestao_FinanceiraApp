@@ -159,20 +159,22 @@ public class AddGrupoActivity extends BaseActivity {
                     for (int i = 0; i < usuarioList.size(); i++) { // percorendo a lista de usuarios
                         if (!usuarioList.get(i).getUsuarioEmail().isEmpty()) {
                             if (usuarioList.get(i).getUsuarioEmail().equals(emailDigitado)) { // comparando ao email digitado com os emails cadastrados no BD
-                                exibirList.add(usuarioList.get(i)); // caso encontre adiciona na lista o usuario
-                                exibirList.add(usuarioLogado); // adicionando você a lista para ser exibido tambem
+                              if(!emailDigitado.equals(usuarioLogado.getUsuarioEmail())){ // impedindo que o usuario logado crie um grupo sozinho.
+                                  exibirList.add(usuarioList.get(i)); // caso encontre adiciona na lista o usuario
+                                  exibirList.add(usuarioLogado); // adicionando você a lista para ser exibido tambem
 
-                                // configurando o adapter para exibir e mostrar a lista de usuario
-                                adicionarUsuarioAdapter = new AdicionarUsuarioAdapter(exibirList, context);
-                                adicionarUsuarioAdapter.notifyDataSetChanged();
-                                recyclerViewuser.setAdapter(adicionarUsuarioAdapter); // pasando  o adapter
-                                inputEmailGrupo.getText().clear(); // limpando compo de email
-                                floatingActionButton.show(); // exibindo o botão para que o grupo possa ser salvo
+                                  // configurando o adapter para exibir e mostrar a lista de usuario
+                                  adicionarUsuarioAdapter = new AdicionarUsuarioAdapter(exibirList, context);
+                                  adicionarUsuarioAdapter.notifyDataSetChanged();
+                                  recyclerViewuser.setAdapter(adicionarUsuarioAdapter); // pasando  o adapter
+                                  inputEmailGrupo.getText().clear(); // limpando compo de email
+                                  floatingActionButton.show(); // exibindo o botão para que o grupo possa ser salvo
+                              }
                             }
                         }
                     }
                     if (exibirList.size() == 0) { // se a lista de usuarios for igual a zero é pq não foi encontrado nenhum
-                        ExibirMensagem(AddGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Usuario não Encontrado.\n Verifique o Email Informado");
+                        ExibirMensagem(AddGrupoActivity.this, SweetAlertDialog.ERROR_TYPE, "Usuario não Encontrado.\n Verifique o Email Informado.");
                     }
                 }
 

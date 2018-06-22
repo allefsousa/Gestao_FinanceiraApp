@@ -364,6 +364,10 @@ public class LancamentoGrupoActivity extends BaseActivity {
                                     statusSaldo = adicionandoDebitoCarteira(ret);
                                 }
 
+                                /**
+                                 * salvando dados em mais um um nó
+                                 * salvando lancamento e atualizando saldo do grupo
+                                 */
                                 switch (statusSaldo) {
                                     case "DebitocartaoOK":
                                         ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.SUCCESS_TYPE, "Valores Removidos do cartão e adicionados ao grupo");
@@ -399,10 +403,14 @@ public class LancamentoGrupoActivity extends BaseActivity {
                             }
                         }
 
-                        if (checkFontesDesconhecidas.isChecked()) { // permitindo fontes desconhecidas remover e adicionar valores
+                        /**
+                         *  permitindo fontes desconhecidas remover e adicionar valores
+                         *  valores entrar e sair do grupo sem estarem cadastrados dentro do app
+                         */
+                        if (checkFontesDesconhecidas.isChecked()) {
 
                             if (retorno != null) {
-
+                                // exebindo dialogo ao usuario
                                 new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                         .setTitleText("Team Money")
                                         .setContentText("Os valores adicionados no grupo\n não seram removidos de nenhuma conta,\n Gostaria de continuar ?")
@@ -441,7 +449,7 @@ public class LancamentoGrupoActivity extends BaseActivity {
 
                             }
                         }
-
+                        // caso não seja utilizado fontes desconhecidas é necessario selecionar uma conta
                         if (!checkFontesDesconhecidas.isChecked()) {
                             if (spinneropcao.getSelectedItemPosition() == 0) {
                                 ExibirMensagem(LancamentoGrupoActivity.this, SweetAlertDialog.WARNING_TYPE, "Selecione uma conta !");
