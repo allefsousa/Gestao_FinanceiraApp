@@ -7,15 +7,16 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".View.myApplication"
+        android:name=".Telas.myApplication"
         android:allowBackup="true"
         android:icon="@drawable/ico2"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/SplashTheme"
         tools:replace="android:icon">
-        <activity android:name=".View.SplashActivity">
+        <activity android:name=".Telas.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,105 +45,119 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".View.LoginActivity"
-            android:theme="@style/MyTheme" />
+            android:name=".Telas.LoginActivity"
+            android:theme="@style/MyTheme"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".View.MenuActivity"
-            android:theme="@style/AppTheme" />
+            android:name=".Telas.MenuActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".View.LoginEmailActivity"
-            android:parentActivityName=".View.LoginActivity"
+            android:name=".Telas.LoginEmailActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Telas.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.LoginActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.LoginActivity" />
         </activity>
         <activity
-            android:name=".View.UsuarioConfiguracaoActivity"
+            android:name=".Telas.UsuarioConfiguracaoActivity"
             android:label="Configuração"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.MenuActivity" />
         </activity>
         <activity
-            android:name=".View.CartaoActivity"
+            android:name=".Telas.CartaoActivity"
             android:label="@string/title_activity_cartao"
-            android:parentActivityName=".View.MenuActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Telas.MenuActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.MenuActivity" />
         </activity>
         <activity
-            android:name=".View.LancamentoActivity"
-            android:parentActivityName=".View.MenuActivity"
+            android:name=".Telas.LancamentoActivity"
+            android:parentActivityName=".Telas.MenuActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.MenuActivity" />
         </activity>
         <activity
-            android:name=".View.ContasBancariasActivity"
+            android:name=".Telas.ContasBancariasActivity"
             android:label="Contas Bancarias"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.MenuActivity" />
         </activity>
         <activity
-            android:name=".View.MeiodePagamentoActivity"
+            android:name=".Telas.MeiodePagamentoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.ContasBancariasActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.ContasBancariasActivity" />
         </activity>
         <activity
-            android:name=".View.TransacoesActivity"
+            android:name=".Telas.TransacoesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.MenuActivity" />
         </activity>
         <activity
-            android:name=".View.GrupoActivity"
+            android:name=".Telas.GrupoActivity"
             android:label="Grupos"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.MenuActivity" />
         </activity>
         <activity
-            android:name=".View.AddGrupoActivity"
+            android:name=".Telas.AddGrupoActivity"
             android:label="Adicionar Grupo"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustNothing">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.GrupoActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.GrupoActivity" />
         </activity>
         <activity
-            android:name=".View.TransacoesGrupoActivity"
+            android:name=".Telas.TransacoesGrupoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.GrupoActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.GrupoActivity" />
         </activity>
         <activity
-            android:name=".View.LancamentoGrupoActivity"
+            android:name=".Telas.LancamentoGrupoActivity"
             android:label="Lançamentos Grupo"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.TransacoesGrupoActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.TransacoesGrupoActivity" />
         </activity>
-        <activity android:name=".View.CarteiraActivity"
+        <activity android:name=".Telas.CarteiraActivity"
             android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
             android:label="Carteira">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.com.felipedeveloper.gestaofinanceira.View.MenuActivity" />
+                android:value="br.com.felipedeveloper.gestaofinanceira.Telas.MenuActivity" />
         </activity>
     </application>
 
